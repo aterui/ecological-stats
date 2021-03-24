@@ -5,11 +5,13 @@ publishDir = "docs"
 languageCode = "en-us"
 theme = "ramium"
 
-title = "Ramium"
+title = "test"
 disqusShortname = ""
 googleAnalytics = ""
 summaryLength = 40
 pluralizeListTitles = false
+draft: false # if set to true, changes will not be published
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 enableemoji = false
 
 [params]
