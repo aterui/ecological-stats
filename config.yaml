@@ -1,4 +1,4 @@
-baseURL: https://test.app
+baseURL: https://ecological-stats.netlify.app
 languageCode: en-us
 theme: ramium
 title: ECOSTATS
@@ -9,8 +9,8 @@ pluralizeListTitles: no
 enableemoji: no
 params:
   adsense: ''
-  description: A description for the meta tag of the site
-  githubProfile: rafed/ramium/
+  description: A website about R and JAGS
+  githubProfile: aterui/
   googleSearch: ''
   math: no
   paginatePostsPerPage: 5
@@ -44,6 +44,6 @@ menu:
       parent: blog
       url: /posts/
       weight: 3
-    - name: Author
+    - name: About
       url: /author/
       weight: 3

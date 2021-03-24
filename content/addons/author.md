@@ -3,9 +3,13 @@ date: "2020-04-06T02:07:31+06:00"
 draft: false
 image: /image/profile.png
 layout: author
-title: About Author
+title: About ECOSTATS
 type: addons
 url: /author/
 ---
 
-I am John Doe. And I can confirm that this is the best theme ever!
+管理者：照井　慧　TERUI, Akira
+
+生態学を専門とする管理者の備忘録。そのため、生態学関連の情報が中心になります。そのほか、研究雑記など。このサイトに関する責任は全て管理者個人に帰すもので、所属機関ならびにその上位機構は内容について関知していません。なお、本ページで公開されているスクリプトによって生じた問題については一切の責任を負いかねます。
+
+なお、当サイトでは、第三者配信の広告サービス[Google Adsense](https://www.google.com/adsense/start/)を利用しています。このような広告配信事業者は、ユーザーの興味に応じた商品やサービスの広告を表示するため、当サイトや他サイトへのアクセスに関する情報 『Cookie』(氏名、住所、メール アドレス、電話番号は含まれません) を使用することがあります。
