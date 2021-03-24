@@ -1,5 +1,4 @@
 baseURL: https://github.com/aterui/ecological-stats
-publishDir: docs
 languageCode: en-us
 theme: ramium
 title: Ramium
