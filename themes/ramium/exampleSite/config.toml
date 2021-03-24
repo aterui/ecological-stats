@@ -1,17 +1,14 @@
-baseURL = "https://github.com/aterui/ecological-stats"
-publishDir = "docs"
+baseURL = "https://example.com"
 #CanonifyURLs=true
 
 languageCode = "en-us"
 theme = "ramium"
 
-title = "test"
+title = "Ramium"
 disqusShortname = ""
 googleAnalytics = ""
 summaryLength = 40
 pluralizeListTitles = false
-draft: false # if set to true, changes will not be published
-ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 enableemoji = false
 
 [params]
