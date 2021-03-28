@@ -1,0 +1,69 @@
+---
+title: 'J1 Visa: Two Year Ruleの落とし穴'
+author: Akira Terui
+date: '2019-04-23'
+slug: []
+categories:
+  - us life
+tags:
+  - visa
+---
+
+## Summary
+
+現在J1ビザでアメリカに滞在している私は、8月から始まる新しい職に就くためにH-1Bビザに切り替える必要があった。しかし、この関係で非常にややこしい問題にぶち当たった。J1ビザに伴う帰国義務（2年ルール）に課されていないものと信じていたのだが、実は課されていることが判明し、H-1Bビザに申請できない状態に陥ってしまったのである。この経緯について、今後同じような問題に陥る人が少しでも減るよう情報をまとめておきたいと思う。なお、以下の記載内容は、筆者の個人的な経験をまとめたものにすぎません。間違いがないよう気をつけましたが、本記事の情報をもとに不利益を被ったとしても一切の責任を負いかねますのでご留意願います。
+
+## J1ビザの帰国義務（2年ルール）
+
+J1ビザとは、知識の国際交流を目的に創設されたアメリカのビザのカテゴリーであり、その取得の容易さから多くの研究者がアメリカに長期滞在する際に利用している。しかし、その容易さと引き換えに制約がある。それが今回の問題の発端となった2年ルール（Two-Year Home-Country Physical Presence Requirement）である（[参照]( https://travel.state.gov/content/travel/en/us-visas/study/exchange/waiver-of-the-exchange-visitor.html)）。このルールは、アメリカで経験を積んだのちに最低2年間は母国で過ごさない限り（もしくは帰国義務免除が承認されない限り）、Hビザやグリーンカードなど、特定のビザに申請できなくなるというものだ。ただし、このルールはJ1ビザで渡航している人すべてに課されているわけではなく、以下の条件のいずれかを満たした人に課されるとされている（アメリカ国務省のWEBページにより；[参照]( https://travel.state.gov/content/travel/en/us-visas/study/exchange/waiver-of-the-exchange-visitor/eligibility.html)）。
+
+>* Government funded Exchange Program - You participated in a program funded in whole or in part by a U.S. government agency, your home country’s government, or an international organization that received funding from the U.S. government or your home country’s government.
+>* Specialized Knowledge or Skill – You participated in a program involving an area of study or field of specialized knowledge designated as necessary for further development of your home country and appears on the Exchange Visitor Skills List for your home country.
+>* Graduate Medical Education/Training - You participated in a program to receive graduate medical education or training.
+
+多くの研究者に関係するのは、一つ目のFunding sourceの部分だろう。J1プログラムのうち、少しでも政府系予算（母国もしくはアメリカ政府）によって補助を受けている場合はこのルールに課される。しかし、この政府系予算の定義はあいまいであり、上で引用した記述以上の説明はない。このため、多くの日本人研究者が利用している学術振興会特別研究員（学振PD）や海外特別研究員（海外学振）がこのルールに該当するかどうかは、この記述を見る限りグレーである。しかし、実際には２年ルールが課されているケースが多い。
+
+## 適用？それとも非適用？
+
+２年ルールに課されているかどうかの「仮決定(preliminary endorsement)」については、ビザスタンプおよびDS2019の左下部分に書かれている。これは、ビザスタンプ発行のインタビューの際に、在日アメリカ大使館の大使の方が決定して記しているもののようだ。例えば、私のビザスタンプには次のように書かれている；
+
+> BEARER IS NOT SUBJECT TO SECTION 212(E) TWO YEAR RULE DOES NOT APPLY
+
+これに対応する形で、DS2019の左下の部分にも、次の記述のところにチェックマークがついている；
+
+> Not subject to two-year residence requirement
+
+これを見る限り私は”2年ルールに適用されていない”と読むことができる。しかし、実はここに大きな落とし穴が潜んでいる。DS2019をよく見ると、左下に小さくこう書いてある；
+
+> THE US DEPARTMENT OF STATE RESERVES THE RIGHT TO MAKE FINAL DETERMINATION REGARDING 212(e)
+
+この言葉の意味するところは「アメリカ国務省（THE US DEPARTMENT OF STATE）が2年ルールに適用されるかどうかに関する最終決定権をもっている」というものだ。つまり、ビザスタンプおよびDS2019になんと記載されていようと、アメリカ国務省が「2年ルール適用」といえば適用になる。そのため、**ビザスタンプ/DS2019に非適用と書かれていても2年ルールが適用されており、Hビザやグリーンカードの申請が却下される可能性があることを意味している（その逆もしかり）**。
+　正式な証明を得るためには、**Advisory Opinionという手段を通してアメリカ国務省に直接問い合わせる必要**があり、このプロセスだけで4-6週かかるとされている（2019年4月22日現在；[参照](https://travel.state.gov/content/travel/en/us-visas/visa-information-resources/advisory-opinions.html)）。Advisory Opinionを通じて得られるレターが、Hビザやグリーンカード申請の際の根拠資料として提出できるようである（※１）。
+
+## 帰国義務免除申請へ
+
+前述のとおり、私のビザ関係の書類には2年ルール非適用であるとする記述があった。しかし、海外学振の研究員として渡航していることを顧みると、いささか不安だったので、たまたま飲み会の席で同席した先輩にこの話をしてみた。その結果、驚くべき返答が返ってきた。**その方は2年ルール非適用と書かれていたにも関わらず、Advisory Opinionを通して問い合わせたところ「適用」という回答**がなされたというのだ。ネット上で調べたところ、ほかの国の人でも同様のケースが散見された。また、Wayne State Universityの国際部署のWEBページには（[参照](https://oiss.wayne.edu/international/requirement-status)）、このPreliminary endorsementの記載がエラーの場合があることが書かれている。もし本当に適用されているとすれば、帰国義務免除の手続きを踏まなければHビザに申請できない。
+　すっかり非適用と思っていた私はパニックに陥った。なぜなら、帰国義務免除の過程は早くて2-6か月かかるといわれているのだが、この話を聞いた時点（3月29日）で新しい職のStart date（8月1日）まで4か月しか残されていなかったからだ。いろいろオプションを考えたが、大学の国際担当部署の人とも相談し、免除申請をすることにした。やはりFunding sourceを考えると、適用されていると考えるほうが妥当だろうという結論に至ったからである。はたして帰国義務免除は間に合うのだろうか。この問題によって職を失ったという話も散見される。今後の人ために、以下に免除申請のタイムラインを順次アップしていこうと思う。
+
+* 2019/4/9　アメリカ国務省（DS3035など）に書類発送
+* 2019/4/9　在米日本大使館（NOSのリクエスト）に書類発送
+* 2019/4/10　アメリカ国務省・日本大使館に書類が届く（FEDEXのNotification）
+* 2019/4/11　Waiver申請料がCashされる（2019/4/23確認）
+* 2019/4/24　J1 Waiver OnlineでNOSが"Received"となる
+* 2019/4/25　J1 Waiver OnlineでDS3035などが"Received"となる
+* 2019/4/25　J1 Waiver Onlineのステータスが"Pending"となる
+* 2019/5/15　J1 Waiver Onlineのステータスが"Favorable Recommendation"となる
+* 2019/5/20　"Favorable Recommendation"の写しが書面で届く
+* 2019/5/24　USCISから"I-797C"が書面で届く（DOSからのレターの受領届）
+* 2019/6/20　USCISからJ1 waiverのFinal Approval"I-797"が書面で届く（これにて手続き終了）
+
+## 学振渡航者の適用率
+
+今回の問題を受けて、学振の予算で渡航している人のうち、どれだけの人が「非適用」のPreliminary endorsementを受けているのか気になりTwitterで集計をとった。その結果、私も入れて29名分の情報が集まり、そのうち9名が非適用とされていた。しかし、JSPSの予算で渡航した場合、ビザスタンプ/DS2019の記載にかかわらず2年ルール適用と見たほうが良いのだろう。
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/%E6%8B%A1%E6%95%A3%E5%B8%8C%E6%9C%9B?src=hash&amp;ref_src=twsrc%5Etfw">#拡散希望</a>　海外学振/学振PDで渡米されている方に質問です。あなたのJ1ビザスタンプ/DS2019においてTWO YEAR RULE 212(e)は適用されていますか？なお、集計結果について、今後のJ1ビザ取得者のためにブログポストなどで共有することについて同意いただける方のみ投票をお願いします。</p>&mdash; Akira Terui (@m_laevis) <a href="https://twitter.com/m_laevis/status/1112553982759591938?ref_src=twsrc%5Etfw">April 1, 2019</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+## 脚注
+
+※1　もちろん、Fundingやその他条件を顧みても非適用であることが明らかで、ビザスタンプ/DS2019にも非適用と記載されているのであれば、そのままHビザなどに申請してもよいのだろう。あくまで自己責任ではあるが。
