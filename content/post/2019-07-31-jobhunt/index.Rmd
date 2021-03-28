@@ -1,0 +1,56 @@
+---
+title: 海外で研究職を探す：ポスドク応募編
+author: ''
+date: '2019-07-31'
+slug: jobhunt
+categories:
+  - academic
+tags:
+  - job hunt
+---
+
+## Summary
+
+立志編につづく、海外ポスドクポジションへの応募に関する記事。フェローシップと通常の募集へ応募したときの経験を書いていきたい。
+
+## 応募先の探し方
+
+海外での研究場所を探す場合、日本人は海外学振制度を利用していく場合が多いだろう。しかし、これはそれなりに競争率が高いので、これだけでは実現できないことも多い。そこで、海外学振への応募に加え、雇われポスドク（PIのもつグラントで雇ってもらう）のクチでもポジションを探すことにした。
+　上記二つのアプローチでは、とるべき行動が大きく異なっていた。フェローシップの受け入れ先探しでは、自分が働きたいと思うラボのPIと国際学会などで話し、面識を作っておくことが大事だろう。私の場合、かねてより論文を読んでいた研究グループのPIが招待講演でたまたま来日する機会があり、その際に面識を作ることができた。いったん面識ができ、かつ人格的に問題がないことがわかれば、（よっぽど変なことをしない限り）受け入れを断られることはまずないだろう。なぜなら、予算として一番かさむのは人件費なので、その部分を持ってきてくれるポスドクは**居て得はあっても損はないからだ**。もし学振DCなどの予算を持っている人であれば、将来受け入れ先になってくれそうなPIに自分から連絡し、博士課程在学中に短期滞在などをしておくのもいいのだろう。
+
+一方、雇われポスドクのクチを探す場合は、自分で積極的にポスティングを探す必要があった。私が北海道大学でポスドクをしていたころ、スペインから着任した新しい助教の方がおり、彼がいろいろアドバイスをくれた。その時の情報を整理すると、生態学分野では概ね以下の三つの情報ソースがあると思われる。（１）[ECOLOG](https://www.esa.org/wp-content/uploads/2012/12/ecolog-l.html "ECOLOG")：アメリカ生態学会のML。メールがアーカイブされているので、過去にさかのぼって探すことができる。時期を問わず、ポスドクの募集が行きかっているので、ここは随時チェックしたほうがいい（のちのエントリーで書く予定のテニュアトラックポジションの募集も多い）。（２）学会のJOB BOARD：大体の学会では、公募に関する情報を載せる掲示板が用意されている。自分の分野に近い学会であれば、興味にあうポジションも探しやすい。（３）個人のツテ：個人のツテを通じて回ってくることも多い。ただし、これはすでに海外とのコネが強い人に限られる術だろう。
+
+## 応募書類の準備
+
+雇われポスドクのポジションを探す場合、応募先にあたりをつけて応募するぞ！となるのだが、ここでもう一度壁にあたった。募集要項を見ると、CV（履歴書）、Cover Letter、References（推薦者）の提出が求められる。CVとReferencesはまだいい。しかしCover Letterには何を書けばいいのか皆目見当がつかない。
+
+Google大先生に聞くと、実は結構な量のカバーレターの例が出てくる（cover letter, postdoc, example, ecologyなどでググる）。例を見ていくと、多くのものは以下のポイントを押さえているようだ。（１）まず自己紹介し、アプライ先の研究プロジェクトに興味があること、自分の能力がマッチしていることを端的に記す。（２）つづいて、なぜ自分がマッチしているのかを、スキルや経験を上げながら具体的に説明する。この際、これらのスキルを得た経緯（博士課程の中で、ポスドクの中で、TAをしながら、などなど）に触れておくと自然に見える。（３）最後に、チームワーク力にも言及しておくとなおよいようだ。
+　
+以下に、実際に自分のつかったカバーレターを例として置いておこうと思う。
+
+> Dear Prof. XXX
+
+> I saw an advertisement of postdoctoral position at your laboratory on ECOLOG-L, and I wish to apply for the postdoctoral position. I have been trained as a freshwater ecologist, but I am very interested in how individual variation has repercussions on ecosystem-level processes. My long-term career goal is to be an independent researcher in the study of how individual-level phenotypic variation has repercussions on population, community, and ecosystem-level processes. Therefore, I believe this position would provide an excellent opportunity for me to continue building on my experience and pursuing my passion for ecology. After completing the postdoctoral period, I plan to be back in Japan and would like to contribute to maintaining international collaborations between Asia and other parts of the world as a researcher.
+
+>In my Ph.D program, I have worked on riverine metapopulation structure and dynamics of the endangered freshwater pearl mussel, Margaritifera laevis, with emphasis on dispersal asymmetry. I found that upstream subpopulations were disproportionately important as immigrant sources due to downstream-biased dispersal. Through this experience, I have developed a strong background for stream ecology and analytical tools such as hierarchical Bayesian modelling (e.g. JAGS with R). This skill can be applicable to a variety of issues, including spatial and time-series data analyses.
+
+> After completing the Ph.D program, I have studied how anthropogenic impacts modify land-aquatic linkages in Japanese braided rivers. The major finding was that riverine eutrophication mediates terrestrial ecosystem function through influencing the amount of spatial subsidies (i.e., emergence of aquatic insects). During the course of the study, I have gained knowledge on stable isotope analysis and related ecological modelling (e.g., Bayesian mixing model). I believe these backgrounds make me a valuable addition to your research team.
+
+>I am also collaborating with scientists in other fields, using long-term monitoring data sets. This includes 1) long-term riverine fish population dynamics (collaboration with XXX) and 2) 9-year vegetation dynamics in Mongolian grasslands (collaboration with XXX). In these collaborations, I am in charge of analyzing the data sets with Bayesian state-space modelling.
+
+> Enclosed are my CV, publication record and contact information for two references. I consider myself being a highly self-motivated scientist, with the ability to coordinate with and organize multidisciplinary teamwork. I would be very grateful if you could kindly find time to review my attached CV and reply.
+
+>Sincerely yours,
+Akira Terui
+
+## インタビュー
+
+雇われポスドクの場合、書類審査を通過するとインタビューがある。これは英会話を苦手とする日本人にとって最難関かもしれない。
+
+2016年、その年の海外学振のアプライを終え、ふう、と一息ついたところだったが、ドイツからインタビューをしたいという旨のメールが届いた。15分ほどのプレゼンをして質疑応答に答えるという内容のSkypeインタビューだったのだが、このインタビューはこれでもか、というくらい失敗したのを覚えている。そもそも、全く準備不足で、意思疎通があまりうまくいかなかった（周りに聞くと、インタビューの仕様はPIに一任されているので、何をするかは多種多様であるようだ）。ちなみに、こうしたインタビューでは最後に「Do you have any questions?」と聞かれるのが恒例で、ここで何も聞かないのは**完全にアウト**である。ここをないがしろにしていた私は、本番中にパニック気味になり、「フィールドはどれくらい近いんですか？」と聞いて失笑された（失笑されるほどでもないと思うのだが。）。
+
+　私のインタビュー経験はこの一度きりだったので、あまり一般化して話をすることはできない。しかし、アプライ先の仕事内容（これから、これまで）をしっかりと把握し、会話の種を仕込んでおくことはどこへ行っても大事だと思う。インタビューでは、スキルセットや業績を確認するのではなく、人となりがどんなものかを見たいと思っているはず、、、である。
+
+## 事の顛末
+
+その後もアプライを続け、次はフィンランドのポジションのインタビューに呼ばれることになった。しかし、同時期に海外学振の採用内定通知が届き、結局この制度を利用して渡米することとなった。最終的には、雇われポスドクのルートで仕事を得るには至らなかったが、この時の経験もまた、テニュアトラックポジションの応募書類の準備に大いに役立ったと思う。次は、海外（アメリカ）でのポスドク環境のメリット、デメリットについて書いていきたい。
