@@ -1,49 +1,34 @@
+theme: "hugo-PaperMod"
 baseURL: https://ecological-stats.netlify.app
-languageCode: en-us
-theme: ramium
+languageCode: ja
 title: ECOSTATS
-disqusShortname: ''
-googleAnalytics: ''
-summaryLength: 40
-pluralizeListTitles: no
-enableemoji: no
+
 params:
-  adsense: ''
-  description: A website about R and JAGS
-  githubProfile: aterui/
-  googleSearch: ''
-  math: no
-  paginatePostsPerPage: 5
-  paginateTagsPerPage: 6
-  sectionsInHome: 5
-  showDate: yes
-  tagsInHome: 40
-taxonomies:
-  tag: tags
-markup:
-  goldmark:
-    renderer:
-      unsafe: yes
+    env: production
+    author: Akira Terui
+    ShowShareButtons: true
+    homeInfoParams:
+        Title: About
+        Content: Can be Info, links, about...
+    
+    socialIcons:
+        - name: github
+          url: "https://github.com/aterui"
+        - name: RSS
+          url: "index.xml"
+          
 menu:
-  main:
-    - name: Home
-      url: /
-      weight: 1
-    - identifier: blog
-      name: This Blog
-      weight: 2
-    - name: All Tags
-      parent: blog
-      url: /tags/
-      weight: 1
-    - name: All Sections
-      parent: blog
-      url: /sections/
-      weight: 2
-    - name: All Posts
-      parent: blog
-      url: /posts/
-      weight: 3
-    - name: About
-      url: /author/
-      weight: 3
+    main:
+        - identifier: archives
+          name: archive
+          url: /archives/
+          weight: 10
+        - identifier: categories
+          name: categories
+          url: /categories/
+          weight: 20
+        - identifier: tags
+          name: tags
+          url: /tags/
+          weight: 30
+
