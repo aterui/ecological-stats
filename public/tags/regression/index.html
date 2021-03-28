@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>regression | ECOSTATS</title>
+
+<meta name="keywords" content="" />
+<meta name="description" content="">
+<meta name="author" content="Akira Terui">
+<link rel="canonical" href="https://ecological-stats.netlify.app/tags/regression/" />
+<link href="/assets/css/stylesheet.min.d08f6c302eba3eaecd589684c093cecdfe7dfb8745a207401bd0583d3bb31837.css" integrity="sha256-0I9sMC66Pq7NWJaEwJPOzf59&#43;4dFogdAG9BYPTuzGDc=" rel="preload stylesheet"
+    as="style">
+
+<link rel="icon" href="https://ecological-stats.netlify.app/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ecological-stats.netlify.app/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ecological-stats.netlify.app/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ecological-stats.netlify.app/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ecological-stats.netlify.app/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.81.0" />
+<link rel="alternate" type="application/rss&#43;xml" href="https://ecological-stats.netlify.app/tags/regression/index.xml">
+
+
+<meta property="og:title" content="regression" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://ecological-stats.netlify.app/tags/regression/" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="regression"/>
+<meta name="twitter:description" content=""/>
+
+
+
+</head>
+
+<body class="list" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: #1d1e20;
+                --entry: #2e2e33;
+                --primary: rgba(255, 255, 255, 0.84);
+                --secondary: rgba(255, 255, 255, 0.56);
+                --tertiary: rgba(255, 255, 255, 0.16);
+                --content: rgba(255, 255, 255, 0.74);
+                --hljs-bg: #2e2e33;
+                --code-bg: #37383e;
+                --border: #333;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+    </style>
+
+</noscript>
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ecological-stats.netlify.app" accesskey="h" title="ECOSTATS (Alt + H)">ECOSTATS</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                
+                
+            </span>
+        </div>
+        <ul id="menu" onscroll="menu_on_scroll()">
+            <li>
+                <a href="https://ecological-stats.netlify.app/archives/" title="archive">
+                    <span>archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ecological-stats.netlify.app/categories/" title="categories">
+                    <span>categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ecological-stats.netlify.app/tags/" title="tags">
+                    <span>tags</span>
+                </a>
+            </li></ul>
+    </nav>
+</header>
+
+    <main class="main"> 
+<header class="page-header">
+
+  <h1>regression</h1>
+</header>
+
+
+
+
+
+<article class="post-entry tag-entry"> 
+
+  <header class="entry-header">
+    <h2>
+      回帰モデルの効果量
+    </h2>
+  </header>
+  <section class="entry-content">
+    <p>効果量としての標準化偏回帰係数Average predictive comparisonRで実装効果量としての標準化偏回帰係数線形回帰は、生態学の一般的な解析手法になっている。Rで多数の関数が用意されているため解析も容易で、回帰係数の95%信頼区間やp値などでその効果の有意性もカンタンに検討できる。一方、近頃では有意性だけでなく、「効果量（Effect size）」にも注目したほうがいいとの見方が広まっている。この効果量には様々な指標があるけれども、線形回帰の文脈でいえば標準化偏回帰係数がもっとも広く使われている。
+そもそも偏回帰係数の意味とは何かというと、対応する説明変数xが単位量（つまり1.0）だけ増えたときに、応答変数がどれだけ変化するかを示している。しかし、説明変数間で単位*1が違うと（例えばある変数はm単位で計られているのに対し、別の変数は㎝単位で計られている）、偏回帰係数はその単位の違いの影響を直に受けてしまう。そこで、それぞれの説明変数をそのばらつき（標準偏差SD）で割り（標準化）、それら標準化された説明変数に対する偏回帰係数を推定する。標準化された説明変数の単位はそろっているので、推定された標準化偏回帰係数も比較できるものになっているはず、というものだ。
+しかし、これには一つの問題がある。現代の一般的な統計モデルでは、効果量としての標準化偏回帰係数の解釈が「直感的ではない」のである。例としては以下のようなものがある。個体数のカウントデータを線形モデルで表現する場合、誤差構造としてはポアソン分布（あるいは負の二項分布）を用いることが多い。ポアソン分布の平均パラメータは負の値をとることができないので、Rではデフォルトで対数リンク関数が実装されている。この時、ポアソンモデルの偏回帰係数のなにがどう「直感的」でないのか、下の例を見ながら考えてみる。
+まず、下記のスクリプトで簡単な仮想データを作る。
+# simulated data set.seed(111)n_sample &lt;- 100x1 &lt;- rnorm(n_sample, mean = 10, sd = 1)x2 &lt;- rnorm(n_sample, mean = 10, sd = 3)X &lt;- model.matrix(~ x1 &#43; x2)b &lt;- c(0.1, 0.2, 0.2) # true parametersy &lt;- rpois(n_sample, exp(X %*% b)) # simulated yポアソン分布を仮定したGLMを当てはめる。
+\[\begin{equation}y_i \sim Pois(\lambda_i)\\ ln \lambda_i = \alpha &#43; \beta_1 x_{1,i} &#43; \beta_2 x_{2,i}\end{equation}\]# model fit; unstandardizedm &lt;- glm(y ~ x1 &#43; x2, family = poisson)coef(m)## (Intercept) x1 x2 ## 0....</p>
+  </section>
+  <footer class="entry-footer">
+
+March 28, 2021&nbsp;·&nbsp;Akira Terui
+</footer>
+  <a class="entry-link" aria-label="post link to 回帰モデルの効果量" href="https://ecological-stats.netlify.app/post/average-predictive-comparison/"></a>
+</article>
+
+    </main><footer class="footer">
+    <span>&copy; 2021 <a href="https://ecological-stats.netlify.app">ECOSTATS</a></span>
+    <span>&middot;</span>
+    <span>Powered by <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span>
+    <span>&middot;</span>
+    <span>Theme <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a></span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+
+
+<script>
+    window.onload = function () {
+        if (localStorage.getItem("menu-scroll-position")) {
+            document.getElementById('menu').scrollLeft = localStorage.getItem("menu-scroll-position");
+        }
+    }
+
+    function menu_on_scroll() {
+        localStorage.setItem("menu-scroll-position", document.getElementById('menu').scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+
+
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+</body>
+
+</html>

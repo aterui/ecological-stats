@@ -6,7 +6,8 @@ title: ECOSTATS
 params:
     env: production
     author: Akira Terui
-    ShowToc: true
+    ShowPostNavLinks: true
+    ShowToc: false
     ShowShareButtons: true
     homeInfoParams:
         Title: ECOSTATS
@@ -17,6 +18,22 @@ params:
           url: "https://github.com/aterui"
         - name: RSS
           url: "index.xml"
+          
+outputs:
+    home:
+        - HTML
+        - RSS
+        - JSON
+
+taxonomies:
+    category: categories
+    tag: tags
+    series: series
+
+markup:
+     goldmark:
+        renderer:
+            unsafe: true
           
 menu:
     main:
