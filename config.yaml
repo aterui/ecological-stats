@@ -18,6 +18,8 @@ params:
           url: "https://github.com/aterui"
         - name: RSS
           url: "index.xml"
+
+googleAnalytics: UA-175522371-2
           
 outputs:
     home:
