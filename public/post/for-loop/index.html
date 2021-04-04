@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Rでシミュレーション1 - for loop | ECOSTATS</title>
+
+<meta name="keywords" content="simulation, for loop" />
+<meta name="description" content="なぜシミュレーション？for loop集団動態モデルランダムネスを加えるモデルの拡張なぜシミュレーション？生態学に慣れ始めてきたころ、いわゆる「理論研究」と言われる類の論文も読み始めるようになった。最初は難解で何をしているのかわからなかったが、分かってくるととても力強いアプローチだなぁと感じるようになり、自分で作ってみたいと思うようになった。というのも、私はフィールドを中心に研究をしていたけれども、野外のデータはあまりにも雑多で、その解釈に困ることが多かったからだ。例えば、ある魚と別の魚が餌をめぐる競争関係に興味があり、「この二種は競争関係にあるので、一方の個体数が多い場所では、もう一方の個体数は少なくなる」という仮説を立てたとしよう。野外で両種の個体数の間に負の相関が認められたとしても、「おお仮説通りのパターンだ、競争に違いない！」と単純に喜ぶことはできない。同じパターンを生み出す仕組みがあまりにもたくさんあるからだ（両者の好きな環境が全く異なるだけかもしれない）。
+こうした理由から、自分がフィールドで集めたデータをもとに論文を書くとき、（特にDiscussionで）もどかしい思いをする。思いっきり「これだ！」と断言したいのに、あれやこれやと言い訳しなければならないからだ。実験で検証可能な仮説ならば、実験するに越したことはない。しかし、見たい現象が生態系スケールとかになってくると、実験などほぼ不可能だ。できたとしても億単位の研究費が必要になる。
+そんなとき、シミュレーションが役に立つ。ある仕組みをこちらで勝手に想定し、そこから導かれるパターンがどんなものかを見るのがシミュレーションだ（生態学の数理モデルが全般的にそうですが）。つまり、観察されたパターンから仕組みを推論する統計モデリングの全く逆のことをするといってもいい（Figure 1）。興味のある仕組み以外を排除あるいはコントロールできるので、その仕組みがどんな時にどんなパターンを生み出すのか知ることができる。
+Figure 1: Conceptual diagram for the roles of theoretical and statistical models. Theoretical models (generally) predict patterns under certain mechanisms (and assumptions) while statistical models infer mechanisms behind observed patternsと、ここまでは論文を読んでいれば納得できるのだが、いかんせんどうやってスクリプトを書けばいいのかわからない…というのが学生のころの悩みだった。統計解析のリソースはオンラインにかなり落ちているので自分でいくらでも勉強できたが、シミュレーションモデルは本当にスクリプトのリソースが少ない。あったとしても、これからやろうとしている人向けには書かれていない。それが今回の（たぶんシリーズ的に）書こうと思っているポストのモチベーション。
+for loopこまごましたことはあるのだが、まずはfor構文をつかって簡単なシミュレーションモデルを作ってしまおう。for構文とはなんぞや、という人もいるかもしれないので、ここで簡単に説明しておく。端的にいうと、for構文を使うと、コンピュータが同じ作業を繰り返しやってくれる。for(i in 1:3) { XXX }という形で書くのだが、これはiがイテレータと呼ばれるもので、このスクリプトで言えば、「XXXという作業を1から3まで回してほしい」と指令している。これだとわかりにくいので、下の例をみてみよう。
+# create a vector with 1, 2, 3y &lt;- NULLx &lt;- 1:3for(i in 1:3) {y[i] &lt;- x[i] * 2}ここではyとxというオブジェクトを作り、xのほうに1から3の値を代入している。やりたいことは、xの値をそれぞれ2倍することである。for構文の中身は次のように展開できる（下付き文字がイテレータに対応している）。">
+<meta name="author" content="Akira Terui">
+<link rel="canonical" href="https://ecological-stats.netlify.app/post/for-loop/" />
+<link href="/assets/css/stylesheet.min.d08f6c302eba3eaecd589684c093cecdfe7dfb8745a207401bd0583d3bb31837.css" integrity="sha256-0I9sMC66Pq7NWJaEwJPOzf59&#43;4dFogdAG9BYPTuzGDc=" rel="preload stylesheet"
+    as="style">
+
+<link rel="icon" href="https://ecological-stats.netlify.app/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ecological-stats.netlify.app/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ecological-stats.netlify.app/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ecological-stats.netlify.app/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ecological-stats.netlify.app/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.81.0" />
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-175522371-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<meta property="og:title" content="Rでシミュレーション1 - for loop" />
+<meta property="og:description" content="なぜシミュレーション？for loop集団動態モデルランダムネスを加えるモデルの拡張なぜシミュレーション？生態学に慣れ始めてきたころ、いわゆる「理論研究」と言われる類の論文も読み始めるようになった。最初は難解で何をしているのかわからなかったが、分かってくるととても力強いアプローチだなぁと感じるようになり、自分で作ってみたいと思うようになった。というのも、私はフィールドを中心に研究をしていたけれども、野外のデータはあまりにも雑多で、その解釈に困ることが多かったからだ。例えば、ある魚と別の魚が餌をめぐる競争関係に興味があり、「この二種は競争関係にあるので、一方の個体数が多い場所では、もう一方の個体数は少なくなる」という仮説を立てたとしよう。野外で両種の個体数の間に負の相関が認められたとしても、「おお仮説通りのパターンだ、競争に違いない！」と単純に喜ぶことはできない。同じパターンを生み出す仕組みがあまりにもたくさんあるからだ（両者の好きな環境が全く異なるだけかもしれない）。
+こうした理由から、自分がフィールドで集めたデータをもとに論文を書くとき、（特にDiscussionで）もどかしい思いをする。思いっきり「これだ！」と断言したいのに、あれやこれやと言い訳しなければならないからだ。実験で検証可能な仮説ならば、実験するに越したことはない。しかし、見たい現象が生態系スケールとかになってくると、実験などほぼ不可能だ。できたとしても億単位の研究費が必要になる。
+そんなとき、シミュレーションが役に立つ。ある仕組みをこちらで勝手に想定し、そこから導かれるパターンがどんなものかを見るのがシミュレーションだ（生態学の数理モデルが全般的にそうですが）。つまり、観察されたパターンから仕組みを推論する統計モデリングの全く逆のことをするといってもいい（Figure 1）。興味のある仕組み以外を排除あるいはコントロールできるので、その仕組みがどんな時にどんなパターンを生み出すのか知ることができる。
+Figure 1: Conceptual diagram for the roles of theoretical and statistical models. Theoretical models (generally) predict patterns under certain mechanisms (and assumptions) while statistical models infer mechanisms behind observed patternsと、ここまでは論文を読んでいれば納得できるのだが、いかんせんどうやってスクリプトを書けばいいのかわからない…というのが学生のころの悩みだった。統計解析のリソースはオンラインにかなり落ちているので自分でいくらでも勉強できたが、シミュレーションモデルは本当にスクリプトのリソースが少ない。あったとしても、これからやろうとしている人向けには書かれていない。それが今回の（たぶんシリーズ的に）書こうと思っているポストのモチベーション。
+for loopこまごましたことはあるのだが、まずはfor構文をつかって簡単なシミュレーションモデルを作ってしまおう。for構文とはなんぞや、という人もいるかもしれないので、ここで簡単に説明しておく。端的にいうと、for構文を使うと、コンピュータが同じ作業を繰り返しやってくれる。for(i in 1:3) { XXX }という形で書くのだが、これはiがイテレータと呼ばれるもので、このスクリプトで言えば、「XXXという作業を1から3まで回してほしい」と指令している。これだとわかりにくいので、下の例をみてみよう。
+# create a vector with 1, 2, 3y &lt;- NULLx &lt;- 1:3for(i in 1:3) {y[i] &lt;- x[i] * 2}ここではyとxというオブジェクトを作り、xのほうに1から3の値を代入している。やりたいことは、xの値をそれぞれ2倍することである。for構文の中身は次のように展開できる（下付き文字がイテレータに対応している）。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ecological-stats.netlify.app/post/for-loop/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-03-29T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-03-29T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Rでシミュレーション1 - for loop"/>
+<meta name="twitter:description" content="なぜシミュレーション？for loop集団動態モデルランダムネスを加えるモデルの拡張なぜシミュレーション？生態学に慣れ始めてきたころ、いわゆる「理論研究」と言われる類の論文も読み始めるようになった。最初は難解で何をしているのかわからなかったが、分かってくるととても力強いアプローチだなぁと感じるようになり、自分で作ってみたいと思うようになった。というのも、私はフィールドを中心に研究をしていたけれども、野外のデータはあまりにも雑多で、その解釈に困ることが多かったからだ。例えば、ある魚と別の魚が餌をめぐる競争関係に興味があり、「この二種は競争関係にあるので、一方の個体数が多い場所では、もう一方の個体数は少なくなる」という仮説を立てたとしよう。野外で両種の個体数の間に負の相関が認められたとしても、「おお仮説通りのパターンだ、競争に違いない！」と単純に喜ぶことはできない。同じパターンを生み出す仕組みがあまりにもたくさんあるからだ（両者の好きな環境が全く異なるだけかもしれない）。
+こうした理由から、自分がフィールドで集めたデータをもとに論文を書くとき、（特にDiscussionで）もどかしい思いをする。思いっきり「これだ！」と断言したいのに、あれやこれやと言い訳しなければならないからだ。実験で検証可能な仮説ならば、実験するに越したことはない。しかし、見たい現象が生態系スケールとかになってくると、実験などほぼ不可能だ。できたとしても億単位の研究費が必要になる。
+そんなとき、シミュレーションが役に立つ。ある仕組みをこちらで勝手に想定し、そこから導かれるパターンがどんなものかを見るのがシミュレーションだ（生態学の数理モデルが全般的にそうですが）。つまり、観察されたパターンから仕組みを推論する統計モデリングの全く逆のことをするといってもいい（Figure 1）。興味のある仕組み以外を排除あるいはコントロールできるので、その仕組みがどんな時にどんなパターンを生み出すのか知ることができる。
+Figure 1: Conceptual diagram for the roles of theoretical and statistical models. Theoretical models (generally) predict patterns under certain mechanisms (and assumptions) while statistical models infer mechanisms behind observed patternsと、ここまでは論文を読んでいれば納得できるのだが、いかんせんどうやってスクリプトを書けばいいのかわからない…というのが学生のころの悩みだった。統計解析のリソースはオンラインにかなり落ちているので自分でいくらでも勉強できたが、シミュレーションモデルは本当にスクリプトのリソースが少ない。あったとしても、これからやろうとしている人向けには書かれていない。それが今回の（たぶんシリーズ的に）書こうと思っているポストのモチベーション。
+for loopこまごましたことはあるのだが、まずはfor構文をつかって簡単なシミュレーションモデルを作ってしまおう。for構文とはなんぞや、という人もいるかもしれないので、ここで簡単に説明しておく。端的にいうと、for構文を使うと、コンピュータが同じ作業を繰り返しやってくれる。for(i in 1:3) { XXX }という形で書くのだが、これはiがイテレータと呼ばれるもので、このスクリプトで言えば、「XXXという作業を1から3まで回してほしい」と指令している。これだとわかりにくいので、下の例をみてみよう。
+# create a vector with 1, 2, 3y &lt;- NULLx &lt;- 1:3for(i in 1:3) {y[i] &lt;- x[i] * 2}ここではyとxというオブジェクトを作り、xのほうに1から3の値を代入している。やりたいことは、xの値をそれぞれ2倍することである。for構文の中身は次のように展開できる（下付き文字がイテレータに対応している）。"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Posts",
+      "item": "https://ecological-stats.netlify.app/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Rでシミュレーション1 - for loop",
+      "item": "https://ecological-stats.netlify.app/post/for-loop/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Rでシミュレーション1 - for loop",
+  "name": "Rでシミュレーション1 - for loop",
+  "description": "なぜシミュレーション？\rfor loop\r集団動態モデル\rランダムネスを加える\rモデルの拡張\r\r\rなぜシミュレーション？\r生態学に慣れ始めてきたころ、いわゆる「理論研究」と言われる類の論文も読み始めるようになった。最初は難解で何をしているのかわからなかったが、分かってくるととても力強いアプローチだなぁと感じるようになり、自分で作ってみたいと思うようになった。というのも、私はフィールドを中心に研究をしていたけれども、野外のデータはあまりにも雑多で、その解釈に困ることが多かったからだ。例えば、ある魚と別の魚が餌をめぐる競争関係に興味があり、「この二種は競争関係にあるので、一方の個体数が多い場所では、もう一方の個体数は少なくなる」という仮説を立てたとしよう。野外で両種の個体数の間に負の相関が認められたとしても、「おお仮説通りのパターンだ、競争に違いない！」と単純に喜ぶことはできない。同じパターンを生み出す仕組みがあまりにもたくさんあるからだ（両者の好きな環境が全く異なるだけかもしれない）。\nこうした理由から、自分がフィールドで集めたデータをもとに論文を書くとき、（特にDiscussionで）もどかしい思いをする。思いっきり「これだ！」と断言したいのに、あれやこれやと言い訳しなければならないからだ。実験で検証可能な仮説ならば、実験するに越したことはない。しかし、見たい現象が生態系スケールとかになってくると、実験などほぼ不可能だ。できたとしても億単位の研究費が必要になる。\nそんなとき、シミュレーションが役に立つ。ある仕組みをこちらで勝手に想定し、そこから導かれるパターンがどんなものかを見るのがシミュレーションだ（生態学の数理モデルが全般的にそうですが）。つまり、観察されたパターンから仕組みを推論する統計モデリングの全く逆のことをするといってもいい（Figure 1）。興味のある仕組み以外を排除あるいはコントロールできるので、その仕組みがどんな時にどんなパターンを生み出すのか知ることができる。\n\rFigure 1: Conceptual diagram for the roles of theoretical and statistical models. Theoretical models (generally) predict patterns under certain mechanisms (and assumptions) while statistical models infer mechanisms behind observed patterns\r\rと、ここまでは論文を読んでいれば納得できるのだが、いかんせんどうやってスクリプトを書けばいいのかわからない…というのが学生のころの悩みだった。統計解析のリソースはオンラインにかなり落ちているので自分でいくらでも勉強できたが、シミュレーションモデルは本当にスクリプトのリソースが少ない。あったとしても、これからやろうとしている人向けには書かれていない。それが今回の（たぶんシリーズ的に）書こうと思っているポストのモチベーション。\n\rfor loop\rこまごましたことはあるのだが、まずはfor構文をつかって簡単なシミュレーションモデルを作ってしまおう。for構文とはなんぞや、という人もいるかもしれないので、ここで簡単に説明しておく。端的にいうと、for構文を使うと、コンピュータが同じ作業を繰り返しやってくれる。for(i in 1:3) { XXX }という形で書くのだが、これはiがイテレータと呼ばれるもので、このスクリプトで言えば、「XXXという作業を1から3まで回してほしい」と指令している。これだとわかりにくいので、下の例をみてみよう。\n# create a vector with 1, 2, 3\ry \u0026lt;- NULL\rx \u0026lt;- 1:3\rfor(i in 1:3) {\ry[i] \u0026lt;- x[i] * 2\r}\rここではyとxというオブジェクトを作り、xのほうに1から3の値を代入している。やりたいことは、xの値をそれぞれ2倍することである。for構文の中身は次のように展開できる（下付き文字がイテレータに対応している）。",
+  "keywords": [
+    "simulation", "for loop"
+  ],
+  "articleBody": "\r\r\rなぜシミュレーション？\rfor loop\r集団動態モデル\rランダムネスを加える\rモデルの拡張\r\r\rなぜシミュレーション？\r生態学に慣れ始めてきたころ、いわゆる「理論研究」と言われる類の論文も読み始めるようになった。最初は難解で何をしているのかわからなかったが、分かってくるととても力強いアプローチだなぁと感じるようになり、自分で作ってみたいと思うようになった。というのも、私はフィールドを中心に研究をしていたけれども、野外のデータはあまりにも雑多で、その解釈に困ることが多かったからだ。例えば、ある魚と別の魚が餌をめぐる競争関係に興味があり、「この二種は競争関係にあるので、一方の個体数が多い場所では、もう一方の個体数は少なくなる」という仮説を立てたとしよう。野外で両種の個体数の間に負の相関が認められたとしても、「おお仮説通りのパターンだ、競争に違いない！」と単純に喜ぶことはできない。同じパターンを生み出す仕組みがあまりにもたくさんあるからだ（両者の好きな環境が全く異なるだけかもしれない）。\nこうした理由から、自分がフィールドで集めたデータをもとに論文を書くとき、（特にDiscussionで）もどかしい思いをする。思いっきり「これだ！」と断言したいのに、あれやこれやと言い訳しなければならないからだ。実験で検証可能な仮説ならば、実験するに越したことはない。しかし、見たい現象が生態系スケールとかになってくると、実験などほぼ不可能だ。できたとしても億単位の研究費が必要になる。\nそんなとき、シミュレーションが役に立つ。ある仕組みをこちらで勝手に想定し、そこから導かれるパターンがどんなものかを見るのがシミュレーションだ（生態学の数理モデルが全般的にそうですが）。つまり、観察されたパターンから仕組みを推論する統計モデリングの全く逆のことをするといってもいい（Figure 1）。興味のある仕組み以外を排除あるいはコントロールできるので、その仕組みがどんな時にどんなパターンを生み出すのか知ることができる。\n\rFigure 1: Conceptual diagram for the roles of theoretical and statistical models. Theoretical models (generally) predict patterns under certain mechanisms (and assumptions) while statistical models infer mechanisms behind observed patterns\r\rと、ここまでは論文を読んでいれば納得できるのだが、いかんせんどうやってスクリプトを書けばいいのかわからない…というのが学生のころの悩みだった。統計解析のリソースはオンラインにかなり落ちているので自分でいくらでも勉強できたが、シミュレーションモデルは本当にスクリプトのリソースが少ない。あったとしても、これからやろうとしている人向けには書かれていない。それが今回の（たぶんシリーズ的に）書こうと思っているポストのモチベーション。\n\rfor loop\rこまごましたことはあるのだが、まずはfor構文をつかって簡単なシミュレーションモデルを作ってしまおう。for構文とはなんぞや、という人もいるかもしれないので、ここで簡単に説明しておく。端的にいうと、for構文を使うと、コンピュータが同じ作業を繰り返しやってくれる。for(i in 1:3) { XXX }という形で書くのだが、これはiがイテレータと呼ばれるもので、このスクリプトで言えば、「XXXという作業を1から3まで回してほしい」と指令している。これだとわかりにくいので、下の例をみてみよう。\n# create a vector with 1, 2, 3\ry \rここではyとxというオブジェクトを作り、xのほうに1から3の値を代入している。やりたいことは、xの値をそれぞれ2倍することである。for構文の中身は次のように展開できる（下付き文字がイテレータに対応している）。\n\\[\ry_1 = 2x_1\\\\\ry_2 = 2x_2\\\\\ry_3 = 2x_3\\\\\r\\] yの中身を見てみると、それぞれ二倍されていることがわかる。\ny\r## [1] 2 4 6\rぶっちゃけこれだけならばy で同じことができてしまうのでfor構文を使う必要など全くないのだが、もっと複雑な作業を繰り返しさせたいときにはfor構文に頼る必要がある。\n\r集団動態モデル\rこのfor構文を使って、早速「シミュレーションモデル」を作ってみよう。ここでは集団サイズnが集団増加率lambdaにしたがって増えることを想定し、以下のようなモデルを考える。\n\\[\rn_{t+1} = \\lambda n_{t}\r\\]\n時間\\(t+1\\)における集団サイズ\\(n_{t+1}\\)は、その一つ手前（1年前とか）の集団サイズ\\(n_t\\)に\\(\\lambda\\)を掛け算したものになっている、とするモデル。これは先のfor構文を使うと次のように書くことができる。\nn \r最初の集団サイズがないと次がわからないので、n[1] として10個体からスタートすることを指定。また、集団増加率もlambda としてこちらで指定してあげている。これらがいわゆる「パラメータ」と呼ばれるもので、統計モデリングにおける推定対象になるものだ。シミュレーションでは、これらを任意の値に定めてやることで、例えば「集団増加率\\(\\lambda\\)が1.1ならば、10年後の個体数n[10]はどれくらいになっているだろう？」などのパターンを予測する。先の計算結果を出すと、以下のようになる。\nn\r## [1] 10.00000 11.00000 12.10000 13.31000 14.64100 16.10510 17.71561 19.48717\r## [9] 21.43589 23.57948 25.93742 28.53117 31.38428 34.52271 37.97498 41.77248\r## [17] 45.94973 50.54470 55.59917 61.15909\rx \r10個体からスタートし、集団増殖率が1.1ならば、10年後の個体数は24くらいになっていそうだ、というのがこの「シミュレーションモデル」にもとづく予測だ。\n\rランダムネスを加える\r先のモデルは「決定論的（Deterministic）」と言われるものである。式が決まっており、そこからの「逸脱」をまったく考えないモデル一般をさす（もっと厳密にいうと、期待値のみをモデル式として表現したもの）。しかし、そうしたことが現実的かというとそうではない。集団の減った増えたに関していえば、たまたま環境がよかった、悪かったなどの理由から、ある年は集団の増加率が1.1を上回ったり下回ったりすることもあるだろう。こうした「ランダムネス」を加えてあげると、より一層現実に即したシミュレーションモデルに近づく。\nランダムネスを表現するには、乱数生成の関数を使う。Rではさまざまな確率分布に基づく乱数生成のための関数が用意されており、それらを使えばランダムネスを比較的容易に表現することができる。例えば、正規分布に従う乱数\\(\\epsilon\\)を考えよう。以下のコードで平均0、標準偏差1に従う正規乱数1000個を瞬時に生み出すことができる。頻度分布を見るとざっくりと正規分布に従っていることがわかる。\neps \rこれをシミュレーションモデルに組み込むことで、ジグザグしながら増える集団動態を描くことができる。ただ足し算にすると、負の値をとるかもしれないので（個体数が負の値なのは変）、対数変換したモデル式を考える（元のスケールではすべて正の数になるので）。\\(\\epsilon\\)は標準偏差0.1とする。\n\\[\rln~n_{t+1} = ln~\\lambda + ln~n_t + \\epsilon_t\\\\\r\\epsilon_t \\sim N(0,0.1)\r\\]\n# log-transformed population size\rlog_n \rランダムネスを加えた場合、こんな感じになる。\nx \rランダムネスが加わるので、当然結果は毎回ことなる。この理由から、シミュレーションをするときは、同じ条件のもとで100回とか1000回とか繰り返しをとり、その平均的なパターンを見る。\n\rモデルの拡張\r今回作ったモデルは非常に単純なので、それなりの数を回してもそれほど計算時間が膨大になることはない。しかし、こうした集団が100あり、かつ50種類からなる群集を考え、などとなっていくと、計算量はべき乗的に増え、for構文で素直に繰り返していては永遠に終わらないシミュレーションモデルができてしまう。そのあたりがプログラムの書き手の腕の見せ所とも言えるかもしれない。気が向いたら空間構造を入れたシミュレーションモデルなんかも紹介したい。\n\r",
+  "wordCount" : "294",
+  "inLanguage": "en",
+  "datePublished": "2021-03-29T00:00:00Z",
+  "dateModified": "2021-03-29T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Akira Terui"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ecological-stats.netlify.app/post/for-loop/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "ECOSTATS",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ecological-stats.netlify.app/favicon.ico"
+    }
+  }
+}
+</script>
+
+
+
+
+
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: #1d1e20;
+                --entry: #2e2e33;
+                --primary: rgba(255, 255, 255, 0.84);
+                --secondary: rgba(255, 255, 255, 0.56);
+                --tertiary: rgba(255, 255, 255, 0.16);
+                --content: rgba(255, 255, 255, 0.74);
+                --hljs-bg: #2e2e33;
+                --code-bg: #37383e;
+                --border: #333;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+    </style>
+
+</noscript>
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ecological-stats.netlify.app" accesskey="h" title="ECOSTATS (Alt + H)">ECOSTATS</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                
+                
+            </span>
+        </div>
+        <ul id="menu" onscroll="menu_on_scroll()">
+            <li>
+                <a href="https://ecological-stats.netlify.app/archives/" title="archive">
+                    <span>archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ecological-stats.netlify.app/categories/" title="categories">
+                    <span>categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ecological-stats.netlify.app/tags/" title="tags">
+                    <span>tags</span>
+                </a>
+            </li></ul>
+    </nav>
+</header>
+
+    <main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+
+    <h1 class="post-title">
+      Rでシミュレーション1 - for loop
+    </h1>
+    <div class="post-meta">
+
+March 29, 2021&nbsp;·&nbsp;Akira Terui
+
+
+</div>
+  </header> 
+
+  <div class="post-content">
+
+<script src="https://ecological-stats.netlify.app/post/for-loop/index_files/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#なぜシミュレーション">なぜシミュレーション？</a></li>
+<li><a href="#for-loop">for loop</a></li>
+<li><a href="#集団動態モデル">集団動態モデル</a></li>
+<li><a href="#ランダムネスを加える">ランダムネスを加える</a></li>
+<li><a href="#モデルの拡張">モデルの拡張</a></li>
+</ul>
+</div>
+
+<div id="なぜシミュレーション" class="section level2">
+<h2>なぜシミュレーション？</h2>
+<p>生態学に慣れ始めてきたころ、いわゆる「理論研究」と言われる類の論文も読み始めるようになった。最初は難解で何をしているのかわからなかったが、分かってくるととても力強いアプローチだなぁと感じるようになり、自分で作ってみたいと思うようになった。というのも、私はフィールドを中心に研究をしていたけれども、野外のデータはあまりにも雑多で、その解釈に困ることが多かったからだ。例えば、ある魚と別の魚が餌をめぐる競争関係に興味があり、「この二種は競争関係にあるので、一方の個体数が多い場所では、もう一方の個体数は少なくなる」という仮説を立てたとしよう。野外で両種の個体数の間に負の相関が認められたとしても、「おお仮説通りのパターンだ、競争に違いない！」と単純に喜ぶことはできない。同じパターンを生み出す仕組みがあまりにもたくさんあるからだ（両者の好きな環境が全く異なるだけかもしれない）。</p>
+<p>こうした理由から、自分がフィールドで集めたデータをもとに論文を書くとき、（特にDiscussionで）もどかしい思いをする。思いっきり「これだ！」と断言したいのに、あれやこれやと言い訳しなければならないからだ。実験で検証可能な仮説ならば、実験するに越したことはない。しかし、見たい現象が生態系スケールとかになってくると、実験などほぼ不可能だ。できたとしても億単位の研究費が必要になる。</p>
+<p>そんなとき、シミュレーションが役に立つ。ある仕組みをこちらで勝手に想定し、そこから導かれるパターンがどんなものかを見るのがシミュレーションだ（生態学の数理モデルが全般的にそうですが）。つまり、観察されたパターンから仕組みを推論する統計モデリングの全く逆のことをするといってもいい（Figure <a href="#fig:fig-theory-obs">1</a>）。興味のある仕組み以外を排除あるいはコントロールできるので、その仕組みがどんな時にどんなパターンを生み出すのか知ることができる。</p>
+<div class="figure"><span id="fig:fig-theory-obs"></span>
+<img src="https://ecological-stats.netlify.app/post/for-loop/index_files/figure-html/fig-theory-obs-1.png" alt="Conceptual diagram for the roles of theoretical and statistical models. Theoretical models (generally) predict patterns under certain mechanisms (and assumptions) while statistical models infer mechanisms behind observed patterns" width="480" />
+<p class="caption">
+Figure 1: Conceptual diagram for the roles of theoretical and statistical models. Theoretical models (generally) predict patterns under certain mechanisms (and assumptions) while statistical models infer mechanisms behind observed patterns
+</p>
+</div>
+<p>と、ここまでは論文を読んでいれば納得できるのだが、いかんせんどうやってスクリプトを書けばいいのかわからない…というのが学生のころの悩みだった。統計解析のリソースはオンラインにかなり落ちているので自分でいくらでも勉強できたが、<strong>シミュレーションモデルは本当にスクリプトのリソースが少ない。</strong>あったとしても、これからやろうとしている人向けには書かれていない。それが今回の（たぶんシリーズ的に）書こうと思っているポストのモチベーション。</p>
+</div>
+<div id="for-loop" class="section level2">
+<h2>for loop</h2>
+<p>こまごましたことはあるのだが、まずは<code>for</code>構文をつかって簡単なシミュレーションモデルを作ってしまおう。<code>for</code>構文とはなんぞや、という人もいるかもしれないので、ここで簡単に説明しておく。端的にいうと、<code>for</code>構文を使うと、コンピュータが同じ作業を繰り返しやってくれる。<code>for(i in 1:3) { XXX }</code>という形で書くのだが、これは<code>i</code>がイテレータと呼ばれるもので、このスクリプトで言えば、「<code>XXX</code>という作業を1から3まで回してほしい」と指令している。これだとわかりにくいので、下の例をみてみよう。</p>
+<pre class="r"><code># create a vector with 1, 2, 3
+y &lt;- NULL
+x &lt;- 1:3
+
+for(i in 1:3) {
+  y[i] &lt;- x[i] * 2
+}</code></pre>
+<p>ここでは<code>y</code>と<code>x</code>というオブジェクトを作り、<code>x</code>のほうに1から3の値を代入している。やりたいことは、<code>x</code>の値をそれぞれ2倍することである。<code>for</code>構文の中身は次のように展開できる（下付き文字がイテレータに対応している）。</p>
+<p><span class="math display">\[
+y_1 = 2x_1\\
+y_2 = 2x_2\\
+y_3 = 2x_3\\
+\]</span> <code>y</code>の中身を見てみると、それぞれ二倍されていることがわかる。</p>
+<pre class="r"><code>y</code></pre>
+<pre><code>## [1] 2 4 6</code></pre>
+<p>ぶっちゃけこれだけならば<code>y &lt;- 2 * x</code>で同じことができてしまうので<code>for</code>構文を使う必要など全くないのだが、もっと複雑な作業を繰り返しさせたいときには<code>for</code>構文に頼る必要がある。</p>
+</div>
+<div id="集団動態モデル" class="section level2">
+<h2>集団動態モデル</h2>
+<p>この<code>for</code>構文を使って、早速「シミュレーションモデル」を作ってみよう。ここでは集団サイズ<code>n</code>が集団増加率<code>lambda</code>にしたがって増えることを想定し、以下のようなモデルを考える。</p>
+<p><span class="math display">\[
+n_{t+1} = \lambda n_{t}
+\]</span></p>
+<p>時間<span class="math inline">\(t+1\)</span>における集団サイズ<span class="math inline">\(n_{t+1}\)</span>は、その一つ手前（1年前とか）の集団サイズ<span class="math inline">\(n_t\)</span>に<span class="math inline">\(\lambda\)</span>を掛け算したものになっている、とするモデル。これは先の<code>for</code>構文を使うと次のように書くことができる。</p>
+<pre class="r"><code>n &lt;- NULL
+n[1] &lt;- 10 # initial population size
+lambda &lt;- 1.1
+
+for(t in 1:19) { # simulate 20 time steps
+  n[t + 1] &lt;- lambda * n[t]
+}</code></pre>
+<p>最初の集団サイズがないと次がわからないので、<code>n[1] &lt;- 10</code>として10個体からスタートすることを指定。また、集団増加率も<code>lambda &lt;- 1.1</code>としてこちらで指定してあげている。これらがいわゆる「パラメータ」と呼ばれるもので、統計モデリングにおける推定対象になるものだ。シミュレーションでは、これらを任意の値に定めてやることで、例えば「集団増加率<span class="math inline">\(\lambda\)</span>が1.1ならば、10年後の個体数<code>n[10]</code>はどれくらいになっているだろう？」などの<strong>パターン</strong>を予測する。先の計算結果を出すと、以下のようになる。</p>
+<pre class="r"><code>n</code></pre>
+<pre><code>##  [1] 10.00000 11.00000 12.10000 13.31000 14.64100 16.10510 17.71561 19.48717
+##  [9] 21.43589 23.57948 25.93742 28.53117 31.38428 34.52271 37.97498 41.77248
+## [17] 45.94973 50.54470 55.59917 61.15909</code></pre>
+<pre class="r"><code>x &lt;- 1:20
+plot(n ~ x,
+     ylab = &quot;Number of individuals&quot;,
+     xlab = &quot;Time step&quot;,
+     type = &quot;o&quot;)</code></pre>
+<p><img src="https://ecological-stats.netlify.app/post/for-loop/index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>10個体からスタートし、集団増殖率が1.1ならば、10年後の個体数は24くらいになっていそうだ、というのがこの「シミュレーションモデル」にもとづく予測だ。</p>
+</div>
+<div id="ランダムネスを加える" class="section level2">
+<h2>ランダムネスを加える</h2>
+<p>先のモデルは「決定論的（Deterministic）」と言われるものである。式が決まっており、そこからの「逸脱」をまったく考えないモデル一般をさす（もっと厳密にいうと、期待値のみをモデル式として表現したもの）。しかし、そうしたことが現実的かというとそうではない。集団の減った増えたに関していえば、たまたま環境がよかった、悪かったなどの理由から、ある年は集団の増加率が1.1を上回ったり下回ったりすることもあるだろう。こうした「ランダムネス」を加えてあげると、より一層現実に即したシミュレーションモデルに近づく。</p>
+<p>ランダムネスを表現するには、乱数生成の関数を使う。Rではさまざまな確率分布に基づく乱数生成のための関数が用意されており、それらを使えばランダムネスを比較的容易に表現することができる。例えば、正規分布に従う乱数<span class="math inline">\(\epsilon\)</span>を考えよう。以下のコードで平均0、標準偏差1に従う正規乱数1000個を瞬時に生み出すことができる。頻度分布を見るとざっくりと正規分布に従っていることがわかる。</p>
+<pre class="r"><code>eps &lt;- rnorm(n = 1000, mean = 0, sd = 1)
+
+hist(eps)</code></pre>
+<p><img src="https://ecological-stats.netlify.app/post/for-loop/index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>これをシミュレーションモデルに組み込むことで、ジグザグしながら増える集団動態を描くことができる。ただ足し算にすると、負の値をとるかもしれないので（個体数が負の値なのは変）、対数変換したモデル式を考える（元のスケールではすべて正の数になるので）。<span class="math inline">\(\epsilon\)</span>は標準偏差0.1とする。</p>
+<p><span class="math display">\[
+ln~n_{t+1} = ln~\lambda + ln~n_t + \epsilon_t\\
+\epsilon_t \sim N(0,0.1)
+\]</span></p>
+<pre class="r"><code># log-transformed population size
+log_n &lt;- NULL
+
+# parameters
+log_n[1] &lt;- log(10) # initial population size
+lambda &lt;- 1.1
+
+# epsilon
+eps &lt;- rnorm(n = 20, mean = 0, sd = 0.1)
+
+for(t in 1:19) { # simulate 20 time steps
+  log_n[t + 1] &lt;- log(lambda) + log_n[t] + eps[t]
+}
+
+# back-transform
+n &lt;- exp(log_n)</code></pre>
+<p>ランダムネスを加えた場合、こんな感じになる。</p>
+<pre class="r"><code>x &lt;- 1:20
+plot(n ~ x,
+     ylab = &quot;Number of individuals&quot;,
+     xlab = &quot;Time step&quot;,
+     type = &quot;o&quot;)</code></pre>
+<p><img src="https://ecological-stats.netlify.app/post/for-loop/index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>ランダムネスが加わるので、当然結果は毎回ことなる。この理由から、シミュレーションをするときは、同じ条件のもとで100回とか1000回とか繰り返しをとり、その平均的なパターンを見る。</p>
+</div>
+<div id="モデルの拡張" class="section level2">
+<h2>モデルの拡張</h2>
+<p>今回作ったモデルは非常に単純なので、それなりの数を回してもそれほど計算時間が膨大になることはない。しかし、こうした集団が100あり、かつ50種類からなる群集を考え、などとなっていくと、計算量はべき乗的に増え、<code>for</code>構文で素直に繰り返していては永遠に終わらないシミュレーションモデルができてしまう。そのあたりがプログラムの書き手の腕の見せ所とも言えるかもしれない。気が向いたら空間構造を入れたシミュレーションモデルなんかも紹介したい。</p>
+</div>
+
+</div>
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ecological-stats.netlify.app/tags/simulation/">simulation</a></li>
+      <li><a href="https://ecological-stats.netlify.app/tags/for-loop/">for loop</a></li>
+    </ul>
+    <nav class="paginav">
+      <a class="next" href="https://ecological-stats.netlify.app/post/average-predictive-comparison/">
+        <span class="title">Next Page »</span>
+        <br>
+        <span>回帰モデルの効果量</span>
+      </a>
+    </nav>
+
+
+
+
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Rでシミュレーション1 - for loop on twitter"
+        href="https://twitter.com/intent/tweet/?text=R%e3%81%a7%e3%82%b7%e3%83%9f%e3%83%a5%e3%83%ac%e3%83%bc%e3%82%b7%e3%83%a7%e3%83%b31%20-%20for%20loop&amp;url=https%3a%2f%2fecological-stats.netlify.app%2fpost%2ffor-loop%2f&amp;hashtags=simulation%2cforloop">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Rでシミュレーション1 - for loop on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fecological-stats.netlify.app%2fpost%2ffor-loop%2f&amp;title=R%e3%81%a7%e3%82%b7%e3%83%9f%e3%83%a5%e3%83%ac%e3%83%bc%e3%82%b7%e3%83%a7%e3%83%b31%20-%20for%20loop&amp;summary=R%e3%81%a7%e3%82%b7%e3%83%9f%e3%83%a5%e3%83%ac%e3%83%bc%e3%82%b7%e3%83%a7%e3%83%b31%20-%20for%20loop&amp;source=https%3a%2f%2fecological-stats.netlify.app%2fpost%2ffor-loop%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Rでシミュレーション1 - for loop on reddit"
+        href="https://reddit.com/submit?url=https%3a%2f%2fecological-stats.netlify.app%2fpost%2ffor-loop%2f&title=R%e3%81%a7%e3%82%b7%e3%83%9f%e3%83%a5%e3%83%ac%e3%83%bc%e3%82%b7%e3%83%a7%e3%83%b31%20-%20for%20loop">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Rでシミュレーション1 - for loop on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fecological-stats.netlify.app%2fpost%2ffor-loop%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Rでシミュレーション1 - for loop on whatsapp"
+        href="https://api.whatsapp.com/send?text=R%e3%81%a7%e3%82%b7%e3%83%9f%e3%83%a5%e3%83%ac%e3%83%bc%e3%82%b7%e3%83%a7%e3%83%b31%20-%20for%20loop%20-%20https%3a%2f%2fecological-stats.netlify.app%2fpost%2ffor-loop%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Rでシミュレーション1 - for loop on telegram"
+        href="https://telegram.me/share/url?text=R%e3%81%a7%e3%82%b7%e3%83%9f%e3%83%a5%e3%83%ac%e3%83%bc%e3%82%b7%e3%83%a7%e3%83%b31%20-%20for%20loop&amp;url=https%3a%2f%2fecological-stats.netlify.app%2fpost%2ffor-loop%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28">
+            <path
+                d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+  </footer>
+</article>
+    </main><footer class="footer">
+    <span>&copy; 2021 <a href="https://ecological-stats.netlify.app">ECOSTATS</a></span>
+    <span>&middot;</span>
+    <span>Powered by <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span>
+    <span>&middot;</span>
+    <span>Theme <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a></span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+
+
+<script defer src="/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js" integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5&#43;kdJvBz5iKbt6B5PJI="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<script>
+    window.onload = function () {
+        if (localStorage.getItem("menu-scroll-position")) {
+            document.getElementById('menu').scrollLeft = localStorage.getItem("menu-scroll-position");
+        }
+    }
+
+    function menu_on_scroll() {
+        localStorage.setItem("menu-scroll-position", document.getElementById('menu').scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+
+
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+</body>
+
+</html>

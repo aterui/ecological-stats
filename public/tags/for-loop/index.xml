@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>R on ECOSTATS</title>
-    <link>https://ecological-stats.netlify.app/categories/r/</link>
-    <description>Recent content in R on ECOSTATS</description>
+    <title>for loop on ECOSTATS</title>
+    <link>https://ecological-stats.netlify.app/tags/for-loop/</link>
+    <description>Recent content in for loop on ECOSTATS</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Mon, 29 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/categories/r/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 29 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/tags/for-loop/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Rでシミュレーション1 - for loop</title>
       <link>https://ecological-stats.netlify.app/post/for-loop/</link>
@@ -19,20 +19,6 @@
 Figure 1: Conceptual diagram for the roles of theoretical and statistical models. Theoretical models (generally) predict patterns under certain mechanisms (and assumptions) while statistical models infer mechanisms behind observed patternsと、ここまでは論文を読んでいれば納得できるのだが、いかんせんどうやってスクリプトを書けばいいのかわからない…というのが学生のころの悩みだった。統計解析のリソースはオンラインにかなり落ちているので自分でいくらでも勉強できたが、シミュレーションモデルは本当にスクリプトのリソースが少ない。あったとしても、これからやろうとしている人向けには書かれていない。それが今回の（たぶんシリーズ的に）書こうと思っているポストのモチベーション。
 for loopこまごましたことはあるのだが、まずはfor構文をつかって簡単なシミュレーションモデルを作ってしまおう。for構文とはなんぞや、という人もいるかもしれないので、ここで簡単に説明しておく。端的にいうと、for構文を使うと、コンピュータが同じ作業を繰り返しやってくれる。for(i in 1:3) { XXX }という形で書くのだが、これはiがイテレータと呼ばれるもので、このスクリプトで言えば、「XXXという作業を1から3まで回してほしい」と指令している。これだとわかりにくいので、下の例をみてみよう。
 # create a vector with 1, 2, 3y &amp;lt;- NULLx &amp;lt;- 1:3for(i in 1:3) {y[i] &amp;lt;- x[i] * 2}ここではyとxというオブジェクトを作り、xのほうに1から3の値を代入している。やりたいことは、xの値をそれぞれ2倍することである。for構文の中身は次のように展開できる（下付き文字がイテレータに対応している）。</description>
-    </item>
-    
-    <item>
-      <title>回帰モデルの効果量</title>
-      <link>https://ecological-stats.netlify.app/post/average-predictive-comparison/</link>
-      <pubDate>Sun, 28 Mar 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://ecological-stats.netlify.app/post/average-predictive-comparison/</guid>
-      <description>効果量としての標準化偏回帰係数Average predictive comparisonRで実装効果量としての標準化偏回帰係数線形回帰は、生態学の一般的な解析手法になっている。Rで多数の関数が用意されているため解析も容易で、回帰係数の95%信頼区間やp値などでその効果の有意性もカンタンに検討できる。一方、近頃では有意性だけでなく、「効果量（Effect size）」にも注目したほうがいいとの見方が広まっている。この効果量には様々な指標があるけれども、線形回帰の文脈でいえば標準化偏回帰係数がもっとも広く使われている。
-そもそも偏回帰係数の意味とは何かというと、対応する説明変数xが単位量（つまり1.0）だけ増えたときに、応答変数がどれだけ変化するかを示している。しかし、説明変数間で単位*1が違うと（例えばある変数はm単位で計られているのに対し、別の変数は㎝単位で計られている）、偏回帰係数はその単位の違いの影響を直に受けてしまう。そこで、それぞれの説明変数をそのばらつき（標準偏差SD）で割り（標準化）、それら標準化された説明変数に対する偏回帰係数を推定する。標準化された説明変数の単位はそろっているので、推定された標準化偏回帰係数も比較できるものになっているはず、というものだ。
-しかし、これには一つの問題がある。現代の一般的な統計モデルでは、効果量としての標準化偏回帰係数の解釈が「直感的ではない」のである。例としては以下のようなものがある。個体数のカウントデータを線形モデルで表現する場合、誤差構造としてはポアソン分布（あるいは負の二項分布）を用いることが多い。ポアソン分布の平均パラメータは負の値をとることができないので、Rではデフォルトで対数リンク関数が実装されている。この時、ポアソンモデルの偏回帰係数のなにがどう「直感的」でないのか、下の例を見ながら考えてみる。
-まず、下記のスクリプトで簡単な仮想データを作る。
-# simulated data set.seed(111)n_sample &amp;lt;- 100x1 &amp;lt;- rnorm(n_sample, mean = 10, sd = 1)x2 &amp;lt;- rnorm(n_sample, mean = 10, sd = 3)X &amp;lt;- model.matrix(~ x1 + x2)b &amp;lt;- c(0.1, 0.2, 0.2) # true parametersy &amp;lt;- rpois(n_sample, exp(X %*% b)) # simulated yポアソン分布を仮定したGLMを当てはめる。
-\[\begin{equation}y_i \sim Pois(\lambda_i)\\ ln \lambda_i = \alpha + \beta_1 x_{1,i} + \beta_2 x_{2,i}\end{equation}\]# model fit; unstandardizedm &amp;lt;- glm(y ~ x1 + x2, family = poisson)coef(m)## (Intercept) x1 x2 ## 0.</description>
     </item>
     
   </channel>
