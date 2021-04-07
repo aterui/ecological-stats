@@ -1,0 +1,54 @@
+theme: "hugo-PaperMod"
+baseURL: https://ecological-stats.netlify.app
+languageCode: ja
+title: ECOSTATS
+
+params:
+    env: production
+    author: Akira Terui
+    ShowPostNavLinks: true
+    ShowToc: false
+    ShowShareButtons: true
+    homeInfoParams:
+        Title: ECOSTATS
+        Content: RやJAGSの備忘録。管理者は生態学を専門にしているため、関連分野の情報が中心になります。そのほか、研究雑記など。このサイトに関する責任は全て管理者個人に帰すもので、所属機関ならびにその上位機構は内容について関知していません。なお、当サイトでは、第三者配信の広告サービス（[Googleアドセンス](https://www.google.com/adsense/start/)）を利用しています。このような広告配信事業者は、ユーザーの興味に応じた商品やサービスの広告を表示するため、当サイトや他サイトへのアクセスに関する情報 『Cookie』(氏名、住所、メール アドレス、電話番号は含まれません) を使用することがあります。
+        
+    socialIcons:
+        - name: github
+          url: "https://github.com/aterui"
+        - name: RSS
+          url: "index.xml"
+
+googleAnalytics: UA-175522371-2
+          
+outputs:
+    home:
+        - HTML
+        - RSS
+        - JSON
+
+taxonomies:
+    category: categories
+    tag: tags
+    series: series
+
+markup:
+     goldmark:
+        renderer:
+            unsafe: true
+          
+menu:
+    main:
+        - identifier: archives
+          name: archive
+          url: /archives/
+          weight: 10
+        - identifier: categories
+          name: categories
+          url: /categories/
+          weight: 20
+        - identifier: tags
+          name: tags
+          url: /tags/
+          weight: 30
+
