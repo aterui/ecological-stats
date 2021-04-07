@@ -52,3 +52,5 @@ menu:
           url: /tags/
           weight: 30
 
+permalinks:
+    post: /:year/:month/:day/:slug/
