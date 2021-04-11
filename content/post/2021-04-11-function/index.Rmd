@@ -1,0 +1,272 @@
+---
+title: Rでシミュレーション2 - function
+author: ''
+date: '2021-04-11'
+slug: function
+output:
+  blogdown::html_page:
+    toc: true
+categories:
+  - R
+tags:
+  - function
+  - simulation
+---
+
+[前回](/2021/03/29/for-loop/)は`for`構文を使った至極簡単なシミュレーションモデルを作ってみた。しかし、中には「こんなめんどくさいスクリプトを毎回書くのか。。。？」などと思われた方もいると思う。**そんなことはないので安心してほしい。**一つのまとまった作業を関数化することで、スクリプトの量をかなり減らすことができる。
+
+## `function`の導入
+
+`function`関数を使うことで一度書いたモデルを使いまわすことができる。最初からシミュレーションモデルを関数化すると説明が煩雑になってしまうので、まずは変動係数CVを推定する関数`mycv` なるものを作ってみよう。まずは正規分布に従う乱数を`rnorm`を使って生成する。
+
+```{r}
+
+# 100 random values following a normal distribution
+set.seed(123) # for reproducibility
+y <- rnorm(n = 100, mean = 50, sd = 25)
+
+# show the first 10 elements
+print(y[1:10])
+```
+
+変動係数は以下のスクリプトで推定できる。
+
+```{r}
+
+cv <- sd(y) / mean(y)
+print(cv)
+```
+
+しかし、なんだか毎回二つの関数`sd` と`mean` を組み合わせて変動係数を計算するのは面倒くさい。なので、これらの作業を一挙にやってくれる関数をつくってみよう。
+
+```{r}
+
+mycv <- function(x) {
+  cv <- sd(x) / mean(x)
+  return(cv)
+}
+```
+
+`x` という引数に基づいて、SDを平均で割るという作業を自動的にやってくれる関数`mycv` を定義している。`function()` のカッコの中に引数として使いたい変数をいれておく。そうすると、そこに使ってほしい値をぶち込むと、関数内で定義された作業を自動的に行ってくれる。`return` のところでは、何を計算結果（返り値）として返してほしいかを指定している。早速`mycv` を使ってみる。以下では、`x = y` とし、関数内の`x` に`y` を「代入」している。
+
+```{r}
+
+mycv(x = y)
+```
+
+この関数はとてもシンプルな計算をまとめているが、もっと複雑な内容を関数化することも可能だ。例えば、CVだけでなく、平均とSDも返す関数にしたいならば：
+
+```{r}
+
+mycv <- function(x) {
+  
+  mu <- mean(x)
+  sigma <- sd(x)
+  cv <- sd(x) / mean(x)
+  
+  return(list(mu = mu,
+              sigma = sigma,
+              cv = cv)
+         )
+}
+
+```
+
+複数の返り値を持たせてやるときに気を付けなければならないのは、`return()` の中身をリスト化しなければならないことだ。そうしないと、関数自体は定義できても、その関数を使う際にエラーがでてしまう。複数の返り値がある場合、それぞれの要素に`$`でアクセスできる。
+
+```{r}
+
+estimate <- mycv(x = y)
+
+estimate
+
+estimate$cv
+
+estimate$mu
+
+estimate$sigma
+
+```
+
+関数化することはできたが、この簡単な関数にも実は落とし穴がある。次のデータをこの関数にいれてみよう。
+
+```{r}
+
+z <- rnorm(100, mean = 50, sd = 25)
+z[sample(1:100, size = 10)] <- NA 
+
+```
+
+上のデータでは、先ほどと同じように100個の正規分布に従う乱数を使っているが、そのうちの10個が`NA`に置き換えられている。このデータを`mycv`に渡すと返り値がすべて`NA`になってしまう。
+
+```{r}
+
+mycv(x = z)
+
+```
+
+これはもともと`mean()`と`sd()`が`NA`入りのデータに対応していないからである（`na.rm = TRUE`とすれば取り除いてくれるが）。`NA`がある場合には、事前に`NA`を入力データから消去する処理を加えた関数にしてみよう。
+
+```{r}
+
+mycv <- function(x) {
+  
+  # remove NAs if any
+  if(any(is.na(x))) {
+    x <- na.omit(x)
+    message("NA detected in the data; removed before the estimation")
+  }
+  
+  mu <- mean(x)
+  sigma <- sd(x)
+  cv <- sd(x) / mean(x)
+  
+  return(list(mu = mu,
+              sigma = sigma,
+              cv = cv)
+         )
+}
+
+```
+
+`if()`は、カッコ内の条件式が`TRUE`である場合にのみ、`{}`内の作業を実行するよう指定する関数である。この場合、`any(is.na(x))`とすることで、`x`に一つでも`NA`がある場合にはそれを取り除く作業を行うよう指定している。この際に、`NA`が取り除かれたことを明示的に解析者に示すために、`message("NA detected in the data; removed before the estimation")`というメッセージを表示するように指定している。もう一度`z`を代入してみる。
+
+```{r}
+
+# z contains NAs in the data
+mycv(x = z)
+
+```
+
+`NA`が取り除かれたことを示すメッセージとともに、残されたデータから推定された平均、SD、CVが返されている。データに`NA`がない場合、このメッセージは表示されない。
+
+```{r}
+
+# y does not contain NAs in the data
+mycv(x = y)
+
+```
+
+## シミュレーションを関数化
+
+では`funcion`を使って、[前回](/2021/03/29/for-loop/)つくったシミュレーションモデルを関数化してみる。
+
+```{r}
+
+sim_geomodel <- function(n_step,
+                         lambda,
+                         sd_eps,
+                         n1 = 10) {
+  
+  log_n <- NULL
+  log_n[1] <- log(n1)
+  eps <- rnorm(n = n_step, mean = 0, sd = sd_eps)
+  
+  for(t in 1:(n_step - 1)) {
+    log_n[t + 1] <- log(lambda) + log_n[t] + eps[t]
+  }
+  
+  n <- exp(log_n)
+  
+  df_dynamics <- dplyr::tibble(n_step = 1:n_step,
+                               n = n)
+  
+  return(df_dynamics)
+}
+
+```
+
+モデルスクリプトを`function`内に移しただけだが、大きく異なる点がある。`n1`、`lambda`、`n_step`、および`sd_eps`を関数の引数（使用者が任意のインプットを指定できる）として定義することで、様々なシナリオのもとでシミュレートしやすくなっている。ここでは`n1 = 10`としているが、「この引数はデフォルトで`10`という値を与える」という意味になる（この関数の使用者が何も値を指定しなければ、勝手に`n1 = 10`として計算を進める）。それ以外の引数は、明示的に値を与えなければならない。また、アウトプットはTime stepと個体数を対応させた`tibble`形式にしてある。こうすることで後の図示がずっと楽になる。早速この関数を使ってみる。
+
+```{r}
+
+re <- sim_geomodel(n_step = 20,
+                   lambda = 1.1,
+                   sd_eps = 0.1)
+
+print(re)
+
+plot(n ~ n_step,
+     data = re,
+     xlab = "Time step",
+     ylab = "Number of individuals",
+     type = "o")
+
+```
+
+このモデルでは、年によって集団増加率がランダムに変動するような仮定がおいてある（計算のたびに個体数の変化の仕方は変わる）。そのため、同じ作業を繰り返し、結果がどれくらいばらつくのかを見みたい。この作業が関数化されているとぐっと楽になる。`for`構文を使ってやってみよう。せっかくなので、アウトプットは[tidyverse](https://r4ds.had.co.nz/)で扱いやすいようtidy形式にする。
+
+```{r, message=FALSE, warning=FALSE}
+
+library(tidyverse)
+
+# create output dataframe
+df_dynamics <- tibble()
+
+# define n_step
+n_step <- 50
+
+for(i in 1:5) {
+  
+  df_subset <- sim_geomodel(n_step = n_step,
+                            lambda = 1.1,
+                            sd_eps = 0.1)
+  
+  # add replicate number column
+  df_subset <- df_subset %>% 
+    mutate(n_rep = i)
+  
+  # combine replication subsets
+  df_dynamics <- bind_rows(df_dynamics, df_subset)
+  
+}
+
+print(df_dynamics)
+```
+
+`r n_step`ステップのシミュレーションを5回繰り返したので、それをレプリケーションごとに図示してみる。
+
+```{r}
+
+g <- ggplot(df_dynamics) +
+  geom_line(aes(x = n_step, y = n, color = factor(n_rep))) +
+  geom_point(aes(x = n_step, y = n, color = factor(n_rep)), alpha = 0.2) +
+  ylab("Number of individuals") +
+  xlab("Time step")
+  
+print(g)
+
+```
+
+集団の増加の仕方は、繰り返すごとに大きく異なることが見て取れる。これらの値の平均と標準誤差を計算する。対数をとってから平均をとることで、幾何平均とそのばらつきをみることにしよう。
+
+```{r}
+
+# summarize df_dynamics
+df_summary <- df_dynamics %>% 
+  group_by(n_step) %>% 
+  summarize(log_mean_n = mean(log(n)), # mean of log-transformed n
+            log_sd_n = sd(log(n))) %>%  # sd of log-transformed n
+  mutate(log_upper = log_mean_n + log_sd_n,
+         log_lower = log_mean_n - log_sd_n) %>% 
+  mutate(mean_n = exp(log_mean_n),
+         upper = exp(log_upper),
+         lower = exp(log_lower))
+  
+print(df_summary)
+```
+
+繰り返し間の幾何平均とそのばらつきを合わせて図示する。
+
+```{r}
+
+ggplot(df_summary) +
+  geom_line(aes(x = n_step, y = mean_n)) + # line for mean n
+  geom_ribbon(aes(x= n_step, ymin = lower, ymax = upper),
+              alpha = 0.2) # sd around the mean
+
+```
+
+
+実際のシミュレーションでは100-1000回ほど繰り返し、その平均や中央値を「あるシナリオのもとで期待されるパターン」として解釈する。
+今回の場合、個体群増加率`lambda = 1.1`、初期個体数`n1 = 10`、そして環境変動の大きさ`sd_eps = 0.1`の組み合わせが「シナリオ」に対応する。これらの値を変えたら集団増加のパターンはどうなるだろうか？そのためにはこれらの値を変えながら、パターンの変化をみることになる。例えば`lambda`については1.1と1.5を、`sd_eps`は0.1と1.0を考えるとしよう（`n1`はその効果に興味がないので10に固定したとする）。そうすると、この二変数の組み合わせは2 x 2で4通り、それぞれシミュレーションを1000回繰り返すとしたら1000 x 4で4000回シミュレーションを回すことになる。このあたりの作業を自動化しないとやっていられないので、次はその方法を書こうと思う。

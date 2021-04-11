@@ -157,6 +157,9 @@ if (!doNotTrack) {
                 </a>
             </li></ul>
     </nav>
+    
+    <script data-ad-client="ca-pub-8263637323017170" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
 </header>
 
     <main class="main"> 
@@ -192,6 +195,27 @@ if (!doNotTrack) {
 
   <header class="entry-header">
     <h2>
+      Rでシミュレーション2 - function
+    </h2>
+  </header>
+  <section class="entry-content">
+    <p>functionの導入シミュレーションを関数化前回はfor構文を使った至極簡単なシミュレーションモデルを作ってみた。しかし、中には「こんなめんどくさいスクリプトを毎回書くのか。。。？」などと思われた方もいると思う。そんなことはないので安心してほしい。一つのまとまった作業を関数化することで、スクリプトの量をかなり減らすことができる。
+functionの導入function関数を使うことで一度書いたモデルを使いまわすことができる。最初からシミュレーションモデルを関数化すると説明が煩雑になってしまうので、まずは変動係数CVを推定する関数mycv なるものを作ってみよう。まずは正規分布に従う乱数をrnormを使って生成する。
+# 100 random values following a normal distributionset.seed(123) # for reproducibilityy &lt;- rnorm(n = 100, mean = 50, sd = 25)# show the first 10 elementsprint(y[1:10])## [1] 35.98811 44.24556 88.96771 51.76271 53.23219 92.87662 61.52291 18.37347## [9] 32.82868 38.85845変動係数は以下のスクリプトで推定できる。
+cv &lt;- sd(y) / mean(y)print(cv)## [1] 0.4366692しかし、なんだか毎回二つの関数sd とmean を組み合わせて変動係数を計算するのは面倒くさい。なので、これらの作業を一挙にやってくれる関数をつくってみよう。
+mycv &lt;- function(x) {cv &lt;- sd(x) / mean(x)return(cv)}x という引数に基づいて、SDを平均で割るという作業を自動的にやってくれる関数mycv を定義している。function() のカッコの中に引数として使いたい変数をいれておく。そうすると、そこに使ってほしい値をぶち込むと、関数内で定義された作業を自動的に行ってくれる。return のところでは、何を計算結果（返り値）として返してほしいかを指定している。早速mycv を使ってみる。以下では、x = y とし、関数内のx にy を「代入」している。...</p>
+  </section>
+  <footer class="entry-footer">
+
+April 11, 2021&nbsp;·&nbsp;Akira Terui
+</footer>
+  <a class="entry-link" aria-label="post link to Rでシミュレーション2 - function" href="https://ecological-stats.netlify.app/2021/04/11/function/"></a>
+</article>
+
+<article class="post-entry"> 
+
+  <header class="entry-header">
+    <h2>
       Rでシミュレーション1 - for loop
     </h2>
   </header>
@@ -207,7 +231,7 @@ if (!doNotTrack) {
 
 March 29, 2021&nbsp;·&nbsp;Akira Terui
 </footer>
-  <a class="entry-link" aria-label="post link to Rでシミュレーション1 - for loop" href="https://ecological-stats.netlify.app/post/for-loop/"></a>
+  <a class="entry-link" aria-label="post link to Rでシミュレーション1 - for loop" href="https://ecological-stats.netlify.app/2021/03/29/for-loop/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -229,7 +253,7 @@ March 29, 2021&nbsp;·&nbsp;Akira Terui
 
 March 28, 2021&nbsp;·&nbsp;Akira Terui
 </footer>
-  <a class="entry-link" aria-label="post link to 回帰モデルの効果量" href="https://ecological-stats.netlify.app/post/average-predictive-comparison/"></a>
+  <a class="entry-link" aria-label="post link to 回帰モデルの効果量" href="https://ecological-stats.netlify.app/2021/03/28/average-predictive-comparison/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -255,7 +279,7 @@ March 28, 2021&nbsp;·&nbsp;Akira Terui
 
 February 7, 2021&nbsp;·&nbsp;Akira Terui
 </footer>
-  <a class="entry-link" aria-label="post link to 学振受け入れ先" href="https://ecological-stats.netlify.app/post/jsps-ad/"></a>
+  <a class="entry-link" aria-label="post link to 学振受け入れ先" href="https://ecological-stats.netlify.app/2021/02/07/jsps-ad/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -281,7 +305,7 @@ February 7, 2021&nbsp;·&nbsp;Akira Terui
 
 September 27, 2020&nbsp;·&nbsp;Akira Terui
 </footer>
-  <a class="entry-link" aria-label="post link to 研究者もどきの憂い" href="https://ecological-stats.netlify.app/post/depressed-scientist/"></a>
+  <a class="entry-link" aria-label="post link to 研究者もどきの憂い" href="https://ecological-stats.netlify.app/2020/09/27/depressed-scientist/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -302,7 +326,7 @@ September 27, 2020&nbsp;·&nbsp;Akira Terui
 
 July 20, 2020&nbsp;·&nbsp;Akira Terui
 </footer>
-  <a class="entry-link" aria-label="post link to 論文英語の差別問題" href="https://ecological-stats.netlify.app/post/japanese-english-papers/"></a>
+  <a class="entry-link" aria-label="post link to 論文英語の差別問題" href="https://ecological-stats.netlify.app/2020/07/20/japanese-english-papers/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -324,7 +348,7 @@ July 20, 2020&nbsp;·&nbsp;Akira Terui
 
 November 3, 2019&nbsp;·&nbsp;Akira Terui
 </footer>
-  <a class="entry-link" aria-label="post link to 日本という国の閉鎖性" href="https://ecological-stats.netlify.app/post/closed-japanese-academia/"></a>
+  <a class="entry-link" aria-label="post link to 日本という国の閉鎖性" href="https://ecological-stats.netlify.app/2019/11/03/closed-japanese-academia/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -349,7 +373,7 @@ Cover Letterこの書類は選考委員会が一番最初に目を通す書類�
 
 September 2, 2019&nbsp;·&nbsp;Akira Terui
 </footer>
-  <a class="entry-link" aria-label="post link to 海外で研究職を探す：ファカルティ応募編" href="https://ecological-stats.netlify.app/post/jobhunt-faculty-apply/"></a>
+  <a class="entry-link" aria-label="post link to 海外で研究職を探す：ファカルティ応募編" href="https://ecological-stats.netlify.app/2019/09/02/jobhunt-faculty-apply/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -375,7 +399,7 @@ September 2, 2019&nbsp;·&nbsp;Akira Terui
 
 August 25, 2019&nbsp;·&nbsp;Akira Terui
 </footer>
-  <a class="entry-link" aria-label="post link to 海外で研究職を探す：ポスドク格闘編" href="https://ecological-stats.netlify.app/post/jobhunt-postdoc-life/"></a>
+  <a class="entry-link" aria-label="post link to 海外で研究職を探す：ポスドク格闘編" href="https://ecological-stats.netlify.app/2019/08/25/jobhunt-postdoc-life/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -400,32 +424,7 @@ Google大先生に聞くと、実は結構な量のカバーレターの例が�
 
 July 31, 2019&nbsp;·&nbsp;Akira Terui
 </footer>
-  <a class="entry-link" aria-label="post link to 海外で研究職を探す：ポスドク応募編" href="https://ecological-stats.netlify.app/post/jobhunt-postdoc-apply/"></a>
-</article>
-
-<article class="post-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      海外で研究職を探す：立志編
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>Summary初めての国際学会@にゅーじーらんど帰国後-とりあえずトレーニング立ちはだかる壁Summary2019年、アメリカで運よくテニュアトラックポジションのオファーをいただくことができ、8月からノースカロライナで研究室を立ち上げることになった。日本で学位をとった私にとって不可能と思えることばかりだったが、気が付いたら何とかなっていた。記憶が褪せる前に、その過程を記事として残しておこうと思う。この記事は「立志編」ということで、海外にでようと思ったキッカケを中心に書いていきたい。
-初めての国際学会@にゅーじーらんど海外に出てみたい、という気持ちが確かに芽生えたのは、2011年に初めて参加した国際学会の時だと思う。この時、私は博士課程1年だったが、国内の研究の世界しか知らなかった私にとって衝撃的な体験だった。
-その国際学会はSociety for Conservation Biologyの年会で、世界各国から保全生態学の第一線で活躍している研究者が集まる。当時、修士課程の論文が出版されたということでこの学会（ニュージーランド、オークランド）に参加したのだが、周囲のレベルの高さ（あるいは高そうに見えること）に圧倒され、自分がここにいていいものか、とさえ思ってしまった。基調講演はさることながら、学生発表賞のプレゼンも洗練されていて、まるでTEDトークのようなものが多かった。ああ、これが国際レベルの研究環境なのか！（のちに英語がある程度堪能になり、実はたいしたことがない場合も多いとわかるのだが。）
-しかし、それまで英語によるコミュニケーションをまったく訓練してこなかった私は、周りが何を話しているのか全く理解できない。発表もすごそうなことはわかるのだが、「すごそう」以上のことはわからない。ポスター発表をしたのだが、ほんの数人しか聞きに来ず、来たとしても片言の英語ではまったく意味のある会話ができない。あまりにも緊張してパニックに陥った私は、“Where are you from?”という簡単な質問に対し、“I’m Japan!”（私は日本です！）と答えた記憶がある。英語論文を（マイナーなジャーナルの）紙面で発表し、ノミ程の自信を持ち始めたころだったのだが、それはあっけなく踏みつぶされ、「ああ、自分は国際的な研究の輪の中に入ることはできないのだ」と悟った。研究は論文が命といえど、結局のところ顔を合わせたコミュニケーションがものを言う。いかに自分が「世界」から取り残されているかが痛いほどわかり、打ちひしがれた記憶がいまだ鮮明に残っている。
-帰国後-とりあえずトレーニングショックを受けて帰国した私は、すぐさま英語コミュニケーションのトレーニングを始めた。当時東京大学の大学院（農学生命科学研究科）に在籍していたのだが、大学内で英語コミュニケーションの場を探すと、驚くほど機会が用意されていた。特に、東京大学工学部は留学生が多く、毎週火曜と金曜には留学生を交えたランチタイムがあった。早速その場に突っ込んでいき、話せないながらも英語による会話に慣れようと必死になった。また、週二回（各回1時間程度）では圧倒的に会話量が少ないので、同時にSkype英会話（比較的安価；当時は毎日30分で月5000円だった）を通じてトレーニングするようにするのと、「レッツスピーク」という英語のディクテーション（音声書き取りのトレーニング）をできるだけ毎日するようにした。
-【中古】NHKラジオ英会話レッツスピ-クベストセレクション NHK　CD　book /NHK出版/岩村圭南 (単行本)
-価格：616円（税込、送料無料) (2019/7/29時点)楽天で購入結果、2年後の国際学会ではある程度コミュニケーションが取れるようになり、より国際学会を楽しめるようになった。また、副産物として、このころから英語の「書く」能力も飛躍的に改善された気がする。感覚的に、英語の「変な表現」がわかるようになってきたのだ。論文を書く効率も上がったのではないかと思う。2019年現在、言語の壁はいまだに大きいと感じるが、この時の時間は確実に今に繋がっている。
-立ちはだかる壁しかし、博士課程在学中、私は自分で望んでいたほどの研究業績を上げることは叶わなかった（英語論文は主著2本）。ポスドクでは海外に！と意気込んでいたのだが、それどころか国内での任期付き研究職につくこともおぼつかない状況だった。幸い、当時交流のあった教授の先生に拾ってもらい、そのポスドク期間にある程度業績を上げて海外への道が開けたのだが、その道のりも平坦ではなかったように思う。次のエントリーでは、海外ポスドクポジションへの応募の過程を書いていきたいと思う。
-</p>
-  </section>
-  <footer class="entry-footer">
-
-July 30, 2019&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to 海外で研究職を探す：立志編" href="https://ecological-stats.netlify.app/post/jobhunt-motivation/"></a>
+  <a class="entry-link" aria-label="post link to 海外で研究職を探す：ポスドク応募編" href="https://ecological-stats.netlify.app/2019/07/31/jobhunt-postdoc-apply/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

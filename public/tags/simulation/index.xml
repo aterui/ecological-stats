@@ -6,13 +6,26 @@
     <description>Recent content in simulation on ECOSTATS</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Mon, 29 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/tags/simulation/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 11 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/tags/simulation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Rでシミュレーション2 - function</title>
+      <link>https://ecological-stats.netlify.app/2021/04/11/function/</link>
+      <pubDate>Sun, 11 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://ecological-stats.netlify.app/2021/04/11/function/</guid>
+      <description>functionの導入シミュレーションを関数化前回はfor構文を使った至極簡単なシミュレーションモデルを作ってみた。しかし、中には「こんなめんどくさいスクリプトを毎回書くのか。。。？」などと思われた方もいると思う。そんなことはないので安心してほしい。一つのまとまった作業を関数化することで、スクリプトの量をかなり減らすことができる。
+functionの導入function関数を使うことで一度書いたモデルを使いまわすことができる。最初からシミュレーションモデルを関数化すると説明が煩雑になってしまうので、まずは変動係数CVを推定する関数mycv なるものを作ってみよう。まずは正規分布に従う乱数をrnormを使って生成する。
+# 100 random values following a normal distributionset.seed(123) # for reproducibilityy &amp;lt;- rnorm(n = 100, mean = 50, sd = 25)# show the first 10 elementsprint(y[1:10])## [1] 35.98811 44.24556 88.96771 51.76271 53.23219 92.87662 61.52291 18.37347## [9] 32.82868 38.85845変動係数は以下のスクリプトで推定できる。
+cv &amp;lt;- sd(y) / mean(y)print(cv)## [1] 0.4366692しかし、なんだか毎回二つの関数sd とmean を組み合わせて変動係数を計算するのは面倒くさい。なので、これらの作業を一挙にやってくれる関数をつくってみよう。
+mycv &amp;lt;- function(x) {cv &amp;lt;- sd(x) / mean(x)return(cv)}x という引数に基づいて、SDを平均で割るという作業を自動的にやってくれる関数mycv を定義している。function() のカッコの中に引数として使いたい変数をいれておく。そうすると、そこに使ってほしい値をぶち込むと、関数内で定義された作業を自動的に行ってくれる。return のところでは、何を計算結果（返り値）として返してほしいかを指定している。早速mycv を使ってみる。以下では、x = y とし、関数内のx にy を「代入」している。</description>
+    </item>
+    
     <item>
       <title>Rでシミュレーション1 - for loop</title>
-      <link>https://ecological-stats.netlify.app/post/for-loop/</link>
+      <link>https://ecological-stats.netlify.app/2021/03/29/for-loop/</link>
       <pubDate>Mon, 29 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://ecological-stats.netlify.app/post/for-loop/</guid>
+      <guid>https://ecological-stats.netlify.app/2021/03/29/for-loop/</guid>
       <description>なぜシミュレーション？for loop集団動態モデルランダムネスを加えるモデルの拡張なぜシミュレーション？生態学に慣れ始めてきたころ、いわゆる「理論研究」と言われる類の論文も読み始めるようになった。最初は難解で何をしているのかわからなかったが、分かってくるととても力強いアプローチだなぁと感じるようになり、自分で作ってみたいと思うようになった。というのも、私はフィールドを中心に研究をしていたけれども、野外のデータはあまりにも雑多で、その解釈に困ることが多かったからだ。例えば、ある魚と別の魚が餌をめぐる競争関係に興味があり、「この二種は競争関係にあるので、一方の個体数が多い場所では、もう一方の個体数は少なくなる」という仮説を立てたとしよう。野外で両種の個体数の間に負の相関が認められたとしても、「おお仮説通りのパターンだ、競争に違いない！」と単純に喜ぶことはできない。同じパターンを生み出す仕組みがあまりにもたくさんあるからだ（両者の好きな環境が全く異なるだけかもしれない）。
 こうした理由から、自分がフィールドで集めたデータをもとに論文を書くとき、（特にDiscussionで）もどかしい思いをする。思いっきり「これだ！」と断言したいのに、あれやこれやと言い訳しなければならないからだ。実験で検証可能な仮説ならば、実験するに越したことはない。しかし、見たい現象が生態系スケールとかになってくると、実験などほぼ不可能だ。できたとしても億単位の研究費が必要になる。
 そんなとき、シミュレーションが役に立つ。ある仕組みをこちらで勝手に想定し、そこから導かれるパターンがどんなものかを見るのがシミュレーションだ（生態学の数理モデルが全般的にそうですが）。つまり、観察されたパターンから仕組みを推論する統計モデリングの全く逆のことをするといってもいい（Figure 1）。興味のある仕組み以外を排除あるいはコントロールできるので、その仕組みがどんな時にどんなパターンを生み出すのか知ることができる。

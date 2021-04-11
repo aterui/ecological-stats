@@ -6,13 +6,26 @@
     <description>Recent content in Posts on ECOSTATS</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Mon, 29 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 11 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Rでシミュレーション2 - function</title>
+      <link>https://ecological-stats.netlify.app/2021/04/11/function/</link>
+      <pubDate>Sun, 11 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://ecological-stats.netlify.app/2021/04/11/function/</guid>
+      <description>functionの導入シミュレーションを関数化前回はfor構文を使った至極簡単なシミュレーションモデルを作ってみた。しかし、中には「こんなめんどくさいスクリプトを毎回書くのか。。。？」などと思われた方もいると思う。そんなことはないので安心してほしい。一つのまとまった作業を関数化することで、スクリプトの量をかなり減らすことができる。
+functionの導入function関数を使うことで一度書いたモデルを使いまわすことができる。最初からシミュレーションモデルを関数化すると説明が煩雑になってしまうので、まずは変動係数CVを推定する関数mycv なるものを作ってみよう。まずは正規分布に従う乱数をrnormを使って生成する。
+# 100 random values following a normal distributionset.seed(123) # for reproducibilityy &amp;lt;- rnorm(n = 100, mean = 50, sd = 25)# show the first 10 elementsprint(y[1:10])## [1] 35.98811 44.24556 88.96771 51.76271 53.23219 92.87662 61.52291 18.37347## [9] 32.82868 38.85845変動係数は以下のスクリプトで推定できる。
+cv &amp;lt;- sd(y) / mean(y)print(cv)## [1] 0.4366692しかし、なんだか毎回二つの関数sd とmean を組み合わせて変動係数を計算するのは面倒くさい。なので、これらの作業を一挙にやってくれる関数をつくってみよう。
+mycv &amp;lt;- function(x) {cv &amp;lt;- sd(x) / mean(x)return(cv)}x という引数に基づいて、SDを平均で割るという作業を自動的にやってくれる関数mycv を定義している。function() のカッコの中に引数として使いたい変数をいれておく。そうすると、そこに使ってほしい値をぶち込むと、関数内で定義された作業を自動的に行ってくれる。return のところでは、何を計算結果（返り値）として返してほしいかを指定している。早速mycv を使ってみる。以下では、x = y とし、関数内のx にy を「代入」している。</description>
+    </item>
+    
     <item>
       <title>Rでシミュレーション1 - for loop</title>
-      <link>https://ecological-stats.netlify.app/post/for-loop/</link>
+      <link>https://ecological-stats.netlify.app/2021/03/29/for-loop/</link>
       <pubDate>Mon, 29 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://ecological-stats.netlify.app/post/for-loop/</guid>
+      <guid>https://ecological-stats.netlify.app/2021/03/29/for-loop/</guid>
       <description>なぜシミュレーション？for loop集団動態モデルランダムネスを加えるモデルの拡張なぜシミュレーション？生態学に慣れ始めてきたころ、いわゆる「理論研究」と言われる類の論文も読み始めるようになった。最初は難解で何をしているのかわからなかったが、分かってくるととても力強いアプローチだなぁと感じるようになり、自分で作ってみたいと思うようになった。というのも、私はフィールドを中心に研究をしていたけれども、野外のデータはあまりにも雑多で、その解釈に困ることが多かったからだ。例えば、ある魚と別の魚が餌をめぐる競争関係に興味があり、「この二種は競争関係にあるので、一方の個体数が多い場所では、もう一方の個体数は少なくなる」という仮説を立てたとしよう。野外で両種の個体数の間に負の相関が認められたとしても、「おお仮説通りのパターンだ、競争に違いない！」と単純に喜ぶことはできない。同じパターンを生み出す仕組みがあまりにもたくさんあるからだ（両者の好きな環境が全く異なるだけかもしれない）。
 こうした理由から、自分がフィールドで集めたデータをもとに論文を書くとき、（特にDiscussionで）もどかしい思いをする。思いっきり「これだ！」と断言したいのに、あれやこれやと言い訳しなければならないからだ。実験で検証可能な仮説ならば、実験するに越したことはない。しかし、見たい現象が生態系スケールとかになってくると、実験などほぼ不可能だ。できたとしても億単位の研究費が必要になる。
 そんなとき、シミュレーションが役に立つ。ある仕組みをこちらで勝手に想定し、そこから導かれるパターンがどんなものかを見るのがシミュレーションだ（生態学の数理モデルが全般的にそうですが）。つまり、観察されたパターンから仕組みを推論する統計モデリングの全く逆のことをするといってもいい（Figure 1）。興味のある仕組み以外を排除あるいはコントロールできるので、その仕組みがどんな時にどんなパターンを生み出すのか知ることができる。
@@ -23,10 +36,10 @@
     
     <item>
       <title>回帰モデルの効果量</title>
-      <link>https://ecological-stats.netlify.app/post/average-predictive-comparison/</link>
+      <link>https://ecological-stats.netlify.app/2021/03/28/average-predictive-comparison/</link>
       <pubDate>Sun, 28 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://ecological-stats.netlify.app/post/average-predictive-comparison/</guid>
+      <guid>https://ecological-stats.netlify.app/2021/03/28/average-predictive-comparison/</guid>
       <description>効果量としての標準化偏回帰係数Average predictive comparisonRで実装効果量としての標準化偏回帰係数線形回帰は、生態学の一般的な解析手法になっている。Rで多数の関数が用意されているため解析も容易で、回帰係数の95%信頼区間やp値などでその効果の有意性もカンタンに検討できる。一方、近頃では有意性だけでなく、「効果量（Effect size）」にも注目したほうがいいとの見方が広まっている。この効果量には様々な指標があるけれども、線形回帰の文脈でいえば標準化偏回帰係数がもっとも広く使われている。
 そもそも偏回帰係数の意味とは何かというと、対応する説明変数xが単位量（つまり1.0）だけ増えたときに、応答変数がどれだけ変化するかを示している。しかし、説明変数間で単位*1が違うと（例えばある変数はm単位で計られているのに対し、別の変数は㎝単位で計られている）、偏回帰係数はその単位の違いの影響を直に受けてしまう。そこで、それぞれの説明変数をそのばらつき（標準偏差SD）で割り（標準化）、それら標準化された説明変数に対する偏回帰係数を推定する。標準化された説明変数の単位はそろっているので、推定された標準化偏回帰係数も比較できるものになっているはず、というものだ。
 しかし、これには一つの問題がある。現代の一般的な統計モデルでは、効果量としての標準化偏回帰係数の解釈が「直感的ではない」のである。例としては以下のようなものがある。個体数のカウントデータを線形モデルで表現する場合、誤差構造としてはポアソン分布（あるいは負の二項分布）を用いることが多い。ポアソン分布の平均パラメータは負の値をとることができないので、Rではデフォルトで対数リンク関数が実装されている。この時、ポアソンモデルの偏回帰係数のなにがどう「直感的」でないのか、下の例を見ながら考えてみる。
@@ -37,10 +50,10 @@
     
     <item>
       <title>学振受け入れ先</title>
-      <link>https://ecological-stats.netlify.app/post/jsps-ad/</link>
+      <link>https://ecological-stats.netlify.app/2021/02/07/jsps-ad/</link>
       <pubDate>Sun, 07 Feb 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://ecological-stats.netlify.app/post/jsps-ad/</guid>
+      <guid>https://ecological-stats.netlify.app/2021/02/07/jsps-ad/</guid>
       <description>理論と実証の統合河川魚類群集のビッグデータ生物の移動パターン+アルファ連絡先私の運営する研究室では、海外学振あるいは学振PD、DCの制度を利用した研究員の受け入れを積極的に行っていきたいと考えています。私の研究室では以下のような興味を持った方が特に恩恵を得られると思います。
 理論と実証の統合私の研究室では理論と実証の統合に重きを置きたいと思っています。以下のような興味をもつ人が特にマッチングがよいと考えています。（１）これまでフィールドばかりやってきたが、理論も取り入れてもっと説得力のある研究デザインを組みたい、（２）理論をやってきたが、これからは実証も見据えた理論研究を展開したい。
 私がカバーしている理論研究の分野は、生態系におけるネットワーク構造と集団・群集構造の関係、食物連鎖長の制限要因、生物の移動とそれが支える個体群構造に関する理論、などですが、例えば進化的視点を取り入れられるような方が来てくれると私の視点も広がるのでとてもうれしいです。
@@ -55,10 +68,10 @@
     
     <item>
       <title>研究者もどきの憂い</title>
-      <link>https://ecological-stats.netlify.app/post/depressed-scientist/</link>
+      <link>https://ecological-stats.netlify.app/2020/09/27/depressed-scientist/</link>
       <pubDate>Sun, 27 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://ecological-stats.netlify.app/post/depressed-scientist/</guid>
+      <guid>https://ecological-stats.netlify.app/2020/09/27/depressed-scientist/</guid>
       <description>学振渡米現在注釈学振Twitterを見ていると、学振に受かった・落ちたという投稿がタイムラインをにぎわせている。博士取得後、私は3年にわたり学振（注釈1）に落ち続け（学振PD、海外学振）、不採択の申請書ばかりがむなしくHDDに溜まっていくのがしんどかったのを覚えている（特に2015年申請時に、PD・海外ともに面接で落ちた時はかなりコタエタ）。今は幸いにも、研究室をリードする職を得ることができ、経済的にもゆとりをもった生活を送ることができている。別の形のプレッシャーも大きいのだが（今も4年後のテニュア審査に通らないとぷー太郎に逆戻り）、勝負の土俵に上がれているだけポスドク時（注釈2）の得体の知れない不安よりはマシかもしれない。「このまま何にもなれずに終わるのではないか」という、あれ。
 2014年2月、学振に落ち行くアテのなかった私は、某研究室に弾丸出張を行い、（頼まれていもいない）セミナーをしてきた。その結果、温情処置で雇ってもらえた。この時、この研究室に雇ってもらえていなかったら研究者の道をあきらめていたと思う。プロジェクト雇用にもかかわらず、大枠さえ抑えていれば自由に研究をさせてくれ、研究環境という意味においては学振以上だったと思う（自分の業績の9割はこのころのアウトプット）。今の研究も、このころの人脈や経験がベースになっているものが多い。本当に楽しかった。
 しかし、もともと予算のないところに無理を言ってねじ込んでもらっていたので、経済的ゆとりがあるわけではなかった（決してこのことに文句を言っているわけではないです）。やる気でなんとかなると思ってたのだが、やはりお金は大事だった。お金がなくなると、人間の本質がでる。自分の場合、まず相手のことを考えれなくなった。何よりも先に家計簿が頭をよぎる。家計簿基準で判断するようになり、本質的にもっと大事であったはずのものを切り捨てたりする。そういう精神状態の中、「いくつ論文を書いたら十分なんだろう」という答えのない疑問が頭の中をめぐり、気が付くと「論文」と独り言をつぶやくようになっていた。申請書は通らない。研究が楽しいからやっていたのか、研究者になるために研究をやっているのかわからなくなる。研究が楽しくなければ、研究者になる意味などないのに。2015年冬、同年に学振PDと海外学振に面接で落ち、これでもかというくらい落ち込んだ時期があった。その話を実家に帰って兄に話すと、軽い笑い話にされたのも「いい思い出」だ。
@@ -73,10 +86,10 @@
     
     <item>
       <title>論文英語の差別問題</title>
-      <link>https://ecological-stats.netlify.app/post/japanese-english-papers/</link>
+      <link>https://ecological-stats.netlify.app/2020/07/20/japanese-english-papers/</link>
       <pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://ecological-stats.netlify.app/post/japanese-english-papers/</guid>
+      <guid>https://ecological-stats.netlify.app/2020/07/20/japanese-english-papers/</guid>
       <description>我々日本人が学術論文を発表する際、誰にとっても大きな障壁として立ちはだかるのは「英語」であると思う。少なくとも私の分野では、研究成果は英語論文として国際学術誌に発表しなければ研究業績としては評価されない（職に応募する際に、競争的になれないという意味）。もちろん日本語で論文を書くほうが意味をなすことも多いが（生物多様性保全の分野など）、若手がそれをやると職に就けずに路頭にさまようことになる。しかし、私を含め多くの学生は大学院に入るまでそんな事実など知らないし、私も修士課程に入学当初、ポスドクの人が英語で論文を書き上げているのをみて仰天した覚えがある。絶対できないと思った（実際やればできるのだけど）。この問題は経験を積むにつれ解消される部分もあるが、やはり英語を母国語とする人の文章にはかなわないところは当然ある。論文を投稿し、内容の新規性は認められつつも英語の拙さを理由にリジェクト（掲載不可）されることも確かにある。先日、このことを差別として強く批判する内容がMLに流れており、それをみて思うところがあったので書き残しておこうと思う。
 先に述べた「論文英語の差別」問題と必ずしも同じではないが、海外に住むと言語による疎外感、差別感を感じることは少なからずある。私は2017年からJSPSの海外学振の制度を利用してミネソタ大学に2年と少し在籍し、2019年の8月からはUNC Greensboroで働いている。渡航前から多少は英会話に慣れておいたつもりではあったが、やはり現地で支障なく生活するには遠く及ばない。4年目を迎えた今でもコミュニケーションがうまくいかないときがある。こういう時、相手を気遣いながら会話をしてくれる人もいれば、あからさまにめんどくさがる人、なかには嘲笑の笑みを浮かべながら話してくる人もいる。大体後者に真に優秀な人はいないので、そういう人とは単にお付き合いしないようにすれば済む、、、とも思えるのだが、そういう人が部署の要職についていたり、研究資材のお得意先だったりすると非常に困る。耐えるしかないのだ。
 と、ここまでであれば単なる「海外生活って大変だよね」という話で終わる。しかし、この経験を踏まえたうえで自分が日本にいた時の経験を振り返ると、とても恥ずかしい気持ちになる。日本の大学にも他の国からくる留学生が多いが、彼ら・彼女らの立場になって何が大変かを考えることができていたかどうかというと、全くできていなかった。自分が米国に来た時、ただ運転免許証をとるだけでもやたら難しく感じたし、車の路上トラブル時にきちんとAAA（米国版JAF）を呼べるかどうか、病気になったら病状をきちんと説明できるかどうか、床屋できちんと「短めでお願いします」といえるかどうか、税金の手続きは…あげればキリがないが、あらゆることに形容しがたい不安が伴う。「当たり前」が「当たり前でなくなる」ことに対する不安なのだと思う。これは経験して初めてわかる類のストレスである。私の場合、言語が英語なのでなんとかなる部分が多いが、日本に留学してくる人は日本語で対応しなければならないし、書面も日本人にすら不可解なものも多い。こうした中で、留学生の人たちがどう耐え忍んでいるのか、想像するだけでもつらい。日本人の留学生への理解度についてみても、米国のそれよりも遥かに劣っているだろう。いつぞや、日本語が話せないまま運転免許試験を受けにきた中国人がおり、その人が日本語を理解できないのをみるにつけ、「これだから、、、日本語できるようになってから来てくれないと困るねぇ」と厭味ったらしく罵声を浴びせた試験官がいたこと思い出す。私が仮に米国でこんなことを言われたら、間違いなく死にたくなる。
@@ -86,10 +99,10 @@
     
     <item>
       <title>日本という国の閉鎖性</title>
-      <link>https://ecological-stats.netlify.app/post/closed-japanese-academia/</link>
+      <link>https://ecological-stats.netlify.app/2019/11/03/closed-japanese-academia/</link>
       <pubDate>Sun, 03 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://ecological-stats.netlify.app/post/closed-japanese-academia/</guid>
+      <guid>https://ecological-stats.netlify.app/2019/11/03/closed-japanese-academia/</guid>
       <description>UNC Greensboroに異動してから3か月がたち、モノがわからないなりに何とか回している（と信じたい）。最初のセメスターはラボの立ち上げということでTeaching offになっているのだが、結局代行などでちょこちょこ教壇に立つ。手探りで授業をしてみると案外できることがわかり、次のセメスターも何とかなりそうだという感覚が得られつつある。しかし、ラボスペースの改修工事が遅れに遅れ、やっと10月の終わりに荷物を運びこんだ。この段ボールの山を整理しなければならないと思うと気が滅入る。
 さて、現状はこんな感じなのだが、この数か月の間で「日本の閉鎖性」を改めて感じさせられることがあった。今回この研究室を立ち上げるにあたり、日本と海外の繋がりの要になるような場所を作りたい‐そんな風に考えていた。日本の人材を学生やポスドクという形でリクルートし、国際交流の活発なラボにできればと妄想していたのである。しかし、この考えが甘いということにリクルートし始めてから気づいた。そう思った経緯を書き残しておきたい。
 そもそも、なぜ日本人のリクルートを頑張りたいと思ったかというと、理由は二つある。一つ目は、日本人が平均的に見て能力の高い人材が多いこと（特に数学）。二つ目は、自分自身「海外に行きたい」と強く思いながらも、キッカケが作れずに思い悩んでいた時期が長かったので、そんな人の手助けになる場所にしたいということがあった。マヌケな私は、「博士課程の学生、あるいはポスドクとして人材をリクルートすればよい」－そう単純に考えていた。アメリカ向けのMLやJob Boardだけでなく、日本向けのMLにも情報を流して応募を待った。博士課程の学生については、アメリカ国内だけでなく、ヨーロッパやアジア諸国からも応募があった。しかし、日本からの応募はないどころか、問い合わせすらなかった。
@@ -100,10 +113,10 @@
     
     <item>
       <title>海外で研究職を探す：ファカルティ応募編</title>
-      <link>https://ecological-stats.netlify.app/post/jobhunt-faculty-apply/</link>
+      <link>https://ecological-stats.netlify.app/2019/09/02/jobhunt-faculty-apply/</link>
       <pubDate>Mon, 02 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://ecological-stats.netlify.app/post/jobhunt-faculty-apply/</guid>
+      <guid>https://ecological-stats.netlify.app/2019/09/02/jobhunt-faculty-apply/</guid>
       <description>Summary選考の流れ書類審査Cover LetterResearch StatementTeaching StatementDiversity StatementReferenceOnline InterviewCampus Interview終えてみてSummary海外学振が2年目に差し掛かったところで、そろそろ次の職を探さないとまずいと思い、ファカルティポジションに応募することにした。いつプータローになるかわからないという恐怖におびえながら、海外のファカルティポジションに応募した自分の経験をまとめてみたい。
 選考の流れ海外学振の研究員としてアメリカで1年暮らしたころ、ファカルティへの応募を考え始めた。しかし、アメリカでファカルティポジションに就いている自分の姿をイメージすることが全くできなかった。というのも、言語に関する自信がないこともあったのだが、それ以上に大学の教育システム、文化に対する理解もとても十分とは思えなかったからだ。しかしながら、日本のアカデミアの状況が良くなるようにも思えなかったので、自信はないもののとりあえず出してみようと決意した。
 アメリカの場合、（１）書類審査、（２）Online Interview、（３）Campus Interviewの3段階の選考がなされることが多い。100通（普通の大学）から300通程度（トップの大学）の応募書類のなかからOnline面接に呼ぶ候補者を決め（10-15人程度）、さらにOnline面接を通じてCampus面接によぶ3-4人の候補者を選ぶ。いずれも全く知らないものばかりであり、書類審査を通ったとしてもその後の面接を潜り抜けられる気は全くしなかった。蓋を開けたら何とかなっていたのだが。
@@ -117,10 +130,10 @@ Cover Letterこの書類は選考委員会が一番最初に目を通す書類�
     
     <item>
       <title>海外で研究職を探す：ポスドク格闘編</title>
-      <link>https://ecological-stats.netlify.app/post/jobhunt-postdoc-life/</link>
+      <link>https://ecological-stats.netlify.app/2019/08/25/jobhunt-postdoc-life/</link>
       <pubDate>Sun, 25 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://ecological-stats.netlify.app/post/jobhunt-postdoc-life/</guid>
+      <guid>https://ecological-stats.netlify.app/2019/08/25/jobhunt-postdoc-life/</guid>
       <description>Summaryメリットネットワークが広がる全く異なる生態系興味の収斂という面白さ少数派体験デメリット言語の壁文化の壁VISA地の利のなさ社会保障海外ポスドクをもっと楽しむために日本人コミュニティーに「適度」に参加いいルームメイトを探そうわからないときは「わからん」という備えあれば憂いなしSummary海外学振を獲得し、晴れて海外で研究する機会が得られた。2017年4月、トランクひとつでミネソタに乗り込む。しかし正直なところ、過剰に期待していたためか、はたまた自分が機会を活かし切れていなったためか、やや生煮え感の残る海外ポスドクだったような気がする。ここでは、アメリカのミネソタ大学という一事例ではあるが、メリット、デメリットについてまとめてみたい。
 メリットネットワークが広がる一番のメリットは、研究のネットワークが大きく広がることだろう。日本という極東の島国は、少なくとも私の研究分野では「世界の中心」とはいいがたく、あらゆる面で隔離されている事実を目の当たりにする。ミネソタ大学のEEB（Ecology, Evolution, and Behavior)では、週一でセミナーが開催されており、これはなかなか刺激的である。また、日本ではあまり見ないが、招待講演者が来ると必ずといっていいほど1対1のミーティングの時間が設けられる。こうしていろんな人と「顔見知り」になることが、アメリカでのキャリア形成の上で非常に重要な意味を持つようだ。
 全く異なる生態系これはメリットでありデメリットでもあるのだが、海外の全く異なる生態系を見られる。これは多くの生態学者にとって非常に魅力的なことだろう。私の場合、淡水二枚貝の研究をしていたが、北アメリカは淡水二枚貝のメッカともいうべき研究フィールドである。こうしたシステムで研究をできたことは、仮に日本に戻っていたとしても大きな財産になったように思う。
@@ -135,10 +148,10 @@ Cover Letterこの書類は選考委員会が一番最初に目を通す書類�
     
     <item>
       <title>海外で研究職を探す：ポスドク応募編</title>
-      <link>https://ecological-stats.netlify.app/post/jobhunt-postdoc-apply/</link>
+      <link>https://ecological-stats.netlify.app/2019/07/31/jobhunt-postdoc-apply/</link>
       <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://ecological-stats.netlify.app/post/jobhunt-postdoc-apply/</guid>
+      <guid>https://ecological-stats.netlify.app/2019/07/31/jobhunt-postdoc-apply/</guid>
       <description>Summary応募先の探し方応募書類の準備インタビュー事の顛末Summary立志編につづく、海外ポスドクポジションへの応募に関する記事。フェローシップと通常の募集へ応募したときの経験を書いていきたい。
 応募先の探し方海外での研究場所を探す場合、日本人は海外学振制度を利用していく場合が多いだろう。しかし、これはそれなりに競争率が高いので、これだけでは実現できないことも多い。そこで、海外学振への応募に加え、雇われポスドク（PIのもつグラントで雇ってもらう）のクチでもポジションを探すことにした。
 上記二つのアプローチでは、とるべき行動が大きく異なっていた。フェローシップの受け入れ先探しでは、自分が働きたいと思うラボのPIと国際学会などで話し、面識を作っておくことが大事だろう。私の場合、かねてより論文を読んでいた研究グループのPIが招待講演でたまたま来日する機会があり、その際に面識を作ることができた。いったん面識ができ、かつ人格的に問題がないことがわかれば、（よっぽど変なことをしない限り）受け入れを断られることはまずないだろう。なぜなら、予算として一番かさむのは人件費なので、その部分を持ってきてくれるポスドクは居て得はあっても損はないからだ。もし学振DCなどの予算を持っている人であれば、将来受け入れ先になってくれそうなPIに自分から連絡し、博士課程在学中に短期滞在などをしておくのもいいのだろう。
@@ -152,10 +165,10 @@ Google大先生に聞くと、実は結構な量のカバーレターの例が�
     
     <item>
       <title>海外で研究職を探す：立志編</title>
-      <link>https://ecological-stats.netlify.app/post/jobhunt-motivation/</link>
+      <link>https://ecological-stats.netlify.app/2019/07/30/jobhunt-motivation/</link>
       <pubDate>Tue, 30 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://ecological-stats.netlify.app/post/jobhunt-motivation/</guid>
+      <guid>https://ecological-stats.netlify.app/2019/07/30/jobhunt-motivation/</guid>
       <description>Summary初めての国際学会@にゅーじーらんど帰国後-とりあえずトレーニング立ちはだかる壁Summary2019年、アメリカで運よくテニュアトラックポジションのオファーをいただくことができ、8月からノースカロライナで研究室を立ち上げることになった。日本で学位をとった私にとって不可能と思えることばかりだったが、気が付いたら何とかなっていた。記憶が褪せる前に、その過程を記事として残しておこうと思う。この記事は「立志編」ということで、海外にでようと思ったキッカケを中心に書いていきたい。
 初めての国際学会@にゅーじーらんど海外に出てみたい、という気持ちが確かに芽生えたのは、2011年に初めて参加した国際学会の時だと思う。この時、私は博士課程1年だったが、国内の研究の世界しか知らなかった私にとって衝撃的な体験だった。
 その国際学会はSociety for Conservation Biologyの年会で、世界各国から保全生態学の第一線で活躍している研究者が集まる。当時、修士課程の論文が出版されたということでこの学会（ニュージーランド、オークランド）に参加したのだが、周囲のレベルの高さ（あるいは高そうに見えること）に圧倒され、自分がここにいていいものか、とさえ思ってしまった。基調講演はさることながら、学生発表賞のプレゼンも洗練されていて、まるでTEDトークのようなものが多かった。ああ、これが国際レベルの研究環境なのか！（のちに英語がある程度堪能になり、実はたいしたことがない場合も多いとわかるのだが。）
@@ -169,10 +182,10 @@ Google大先生に聞くと、実は結構な量のカバーレターの例が�
     
     <item>
       <title>恥ずかしい英語の間違い</title>
-      <link>https://ecological-stats.netlify.app/post/bad-english/</link>
+      <link>https://ecological-stats.netlify.app/2019/06/03/bad-english/</link>
       <pubDate>Mon, 03 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://ecological-stats.netlify.app/post/bad-english/</guid>
+      <guid>https://ecological-stats.netlify.app/2019/06/03/bad-english/</guid>
       <description>SummaryNo thanksWhat are you working on?EverythingXXXgraXXXCan I borrow a restroom?Summaryアメリカに来て二年が経ったが、いまだに恥ずかしい英語の間違いを繰り返してばかり。そんな失敗談のまとめ。
 No thanksだれも知り合いがいない国際学会に一人で参加し、Burger Kingに行った時の話。当時（博士課程2年）、英語がおぼつかないながらも何とかハンバーガーを注文し、席で普通に食べていた。そうすると、店員の人がテーブルを回りながらお客に声をかけている。
 “How XXXing?”
@@ -197,10 +210,10 @@ Pornographic
     
     <item>
       <title>J1 Visa: Two Year Ruleの落とし穴</title>
-      <link>https://ecological-stats.netlify.app/post/2019-04-23-j1-visa-two-year-rule/</link>
+      <link>https://ecological-stats.netlify.app/2019/04/23/j1-visa-two-year-rule%E3%81%AE%E8%90%BD%E3%81%A8%E3%81%97%E7%A9%B4/</link>
       <pubDate>Tue, 23 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://ecological-stats.netlify.app/post/2019-04-23-j1-visa-two-year-rule/</guid>
+      <guid>https://ecological-stats.netlify.app/2019/04/23/j1-visa-two-year-rule%E3%81%AE%E8%90%BD%E3%81%A8%E3%81%97%E7%A9%B4/</guid>
       <description>SummaryJ1ビザの帰国義務（2年ルール）適用？それとも非適用？帰国義務免除申請へ学振渡航者の適用率脚注Summary現在J1ビザでアメリカに滞在している私は、8月から始まる新しい職に就くためにH-1Bビザに切り替える必要があった。しかし、この関係で非常にややこしい問題にぶち当たった。J1ビザに伴う帰国義務（2年ルール）に課されていないものと信じていたのだが、実は課されていることが判明し、H-1Bビザに申請できない状態に陥ってしまったのである。この経緯について、今後同じような問題に陥る人が少しでも減るよう情報をまとめておきたいと思う。なお、以下の記載内容は、筆者の個人的な経験をまとめたものにすぎません。間違いがないよう気をつけましたが、本記事の情報をもとに不利益を被ったとしても一切の責任を負いかねますのでご留意願います。
 J1ビザの帰国義務（2年ルール）J1ビザとは、知識の国際交流を目的に創設されたアメリカのビザのカテゴリーであり、その取得の容易さから多くの研究者がアメリカに長期滞在する際に利用している。しかし、その容易さと引き換えに制約がある。それが今回の問題の発端となった2年ルール（Two-Year Home-Country Physical Presence Requirement）である（参照）。このルールは、アメリカで経験を積んだのちに最低2年間は母国で過ごさない限り（もしくは帰国義務免除が承認されない限り）、Hビザやグリーンカードなど、特定のビザに申請できなくなるというものだ。ただし、このルールはJ1ビザで渡航している人すべてに課されているわけではなく、以下の条件のいずれかを満たした人に課されるとされている（アメリカ国務省のWEBページにより；参照）。
 Government funded Exchange Program - You participated in a program funded in whole or in part by a U.S. government agency, your home country’s government, or an international organization that received funding from the U.S. government or your home country’s government.Specialized Knowledge or Skill – You participated in a program involving an area of study or field of specialized knowledge designated as necessary for further development of your home country and appears on the Exchange Visitor Skills List for your home country.</description>

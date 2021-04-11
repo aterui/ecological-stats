@@ -1,0 +1,275 @@
+---
+title: Rでシミュレーション2 - function
+author: ''
+date: '2021-04-11'
+slug: function
+output:
+  blogdown::html_page:
+    toc: true
+categories:
+  - R
+tags:
+  - function
+  - simulation
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#functionの導入"><code>function</code>の導入</a></li>
+<li><a href="#シミュレーションを関数化">シミュレーションを関数化</a></li>
+</ul>
+</div>
+
+<p><a href="/2021/03/29/for-loop/">前回</a>は<code>for</code>構文を使った至極簡単なシミュレーションモデルを作ってみた。しかし、中には「こんなめんどくさいスクリプトを毎回書くのか。。。？」などと思われた方もいると思う。<strong>そんなことはないので安心してほしい。</strong>一つのまとまった作業を関数化することで、スクリプトの量をかなり減らすことができる。</p>
+<div id="functionの導入" class="section level2">
+<h2><code>function</code>の導入</h2>
+<p><code>function</code>関数を使うことで一度書いたモデルを使いまわすことができる。最初からシミュレーションモデルを関数化すると説明が煩雑になってしまうので、まずは変動係数CVを推定する関数<code>mycv</code> なるものを作ってみよう。まずは正規分布に従う乱数を<code>rnorm</code>を使って生成する。</p>
+<pre class="r"><code># 100 random values following a normal distribution
+set.seed(123) # for reproducibility
+y &lt;- rnorm(n = 100, mean = 50, sd = 25)
+
+# show the first 10 elements
+print(y[1:10])</code></pre>
+<pre><code>##  [1] 35.98811 44.24556 88.96771 51.76271 53.23219 92.87662 61.52291 18.37347
+##  [9] 32.82868 38.85845</code></pre>
+<p>変動係数は以下のスクリプトで推定できる。</p>
+<pre class="r"><code>cv &lt;- sd(y) / mean(y)
+print(cv)</code></pre>
+<pre><code>## [1] 0.4366692</code></pre>
+<p>しかし、なんだか毎回二つの関数<code>sd</code> と<code>mean</code> を組み合わせて変動係数を計算するのは面倒くさい。なので、これらの作業を一挙にやってくれる関数をつくってみよう。</p>
+<pre class="r"><code>mycv &lt;- function(x) {
+  cv &lt;- sd(x) / mean(x)
+  return(cv)
+}</code></pre>
+<p><code>x</code> という引数に基づいて、SDを平均で割るという作業を自動的にやってくれる関数<code>mycv</code> を定義している。<code>function()</code> のカッコの中に引数として使いたい変数をいれておく。そうすると、そこに使ってほしい値をぶち込むと、関数内で定義された作業を自動的に行ってくれる。<code>return</code> のところでは、何を計算結果（返り値）として返してほしいかを指定している。早速<code>mycv</code> を使ってみる。以下では、<code>x = y</code> とし、関数内の<code>x</code> に<code>y</code> を「代入」している。</p>
+<pre class="r"><code>mycv(x = y)</code></pre>
+<pre><code>## [1] 0.4366692</code></pre>
+<p>この関数はとてもシンプルな計算をまとめているが、もっと複雑な内容を関数化することも可能だ。例えば、CVだけでなく、平均とSDも返す関数にしたいならば：</p>
+<pre class="r"><code>mycv &lt;- function(x) {
+  
+  mu &lt;- mean(x)
+  sigma &lt;- sd(x)
+  cv &lt;- sd(x) / mean(x)
+  
+  return(list(mu = mu,
+              sigma = sigma,
+              cv = cv)
+         )
+}</code></pre>
+<p>複数の返り値を持たせてやるときに気を付けなければならないのは、<code>return()</code> の中身をリスト化しなければならないことだ。そうしないと、関数自体は定義できても、その関数を使う際にエラーがでてしまう。複数の返り値がある場合、それぞれの要素に<code>$</code>でアクセスできる。</p>
+<pre class="r"><code>estimate &lt;- mycv(x = y)
+
+estimate</code></pre>
+<pre><code>## $mu
+## [1] 52.26015
+## 
+## $sigma
+## [1] 22.8204
+## 
+## $cv
+## [1] 0.4366692</code></pre>
+<pre class="r"><code>estimate$cv</code></pre>
+<pre><code>## [1] 0.4366692</code></pre>
+<pre class="r"><code>estimate$mu</code></pre>
+<pre><code>## [1] 52.26015</code></pre>
+<pre class="r"><code>estimate$sigma</code></pre>
+<pre><code>## [1] 22.8204</code></pre>
+<p>関数化することはできたが、この簡単な関数にも実は落とし穴がある。次のデータをこの関数にいれてみよう。</p>
+<pre class="r"><code>z &lt;- rnorm(100, mean = 50, sd = 25)
+z[sample(1:100, size = 10)] &lt;- NA </code></pre>
+<p>上のデータでは、先ほどと同じように100個の正規分布に従う乱数を使っているが、そのうちの10個が<code>NA</code>に置き換えられている。このデータを<code>mycv</code>に渡すと返り値がすべて<code>NA</code>になってしまう。</p>
+<pre class="r"><code>mycv(x = z)</code></pre>
+<pre><code>## $mu
+## [1] NA
+## 
+## $sigma
+## [1] NA
+## 
+## $cv
+## [1] NA</code></pre>
+<p>これはもともと<code>mean()</code>と<code>sd()</code>が<code>NA</code>入りのデータに対応していないからである（<code>na.rm = TRUE</code>とすれば取り除いてくれるが）。<code>NA</code>がある場合には、事前に<code>NA</code>を入力データから消去する処理を加えた関数にしてみよう。</p>
+<pre class="r"><code>mycv &lt;- function(x) {
+  
+  # remove NAs if any
+  if(any(is.na(x))) {
+    x &lt;- na.omit(x)
+    message(&quot;NA detected in the data; removed before the estimation&quot;)
+  }
+  
+  mu &lt;- mean(x)
+  sigma &lt;- sd(x)
+  cv &lt;- sd(x) / mean(x)
+  
+  return(list(mu = mu,
+              sigma = sigma,
+              cv = cv)
+         )
+}</code></pre>
+<p><code>if()</code>は、カッコ内の条件式が<code>TRUE</code>である場合にのみ、<code>{}</code>内の作業を実行するよう指定する関数である。この場合、<code>any(is.na(x))</code>とすることで、<code>x</code>に一つでも<code>NA</code>がある場合にはそれを取り除く作業を行うよう指定している。この際に、<code>NA</code>が取り除かれたことを明示的に解析者に示すために、<code>message("NA detected in the data; removed before the estimation")</code>というメッセージを表示するように指定している。もう一度<code>z</code>を代入してみる。</p>
+<pre class="r"><code># z contains NAs in the data
+mycv(x = z)</code></pre>
+<pre><code>## NA detected in the data; removed before the estimation</code></pre>
+<pre><code>## $mu
+## [1] 46.06076
+## 
+## $sigma
+## [1] 23.8327
+## 
+## $cv
+## [1] 0.5174186</code></pre>
+<p><code>NA</code>が取り除かれたことを示すメッセージとともに、残されたデータから推定された平均、SD、CVが返されている。データに<code>NA</code>がない場合、このメッセージは表示されない。</p>
+<pre class="r"><code># y does not contain NAs in the data
+mycv(x = y)</code></pre>
+<pre><code>## $mu
+## [1] 52.26015
+## 
+## $sigma
+## [1] 22.8204
+## 
+## $cv
+## [1] 0.4366692</code></pre>
+</div>
+<div id="シミュレーションを関数化" class="section level2">
+<h2>シミュレーションを関数化</h2>
+<p>では<code>funcion</code>を使って、<a href="/2021/03/29/for-loop/">前回</a>つくったシミュレーションモデルを関数化してみる。</p>
+<pre class="r"><code>sim_geomodel &lt;- function(n_step,
+                         lambda,
+                         sd_eps,
+                         n1 = 10) {
+  
+  log_n &lt;- NULL
+  log_n[1] &lt;- log(n1)
+  eps &lt;- rnorm(n = n_step, mean = 0, sd = sd_eps)
+  
+  for(t in 1:(n_step - 1)) {
+    log_n[t + 1] &lt;- log(lambda) + log_n[t] + eps[t]
+  }
+  
+  n &lt;- exp(log_n)
+  
+  df_dynamics &lt;- dplyr::tibble(n_step = 1:n_step,
+                               n = n)
+  
+  return(df_dynamics)
+}</code></pre>
+<p>モデルスクリプトを<code>function</code>内に移しただけだが、大きく異なる点がある。<code>n1</code>、<code>lambda</code>、<code>n_step</code>、および<code>sd_eps</code>を関数の引数（使用者が任意のインプットを指定できる）として定義することで、様々なシナリオのもとでシミュレートしやすくなっている。ここでは<code>n1 = 10</code>としているが、「この引数はデフォルトで<code>10</code>という値を与える」という意味になる（この関数の使用者が何も値を指定しなければ、勝手に<code>n1 = 10</code>として計算を進める）。それ以外の引数は、明示的に値を与えなければならない。また、アウトプットはTime stepと個体数を対応させた<code>tibble</code>形式にしてある。こうすることで後の図示がずっと楽になる。早速この関数を使ってみる。</p>
+<pre class="r"><code>re &lt;- sim_geomodel(n_step = 20,
+                   lambda = 1.1,
+                   sd_eps = 0.1)
+
+print(re)</code></pre>
+<pre><code>## # A tibble: 20 x 2
+##    n_step     n
+##     &lt;int&gt; &lt;dbl&gt;
+##  1      1  10. 
+##  2      2  11.0
+##  3      3  11.1
+##  4      4  11.6
+##  5      5  10.6
+##  6      6  12.1
+##  7      7  12.7
+##  8      8  14.4
+##  9      9  15.4
+## 10     10  18.9
+## 11     11  21.1
+## 12     12  30.5
+## 13     13  34.5
+## 14     14  37.8
+## 15     15  37.7
+## 16     16  42.3
+## 17     17  42.2
+## 18     18  49.1
+## 19     19  48.6
+## 20     20  55.9</code></pre>
+<pre class="r"><code>plot(n ~ n_step,
+     data = re,
+     xlab = &quot;Time step&quot;,
+     ylab = &quot;Number of individuals&quot;,
+     type = &quot;o&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>このモデルでは、年によって集団増加率がランダムに変動するような仮定がおいてある（計算のたびに個体数の変化の仕方は変わる）。そのため、同じ作業を繰り返し、結果がどれくらいばらつくのかを見みたい。この作業が関数化されているとぐっと楽になる。<code>for</code>構文を使ってやってみよう。せっかくなので、アウトプットは<a href="https://r4ds.had.co.nz/">tidyverse</a>で扱いやすいようtidy形式にする。</p>
+<pre class="r"><code>library(tidyverse)
+
+# create output dataframe
+df_dynamics &lt;- tibble()
+
+# define n_step
+n_step &lt;- 50
+
+for(i in 1:5) {
+  
+  df_subset &lt;- sim_geomodel(n_step = n_step,
+                            lambda = 1.1,
+                            sd_eps = 0.1)
+  
+  # add replicate number column
+  df_subset &lt;- df_subset %&gt;% 
+    mutate(n_rep = i)
+  
+  # combine replication subsets
+  df_dynamics &lt;- bind_rows(df_dynamics, df_subset)
+  
+}
+
+print(df_dynamics)</code></pre>
+<pre><code>## # A tibble: 250 x 3
+##    n_step     n n_rep
+##     &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+##  1      1 10.       1
+##  2      2  9.40     1
+##  3      3 11.7      1
+##  4      4 13.7      1
+##  5      5 13.5      1
+##  6      6 14.6      1
+##  7      7 14.6      1
+##  8      8 15.1      1
+##  9      9 17.4      1
+## 10     10 20.9      1
+## # ... with 240 more rows</code></pre>
+<p>50ステップのシミュレーションを5回繰り返したので、それをレプリケーションごとに図示してみる。</p>
+<pre class="r"><code>g &lt;- ggplot(df_dynamics) +
+  geom_line(aes(x = n_step, y = n, color = factor(n_rep))) +
+  geom_point(aes(x = n_step, y = n, color = factor(n_rep)), alpha = 0.2) +
+  ylab(&quot;Number of individuals&quot;) +
+  xlab(&quot;Time step&quot;)
+  
+print(g)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>集団の増加の仕方は、繰り返すごとに大きく異なることが見て取れる。これらの値の平均と標準誤差を計算する。対数をとってから平均をとることで、幾何平均とそのばらつきをみることにしよう。</p>
+<pre class="r"><code># summarize df_dynamics
+df_summary &lt;- df_dynamics %&gt;% 
+  group_by(n_step) %&gt;% 
+  summarize(log_mean_n = mean(log(n)), # mean of log-transformed n
+            log_sd_n = sd(log(n))) %&gt;%  # sd of log-transformed n
+  mutate(log_upper = log_mean_n + log_sd_n,
+         log_lower = log_mean_n - log_sd_n) %&gt;% 
+  mutate(mean_n = exp(log_mean_n),
+         upper = exp(log_upper),
+         lower = exp(log_lower))
+  
+print(df_summary)</code></pre>
+<pre><code>## # A tibble: 50 x 8
+##    n_step log_mean_n log_sd_n log_upper log_lower mean_n upper lower
+##     &lt;int&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1      1       2.30   0           2.30      2.30   10.   10.  10.  
+##  2      2       2.38   0.125       2.50      2.25   10.8  12.2  9.50
+##  3      3       2.52   0.120       2.64      2.40   12.4  14.0 11.0 
+##  4      4       2.60   0.0885      2.69      2.51   13.4  14.7 12.3 
+##  5      5       2.63   0.0597      2.69      2.57   13.8  14.7 13.0 
+##  6      6       2.72   0.108       2.83      2.61   15.1  16.9 13.6 
+##  7      7       2.78   0.118       2.90      2.67   16.2  18.2 14.4 
+##  8      8       2.81   0.137       2.95      2.68   16.7  19.1 14.5 
+##  9      9       2.89   0.182       3.07      2.71   18.0  21.5 15.0 
+## 10     10       3.02   0.231       3.25      2.79   20.4  25.7 16.2 
+## # ... with 40 more rows</code></pre>
+<p>繰り返し間の幾何平均とそのばらつきを合わせて図示する。</p>
+<pre class="r"><code>ggplot(df_summary) +
+  geom_line(aes(x = n_step, y = mean_n)) + # line for mean n
+  geom_ribbon(aes(x= n_step, ymin = lower, ymax = upper),
+              alpha = 0.2) # sd around the mean</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>実際のシミュレーションでは100-1000回ほど繰り返し、その平均や中央値を「あるシナリオのもとで期待されるパターン」として解釈する。
+今回の場合、個体群増加率<code>lambda = 1.1</code>、初期個体数<code>n1 = 10</code>、そして環境変動の大きさ<code>sd_eps = 0.1</code>の組み合わせが「シナリオ」に対応する。これらの値を変えたら集団増加のパターンはどうなるだろうか？そのためにはこれらの値を変えながら、パターンの変化をみることになる。例えば<code>lambda</code>については1.1と1.5を、<code>sd_eps</code>は0.1と1.0を考えるとしよう（<code>n1</code>はその効果に興味がないので10に固定したとする）。そうすると、この二変数の組み合わせは2 x 2で4通り、それぞれシミュレーションを1000回繰り返すとしたら1000 x 4で4000回シミュレーションを回すことになる。このあたりの作業を自動化しないとやっていられないので、次はその方法を書こうと思う。</p>
+</div>
