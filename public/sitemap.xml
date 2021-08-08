@@ -3,27 +3,33 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://ecological-stats.netlify.app/categories/</loc>
-    <lastmod>2021-04-11T00:00:00+00:00</lastmod>
+    <lastmod>2021-05-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/</loc>
-    <lastmod>2021-04-11T00:00:00+00:00</lastmod>
+    <lastmod>2021-05-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/tags/foreach/</loc>
+    <lastmod>2021-05-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/post/</loc>
+    <lastmod>2021-05-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/categories/r/</loc>
+    <lastmod>2021-05-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/2021/05/30/foreach/</loc>
+    <lastmod>2021-05-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/tags/simulation/</loc>
+    <lastmod>2021-05-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/tags/</loc>
+    <lastmod>2021-05-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/tags/function/</loc>
     <lastmod>2021-04-11T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ecological-stats.netlify.app/post/</loc>
-    <lastmod>2021-04-11T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ecological-stats.netlify.app/categories/r/</loc>
-    <lastmod>2021-04-11T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://ecological-stats.netlify.app/2021/04/11/function/</loc>
-    <lastmod>2021-04-11T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ecological-stats.netlify.app/tags/simulation/</loc>
-    <lastmod>2021-04-11T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ecological-stats.netlify.app/tags/</loc>
     <lastmod>2021-04-11T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/tags/for-loop/</loc>

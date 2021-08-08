@@ -5,12 +5,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>simulation | ECOSTATS</title>
+<title>foreach | ECOSTATS</title>
 
 <meta name="keywords" content="" />
 <meta name="description" content="">
 <meta name="author" content="Akira Terui">
-<link rel="canonical" href="https://ecological-stats.netlify.app/tags/simulation/" />
+<link rel="canonical" href="https://ecological-stats.netlify.app/tags/foreach/" />
 <link href="/assets/css/stylesheet.min.d08f6c302eba3eaecd589684c093cecdfe7dfb8745a207401bd0583d3bb31837.css" integrity="sha256-0I9sMC66Pq7NWJaEwJPOzf59&#43;4dFogdAG9BYPTuzGDc=" rel="preload stylesheet"
     as="style">
 
@@ -22,7 +22,7 @@
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
 <meta name="generator" content="Hugo 0.81.0" />
-<link rel="alternate" type="application/rss&#43;xml" href="https://ecological-stats.netlify.app/tags/simulation/index.xml">
+<link rel="alternate" type="application/rss&#43;xml" href="https://ecological-stats.netlify.app/tags/foreach/index.xml">
 
 
 
@@ -36,13 +36,13 @@ if (!doNotTrack) {
 }
 </script>
 <script async src='https://www.google-analytics.com/analytics.js'></script>
-<meta property="og:title" content="simulation" />
+<meta property="og:title" content="foreach" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://ecological-stats.netlify.app/tags/simulation/" />
+<meta property="og:url" content="https://ecological-stats.netlify.app/tags/foreach/" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="simulation"/>
+<meta name="twitter:title" content="foreach"/>
 <meta name="twitter:description" content=""/>
 
 
@@ -151,7 +151,7 @@ if (!doNotTrack) {
     <main class="main"> 
 <header class="page-header">
 
-  <h1>simulation</h1>
+  <h1>foreach</h1>
 </header>
 
 
@@ -177,49 +177,6 @@ sim_geomodel &lt;- function(n_step,lambda,sd_eps,n1 = 10) {log_n &lt;- NULL
 May 30, 2021&nbsp;·&nbsp;Akira Terui
 </footer>
   <a class="entry-link" aria-label="post link to Rでシミュレーション3 - foreach" href="https://ecological-stats.netlify.app/2021/05/30/foreach/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      Rでシミュレーション2 - function
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>functionの導入シミュレーションを関数化前回はfor構文を使った至極簡単なシミュレーションモデルを作ってみた。しかし、中には「こんなめんどくさいスクリプトを毎回書くのか。。。？」などと思われた方もいると思う。そんなことはないので安心してほしい。一つのまとまった作業を関数化することで、スクリプトの量をかなり減らすことができる。
-functionの導入function関数を使うことで一度書いたモデルを使いまわすことができる。最初からシミュレーションモデルを関数化すると説明が煩雑になってしまうので、まずは変動係数CVを推定する関数mycv なるものを作ってみよう。まずは正規分布に従う乱数をrnormを使って生成する。
-# 100 random values following a normal distributionset.seed(123) # for reproducibilityy &lt;- rnorm(n = 100, mean = 50, sd = 25)# show the first 10 elementsprint(y[1:10])## [1] 35.98811 44.24556 88.96771 51.76271 53.23219 92.87662 61.52291 18.37347## [9] 32.82868 38.85845変動係数は以下のスクリプトで推定できる。
-cv &lt;- sd(y) / mean(y)print(cv)## [1] 0.4366692しかし、なんだか毎回二つの関数sd とmean を組み合わせて変動係数を計算するのは面倒くさい。なので、これらの作業を一挙にやってくれる関数をつくってみよう。
-mycv &lt;- function(x) {cv &lt;- sd(x) / mean(x)return(cv)}x という引数に基づいて、SDを平均で割るという作業を自動的にやってくれる関数mycv を定義している。function() のカッコの中に引数として使いたい変数をいれておく。そうすると、そこに使ってほしい値をぶち込むと、関数内で定義された作業を自動的に行ってくれる。return のところでは、何を計算結果（返り値）として返してほしいかを指定している。早速mycv を使ってみる。以下では、x = y とし、関数内のx にy を「代入」している。...</p>
-  </section>
-  <footer class="entry-footer">
-
-April 11, 2021&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to Rでシミュレーション2 - function" href="https://ecological-stats.netlify.app/2021/04/11/function/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      Rでシミュレーション1 - for loop
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>なぜシミュレーション？for loop集団動態モデルランダムネスを加えるモデルの拡張なぜシミュレーション？生態学に慣れ始めてきたころ、いわゆる「理論研究」と言われる類の論文も読み始めるようになった。最初は難解で何をしているのかわからなかったが、分かってくるととても力強いアプローチだなぁと感じるようになり、自分で作ってみたいと思うようになった。というのも、私はフィールドを中心に研究をしていたけれども、野外のデータはあまりにも雑多で、その解釈に困ることが多かったからだ。例えば、ある魚と別の魚が餌をめぐる競争関係に興味があり、「この二種は競争関係にあるので、一方の個体数が多い場所では、もう一方の個体数は少なくなる」という仮説を立てたとしよう。野外で両種の個体数の間に負の相関が認められたとしても、「おお仮説通りのパターンだ、競争に違いない！」と単純に喜ぶことはできない。同じパターンを生み出す仕組みがあまりにもたくさんあるからだ（両者の好きな環境が全く異なるだけかもしれない）。
-こうした理由から、自分がフィールドで集めたデータをもとに論文を書くとき、（特にDiscussionで）もどかしい思いをする。思いっきり「これだ！」と断言したいのに、あれやこれやと言い訳しなければならないからだ。実験で検証可能な仮説ならば、実験するに越したことはない。しかし、見たい現象が生態系スケールとかになってくると、実験などほぼ不可能だ。できたとしても億単位の研究費が必要になる。
-そんなとき、シミュレーションが役に立つ。ある仕組みをこちらで勝手に想定し、そこから導かれるパターンがどんなものかを見るのがシミュレーションだ（生態学の数理モデルが全般的にそうですが）。つまり、観察されたパターンから仕組みを推論する統計モデリングの全く逆のことをするといってもいい（Figure 1）。興味のある仕組み以外を排除あるいはコントロールできるので、その仕組みがどんな時にどんなパターンを生み出すのか知ることができる。
-Figure 1: Conceptual diagram for the roles of theoretical and statistical models. Theoretical models (generally) predict patterns under certain mechanisms (and assumptions) while statistical models infer mechanisms behind observed patternsと、ここまでは論文を読んでいれば納得できるのだが、いかんせんどうやってスクリプトを書けばいいのかわからない…というのが学生のころの悩みだった。統計解析のリソースはオンラインにかなり落ちているので自分でいくらでも勉強できたが、シミュレーションモデルは本当にスクリプトのリソースが少ない。あったとしても、これからやろうとしている人向けには書かれていない。それが今回の（たぶんシリーズ的に）書こうと思っているポストのモチベーション。
-for loopこまごましたことはあるのだが、まずはfor構文をつかって簡単なシミュレーションモデルを作ってしまおう。for構文とはなんぞや、という人もいるかもしれないので、ここで簡単に説明しておく。端的にいうと、コンピュータに「同じ作業を繰り返せ」と指令するコマンド。for(i in 1:3) { XXX }という形で書くのだが、これはiがイテレータと呼ばれるもので、繰り返しのユニットに対応するものだ。このスクリプトで言えば、「XXXという作業を1から3まで回してほしい」と指令している。これだとわかりにくいので、下の例をみてみよう。
-# create a vector with 11, 12, 13y &lt;- NULLx &lt;- 11:13for(i in 1:3) {y[i] &lt;- x[i] * 2}ここではyとxというオブジェクトを作り、xのほうに11から13の値を代入している。やりたいことは、xの値をそれぞれ2倍することである。for構文の中身は次のように展開できる（下付き文字がイテレータに対応している）。...</p>
-  </section>
-  <footer class="entry-footer">
-
-March 29, 2021&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to Rでシミュレーション1 - for loop" href="https://ecological-stats.netlify.app/2021/03/29/for-loop/"></a>
 </article>
 
     </main><footer class="footer">

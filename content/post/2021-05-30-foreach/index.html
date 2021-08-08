@@ -1,0 +1,151 @@
+---
+title: Rでシミュレーション3 - foreach
+author: ''
+date: '2021-05-30'
+slug: foreach
+categories:
+  - R
+tags:
+  - simulation
+  - foreach
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<p><a href="/2021/04/11/function/">前回</a>は<code>function</code>を使ってシミュレーションモデルを関数化する方法を書いた。今日はこの関数を使い、様々なパラメータの下でシミュレーションを効率的に走らせるコードを書いてみたい。</p>
+<div id="パラメータセットを用意する" class="section level1">
+<h1>パラメータセットを用意する</h1>
+<p><a href="/2021/03/29/for-loop/">以前</a>作った個体群動態のシミュレーションモデルを、ここの例題として再度利用する：</p>
+<p><span class="math display">\[
+ln~n_{t+1} = ln~\lambda + ln~n_t + \epsilon_t\\
+\epsilon_t \sim N(0,0.1)
+\]</span></p>
+<p>前年の個体数<span class="math inline">\(n_{t}\)</span>に集団増加率<span class="math inline">\(\lambda\)</span>が掛け算され、翌年の個体数<span class="math inline">\(n_{t+1}\)</span>が決まるが、そこにはランダムな環境変動の影響（<span class="math inline">\(\epsilon_t\)</span>）もある、というものであった（上の式では対数スケールのため足し算になっている）。これをコードとして書き下し、関数化したものが以下：</p>
+<pre class="r"><code>sim_geomodel &lt;- function(n_step,
+                         lambda,
+                         sd_eps,
+                         n1 = 10) {
+  
+  log_n &lt;- NULL
+  log_n[1] &lt;- log(n1)
+  eps &lt;- rnorm(n = n_step, mean = 0, sd = sd_eps)
+  
+  for(t in 1:(n_step - 1)) {
+    log_n[t + 1] &lt;- log(lambda) + log_n[t] + eps[t]
+  }
+  
+  n &lt;- exp(log_n)
+  
+  df_dynamics &lt;- dplyr::tibble(n_step = 1:n_step,
+                               n = n)
+  
+  return(df_dynamics)
+}</code></pre>
+<p>この関数<code>sim_geomodel</code>を使い、パラメータの値を変えた時に、50年後の個体数の予測値がどう変わるのか調べてみよう。パラメータを変えながらパターンを予測することで、どのパラメータが集団動態にどんな影響を及ぼすのかを調べることができる。今回の場合、パラメータは二つあるので（<code>lambda</code>, <code>sd_eps</code>）、これらのパラメータセットを作るところから始める。パラメータセットを作るには、パラメータ値のすべての組み合わせを考える必要がある。この場合、<code>expand.grid()</code>という関数が役立つ：</p>
+<pre class="r"><code>lambda &lt;- c(1.1, 1.3)
+sd_eps &lt;- c(0.1, 0.5)
+
+param_set &lt;- expand.grid(lambda = lambda,
+                         sd_eps = sd_eps)
+
+print(param_set)</code></pre>
+<pre><code>##   lambda sd_eps
+## 1    1.1    0.1
+## 2    1.3    0.1
+## 3    1.1    0.5
+## 4    1.3    0.5</code></pre>
+<p>この関数を使うと、すべてのパラメータ値の組み合わせを考えたデータフレームを生成してくれるので、非常に便利。このパラメータセットの組み合わせを一つのシナリオとして、それぞれのシナリオの下で集団動態を100回シミュレートする。</p>
+</div>
+<div id="foreachの導入" class="section level1">
+<h1><code>foreach</code>の導入</h1>
+<p>それぞれのシナリオの下で50年後の個体数の予測をしてみることにするが、このとき<code>foreach</code>を導入する。というのも、今回のケースは問題にならないが、今後並列化などを視野にいれたとき、この関数に慣れておいたほうがいいためである（<code>foreach</code>の使い方は<a href="https://qiita.com/hoxo_m/items/04903cbbe9d023f0ed6d">こちら</a>を参照）。全体としてはこんな形で書き下すことができる。</p>
+<pre class="r"><code>pacman::p_load(foreach,
+               tidyverse)
+
+n_rep &lt;- 100
+
+result &lt;- foreach(k = 1:nrow(param_set),
+                  .combine = dplyr::bind_rows) %do% {
+          
+          df_rep &lt;- foreach(i = 1:n_rep,
+                            .combine = dplyr::bind_rows) %do% {
+                              
+                              df_dyn &lt;- sim_geomodel(n_step = 50,
+                                                     lambda = param_set$lambda[k],
+                                                     sd_eps = param_set$sd_eps[k],
+                                                     n1 = 10)
+                                
+                              y &lt;- dplyr::filter(df_dyn, n_step == 50)
+                              re &lt;- dplyr::tibble(n_rep = i,
+                                                  param_set[k,],
+                                                  n50 = y$n)
+                              
+                              return(re)
+                            } 
+          
+          return(df_rep)
+        }
+
+print(result)</code></pre>
+<pre><code>## # A tibble: 400 x 4
+##    n_rep lambda sd_eps   n50
+##    &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+##  1     1    1.1    0.1 3046.
+##  2     2    1.1    0.1  335.
+##  3     3    1.1    0.1 1933.
+##  4     4    1.1    0.1 2358.
+##  5     5    1.1    0.1 2020.
+##  6     6    1.1    0.1 1219.
+##  7     7    1.1    0.1 1227.
+##  8     8    1.1    0.1 6160.
+##  9     9    1.1    0.1 1601.
+## 10    10    1.1    0.1 1166.
+## # ... with 390 more rows</code></pre>
+<p>以下、個別の要素について。まずは<code>df_rep</code>でなにをやっているか。</p>
+<pre class="r"><code>df_rep &lt;- foreach(i = 1:n_rep,
+                  .combine = &quot;bind_rows&quot;) %do% {
+                    
+                    df_dyn &lt;- sim_geomodel(n_step = 50,
+                                           lambda = param_set$lambda[k],
+                                           sd_eps = param_set$sd_eps[k],
+                                           n1 = 10)
+                      
+                    y &lt;- dplyr::filter(df_dyn, n_step == 50)
+                    re &lt;- tibble(n_rep = i,
+                                 param_set[k,],
+                                 n50 = y)
+                    
+                    return(re)
+                  } </code></pre>
+<p>この部分が一つのシミュレーションの反復計算になっている。<code>df_dyn</code>に計算結果が格納され、その結果の内から<code>n_step == 50</code>となるシミュレーション結果を抽出している（<code>dplyr::filter(df_dyn, n_step == 50)</code>）。次に、この結果をデータフレーム<code>tibble</code>として保存している（反復回数<code>i</code>、計算に使われたパラメータセットの値<code>param_set[k,]</code>、そのパラメータセットのもとでの計算結果<code>y$n</code>）。こうして結果を保存することで、「どのパラメータセットのもとでどんな予測がなされたのか」を簡単に図示できる。この<code>foreach</code>のくくりの中ではパラメータセットは固定されているので、同じパラメータセットのもとでの反復間のばらつきをみることができる。</p>
+<p>さらに、このセットをさらに<code>foreach</code>でくくり、パラメータセットを変えるように指定することで、各パラメータセットのもとで指定された数の反復がなされるようになっている。</p>
+<pre class="r"><code>result &lt;- foreach(k = 1:nrow(param_set),
+                  .combine = &quot;bind_rows&quot;,
+                  .packages = &quot;dplyr&quot;) %do% {
+          
+          df_rep &lt;- #foreach contents
+          
+          return(df_rep)
+        }</code></pre>
+<p>この結果をもとに、それぞれのパラメータセットのもとで、50年後の個体数の予測値がそれぞれどうなっているか図示する。<code>result</code>はTidyフォーマットになっているので、<code>ggplot</code>との相性がよい。</p>
+<pre class="r"><code>result &lt;- result %&gt;% 
+  mutate(sd_eps_label = recode(sd_eps,
+                              `0.1`= sprintf(&#39;&quot;Low SD&quot;~(sigma[epsilon]==&quot;%.2f&quot;)&#39;, sd_eps),
+                              `0.5`= sprintf(&#39;&quot;High SD&quot;~(sigma[epsilon]==&quot;%.2f&quot;)&#39;, sd_eps)
+                     )
+         )
+
+result %&gt;% 
+  ggplot(aes(y = n50, x = factor(lambda))) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA) +
+  geom_jitter(alpha = 0.5, size = 0.5) +
+  facet_wrap(facets = ~sd_eps_label, 
+             ncol = 2,
+             labeller = label_parsed) +
+  scale_y_continuous(trans = &quot;log10&quot;) +
+  xlab(expression(&quot;Population growth rate&quot;~lambda)) +
+  ylab(&quot;Population size in year 50&quot;) +
+  theme_bw()</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>

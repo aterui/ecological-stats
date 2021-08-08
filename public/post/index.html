@@ -179,6 +179,27 @@ if (!doNotTrack) {
 
   <header class="entry-header">
     <h2>
+      Rでシミュレーション3 - foreach
+    </h2>
+  </header>
+  <section class="entry-content">
+    <p>前回はfunctionを使ってシミュレーションモデルを関数化する方法を書いた。今日はこの関数を使い、様々なパラメータの下でシミュレーションを効率的に走らせるコードを書いてみたい。
+パラメータセットを用意する以前作った個体群動態のシミュレーションモデルを、ここの例題として再度利用する：
+\[ln~n_{t&#43;1} = ln~\lambda &#43; ln~n_t &#43; \epsilon_t\\\epsilon_t \sim N(0,0.1)\]
+前年の個体数\(n_{t}\)に集団増加率\(\lambda\)が掛け算され、翌年の個体数\(n_{t&#43;1}\)が決まるが、そこにはランダムな環境変動の影響（\(\epsilon_t\)）もある、というものであった（上の式では対数スケールのため足し算になっている）。これをコードとして書き下し、関数化したものが以下：
+sim_geomodel &lt;- function(n_step,lambda,sd_eps,n1 = 10) {log_n &lt;- NULLlog_n[1] &lt;- log(n1)eps &lt;- rnorm(n = n_step, mean = 0, sd = sd_eps)for(t in 1:(n_step - 1)) {log_n[t &#43; 1] &lt;- log(lambda) &#43; log_n[t] &#43; eps[t]}n &lt;- exp(log_n)df_dynamics &lt;- dplyr::tibble(n_step = 1:n_step,n = n)return(df_dynamics)}この関数sim_geomodelを使い、パラメータの値を変えた時に、50年後の個体数の予測値がどう変わるのか調べてみよう。パラメータを変えながらパターンを予測することで、どのパラメータが集団動態にどんな影響を及ぼすのかを調べることができる。今回の場合、パラメータは二つあるので（lambda, sd_eps）、これらのパラメータセットを作るところから始める。パラメータセットを作るには、パラメータ値のすべての組み合わせを考える必要がある。この場合、expand....</p>
+  </section>
+  <footer class="entry-footer">
+
+May 30, 2021&nbsp;·&nbsp;Akira Terui
+</footer>
+  <a class="entry-link" aria-label="post link to Rでシミュレーション3 - foreach" href="https://ecological-stats.netlify.app/2021/05/30/foreach/"></a>
+</article>
+
+<article class="post-entry"> 
+
+  <header class="entry-header">
+    <h2>
       Rでシミュレーション2 - function
     </h2>
   </header>
@@ -384,31 +405,6 @@ September 2, 2019&nbsp;·&nbsp;Akira Terui
 August 25, 2019&nbsp;·&nbsp;Akira Terui
 </footer>
   <a class="entry-link" aria-label="post link to 海外で研究職を探す：ポスドク格闘編" href="https://ecological-stats.netlify.app/2019/08/25/jobhunt-postdoc-life/"></a>
-</article>
-
-<article class="post-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      海外で研究職を探す：ポスドク応募編
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>Summary応募先の探し方応募書類の準備インタビュー事の顛末Summary立志編につづく、海外ポスドクポジションへの応募に関する記事。フェローシップと通常の募集へ応募したときの経験を書いていきたい。
-応募先の探し方海外での研究場所を探す場合、日本人は海外学振制度を利用していく場合が多いだろう。しかし、これはそれなりに競争率が高いので、これだけでは実現できないことも多い。そこで、海外学振への応募に加え、雇われポスドク（PIのもつグラントで雇ってもらう）のクチでもポジションを探すことにした。
-上記二つのアプローチでは、とるべき行動が大きく異なっていた。フェローシップの受け入れ先探しでは、自分が働きたいと思うラボのPIと国際学会などで話し、面識を作っておくことが大事だろう。私の場合、かねてより論文を読んでいた研究グループのPIが招待講演でたまたま来日する機会があり、その際に面識を作ることができた。いったん面識ができ、かつ人格的に問題がないことがわかれば、（よっぽど変なことをしない限り）受け入れを断られることはまずないだろう。なぜなら、予算として一番かさむのは人件費なので、その部分を持ってきてくれるポスドクは居て得はあっても損はないからだ。もし学振DCなどの予算を持っている人であれば、将来受け入れ先になってくれそうなPIに自分から連絡し、博士課程在学中に短期滞在などをしておくのもいいのだろう。
-一方、雇われポスドクのクチを探す場合は、自分で積極的にポスティングを探す必要があった。私が北海道大学でポスドクをしていたころ、スペインから着任した新しい助教の方がおり、彼がいろいろアドバイスをくれた。その時の情報を整理すると、生態学分野では概ね以下の三つの情報ソースがあると思われる。（１）ECOLOG：アメリカ生態学会のML。メールがアーカイブされているので、過去にさかのぼって探すことができる。時期を問わず、ポスドクの募集が行きかっているので、ここは随時チェックしたほうがいい（のちのエントリーで書く予定のテニュアトラックポジションの募集も多い）。（２）学会のJOB BOARD：大体の学会では、公募に関する情報を載せる掲示板が用意されている。自分の分野に近い学会であれば、興味にあうポジションも探しやすい。（３）個人のツテ：個人のツテを通じて回ってくることも多い。ただし、これはすでに海外とのコネが強い人に限られる術だろう。
-応募書類の準備雇われポスドクのポジションを探す場合、応募先にあたりをつけて応募するぞ！となるのだが、ここでもう一度壁にあたった。募集要項を見ると、CV（履歴書）、Cover Letter、References（推薦者）の提出が求められる。CVとReferencesはまだいい。しかしCover Letterには何を書けばいいのか皆目見当がつかない。
-Google大先生に聞くと、実は結構な量のカバーレターの例が出てくる（cover letter, postdoc, example, ecologyなどでググる）。例を見ていくと、多くのものは以下のポイントを押さえているようだ。（１）まず自己紹介し、アプライ先の研究プロジェクトに興味があること、自分の能力がマッチしていることを端的に記す。（２）つづいて、なぜ自分がマッチしているのかを、スキルや経験を上げながら具体的に説明する。この際、これらのスキルを得た経緯（博士課程の中で、ポスドクの中で、TAをしながら、などなど）に触れておくと自然に見える。（３）最後に、チームワーク力にも言及しておくとなおよいようだ。
-以下に、実際に自分のつかったカバーレターを例として置いておこうと思う。
-Dear Prof. XXX
-I saw an advertisement of postdoctoral position at your laboratory on ECOLOG-L, and I wish to apply for the postdoctoral position. I have been trained as a freshwater ecologist, but I am very interested in how individual variation has repercussions on ecosystem-level processes....</p>
-  </section>
-  <footer class="entry-footer">
-
-July 31, 2019&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to 海外で研究職を探す：ポスドク応募編" href="https://ecological-stats.netlify.app/2019/07/31/jobhunt-postdoc-apply/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
