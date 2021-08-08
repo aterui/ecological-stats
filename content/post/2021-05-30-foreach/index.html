@@ -3,6 +3,9 @@ title: Rでシミュレーション3 - foreach
 author: ''
 date: '2021-05-30'
 slug: foreach
+output:
+  blogdown::html_page:
+    toc: true
 categories:
   - R
 tags:
@@ -12,14 +15,21 @@ tags:
 
 <script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 
+<div id="TOC">
+<ul>
+<li><a href="#パラメータセットを用意する">パラメータセットを用意する</a></li>
+<li><a href="#foreachの導入"><code>foreach</code>の導入</a></li>
+<li><a href="#plotを描く">Plotを描く</a></li>
+</ul>
+</div>
 
 <p><a href="/2021/04/11/function/">前回</a>は<code>function</code>を使ってシミュレーションモデルを関数化する方法を書いた。今日はこの関数を使い、様々なパラメータの下でシミュレーションを効率的に走らせるコードを書いてみたい。</p>
-<div id="パラメータセットを用意する" class="section level1">
-<h1>パラメータセットを用意する</h1>
+<div id="パラメータセットを用意する" class="section level2">
+<h2>パラメータセットを用意する</h2>
 <p><a href="/2021/03/29/for-loop/">以前</a>作った個体群動態のシミュレーションモデルを、ここの例題として再度利用する：</p>
 <p><span class="math display">\[
 ln~n_{t+1} = ln~\lambda + ln~n_t + \epsilon_t\\
-\epsilon_t \sim N(0,0.1)
+\epsilon_t \sim N(0,\sigma_{\epsilon}^2)
 \]</span></p>
 <p>前年の個体数<span class="math inline">\(n_{t}\)</span>に集団増加率<span class="math inline">\(\lambda\)</span>が掛け算され、翌年の個体数<span class="math inline">\(n_{t+1}\)</span>が決まるが、そこにはランダムな環境変動の影響（<span class="math inline">\(\epsilon_t\)</span>）もある、というものであった（上の式では対数スケールのため足し算になっている）。これをコードとして書き下し、関数化したものが以下：</p>
 <pre class="r"><code>sim_geomodel &lt;- function(n_step,
@@ -57,8 +67,8 @@ print(param_set)</code></pre>
 ## 4    1.3    0.5</code></pre>
 <p>この関数を使うと、すべてのパラメータ値の組み合わせを考えたデータフレームを生成してくれるので、非常に便利。このパラメータセットの組み合わせを一つのシナリオとして、それぞれのシナリオの下で集団動態を100回シミュレートする。</p>
 </div>
-<div id="foreachの導入" class="section level1">
-<h1><code>foreach</code>の導入</h1>
+<div id="foreachの導入" class="section level2">
+<h2><code>foreach</code>の導入</h2>
 <p>それぞれのシナリオの下で50年後の個体数の予測をしてみることにするが、このとき<code>foreach</code>を導入する。というのも、今回のケースは問題にならないが、今後並列化などを視野にいれたとき、この関数に慣れておいたほうがいいためである（<code>foreach</code>の使い方は<a href="https://qiita.com/hoxo_m/items/04903cbbe9d023f0ed6d">こちら</a>を参照）。全体としてはこんな形で書き下すことができる。</p>
 <pre class="r"><code>pacman::p_load(foreach,
                tidyverse)
@@ -91,16 +101,16 @@ print(result)</code></pre>
 <pre><code>## # A tibble: 400 x 4
 ##    n_rep lambda sd_eps   n50
 ##    &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-##  1     1    1.1    0.1 3046.
-##  2     2    1.1    0.1  335.
-##  3     3    1.1    0.1 1933.
-##  4     4    1.1    0.1 2358.
-##  5     5    1.1    0.1 2020.
-##  6     6    1.1    0.1 1219.
-##  7     7    1.1    0.1 1227.
-##  8     8    1.1    0.1 6160.
-##  9     9    1.1    0.1 1601.
-## 10    10    1.1    0.1 1166.
+##  1     1    1.1    0.1  436.
+##  2     2    1.1    0.1 1974.
+##  3     3    1.1    0.1  427.
+##  4     4    1.1    0.1 1912.
+##  5     5    1.1    0.1 2269.
+##  6     6    1.1    0.1  350.
+##  7     7    1.1    0.1  945.
+##  8     8    1.1    0.1 1807.
+##  9     9    1.1    0.1  582.
+## 10    10    1.1    0.1  340.
 ## # ... with 390 more rows</code></pre>
 <p>以下、個別の要素について。まずは<code>df_rep</code>でなにをやっているか。</p>
 <pre class="r"><code>df_rep &lt;- foreach(i = 1:n_rep,
@@ -128,6 +138,9 @@ print(result)</code></pre>
           
           return(df_rep)
         }</code></pre>
+</div>
+<div id="plotを描く" class="section level2">
+<h2>Plotを描く</h2>
 <p>この結果をもとに、それぞれのパラメータセットのもとで、50年後の個体数の予測値がそれぞれどうなっているか図示する。<code>result</code>はTidyフォーマットになっているので、<code>ggplot</code>との相性がよい。</p>
 <pre class="r"><code>result &lt;- result %&gt;% 
   mutate(sd_eps_label = recode(sd_eps,
@@ -148,4 +161,5 @@ result %&gt;%
   ylab(&quot;Population size in year 50&quot;) +
   theme_bw()</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>当然だけど、個体群増加率<span class="math inline">\(\lambda\)</span>が大きいほど集団はより大きく成長し、環境変動<span class="math inline">\(\sigma_{\epsilon}\)</span>が大きいほど50年後の個体数のばらつき大きいことがわかる。</p>
 </div>
