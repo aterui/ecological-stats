@@ -2,16 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://ecological-stats.netlify.app/categories/academic/</loc>
+    <lastmod>2021-11-27T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://ecological-stats.netlify.app/categories/</loc>
-    <lastmod>2021-05-30T00:00:00+00:00</lastmod>
+    <lastmod>2021-11-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/</loc>
-    <lastmod>2021-05-30T00:00:00+00:00</lastmod>
+    <lastmod>2021-11-27T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ecological-stats.netlify.app/tags/foreach/</loc>
-    <lastmod>2021-05-30T00:00:00+00:00</lastmod>
+    <loc>https://ecological-stats.netlify.app/tags/miscellaneous/</loc>
+    <lastmod>2021-11-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/post/</loc>
+    <lastmod>2021-11-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/tags/</loc>
+    <lastmod>2021-11-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/2021/11/27/branching/</loc>
+    <lastmod>2021-11-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/tags/foreach/</loc>
     <lastmod>2021-05-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/categories/r/</loc>
@@ -21,9 +33,6 @@
     <lastmod>2021-05-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/tags/simulation/</loc>
-    <lastmod>2021-05-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ecological-stats.netlify.app/tags/</loc>
     <lastmod>2021-05-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/tags/function/</loc>
@@ -43,12 +52,6 @@
   </url><url>
     <loc>https://ecological-stats.netlify.app/2021/03/28/average-predictive-comparison/</loc>
     <lastmod>2021-03-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ecological-stats.netlify.app/categories/academic/</loc>
-    <lastmod>2021-02-07T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ecological-stats.netlify.app/tags/miscellaneous/</loc>
-    <lastmod>2021-02-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/2021/02/07/jsps-ad/</loc>
     <lastmod>2021-02-07T00:00:00+00:00</lastmod>
