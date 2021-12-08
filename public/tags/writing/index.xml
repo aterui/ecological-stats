@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>writing on ECOSTATS</title>
+    <link>https://ecological-stats.netlify.app/tags/writing/</link>
+    <description>Recent content in writing on ECOSTATS</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Tue, 07 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/tags/writing/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>論文を書くときの留意点</title>
+      <link>https://ecological-stats.netlify.app/2021/12/07/checkpoint/</link>
+      <pubDate>Tue, 07 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://ecological-stats.netlify.app/2021/12/07/checkpoint/</guid>
+      <description>StructureIntroductionMethodsResultsDiscussionAdditional pointParagraphSentenceStructureIntroductionパラグラフ間の論理的つながりが明確
+大きな枠組みの中で新奇性を述べている
+対象とするシステムの「必然性」が明確
+データの質と整合性が取れている
+仮説が単純かつ明快
+Methods情報を出す順番が適切
+パラグラフごとに情報が整理されている
+理論・統計は専門外の人にも伝わるように書かれている
+パラメータ名の重複や説明漏れがない
+パッケージやソフトウェアのVersion情報に誤りがない
+ResultsMethodsを詳しく読まずとも結果が理解できる
+結果の意味するところが述べられている
+不確実性の記述が適切
+効果量の記述が明確
+Discussion仮説・問いに対する答えが明確であり、答えの意義を広い枠組みのなかで捉えている（最初のパラグラフ）
+各結果の解釈が端的に述べられている
+複数の解釈がある場合、それらが網羅されている
+弱みや限界に言及がある
+今後の大きな展開がイメージできる（最後のパラグラフ）
+Additional point読み落とされたくない重要情報は表現を変えて複数個所に配置する（MethodsとDiscussionなど）</description>
+    </item>
+    
+  </channel>
+</rss>
