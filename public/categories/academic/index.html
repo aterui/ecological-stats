@@ -162,11 +162,31 @@ if (!doNotTrack) {
 
   <header class="entry-header">
     <h2>
+      Rの使えるパッケージ/ショートカット
+    </h2>
+  </header>
+  <section class="entry-content">
+    <p>Packagetidyversepatchworksf/raster/stars/exactextractrwhiteboxShortcutCode block label (Ctrl &#43; Shift &#43; R)Multi-line (un)comment (Ctrl &#43; Shift &#43; C)Pipe (Ctrl &#43; Shift &#43; M)Packagetidyverseデータ整理や図表作成に有用なさまざまなパッケージをまとめたもの。もはやこのパッケージなしにはRを使えない。とくにdplyr およびggplot2 に含まれる関数群にはお世話になりっぱなしである。このあたりの関数の使い方はWeb上にあふれているので割愛。dplyrであればHeavyWatalさんのWebsiteが分かりやすい。ggplot2に関してはFrom data to Vizがビジュアルから入れるのでとっつきやすい。
+patchworkggplot2とセットで使うとことを想定したパッケージ（patchwork）。データフレームをグループごとにプロットする場合、facet_wrapやfacet_gridなどの関数を使うことが多いと思う。これらは非常に有用な関数なのだが、すべてのパネルで同じ構造（xとyが一緒など）をとる必要がある。しかし、論文の図を作る時、フォーマットの異なる図を横に並べて一つの図としてまとめたいことも多いと思う（例えば散布図と箱ひげ図を並べる、など）。そんなときに役立つのがpatchworkである。このパッケージを使うと、複数のggplotオブジェクトを好きなように配置できる。irisを使って例を下に示す。
+pacman::p_load(tidyverse,patchwork)# scatter plotg1 &lt;- iris %&gt;% ggplot(aes(x = Sepal.Width,y = Sepal.Length,color = Species)) &#43;geom_point(alpha = 0.3) &#43;theme_bw()# box plotg2 &lt;- iris %&gt;%ggplot(aes(x = Species,y = Sepal....</p>
+  </section>
+  <footer class="entry-footer">
+
+April 9, 2022&nbsp;·&nbsp;Akira Terui
+</footer>
+  <a class="entry-link" aria-label="post link to Rの使えるパッケージ/ショートカット" href="https://ecological-stats.netlify.app/2022/04/09/r-package-shortcut/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+
+  <header class="entry-header">
+    <h2>
       論文を書くときの留意点
     </h2>
   </header>
   <section class="entry-content">
-    <p>StructureIntroductionMethodsResultsDiscussionAdditional pointParagraphSentenceStructureIntroductionパラグラフ間の論理的つながりが明確
+    <p>StructureIntroductionMethodsResultsDiscussionAdditional pointParagraphSentence論文のドラフトをあげたら、以下の点を確認する。
+StructureIntroductionパラグラフ間の論理的つながりが明確
 大きな枠組みの中で新奇性を述べている
 対象とするシステムの「必然性」が明確
 データの質と整合性が取れている
@@ -388,34 +408,14 @@ July 31, 2019&nbsp;·&nbsp;Akira Terui
 </footer>
   <a class="entry-link" aria-label="post link to 海外で研究職を探す：ポスドク応募編" href="https://ecological-stats.netlify.app/2019/07/31/jobhunt-postdoc-apply/"></a>
 </article>
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      海外で研究職を探す：立志編
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>Summary初めての国際学会@にゅーじーらんど帰国後-とりあえずトレーニング立ちはだかる壁Summary2019年、アメリカで運よくテニュアトラックポジションのオファーをいただくことができ、8月からノースカロライナで研究室を立ち上げることになった。日本で学位をとった私にとって不可能と思えることばかりだったが、気が付いたら何とかなっていた。記憶が褪せる前に、その過程を記事として残しておこうと思う。この記事は「立志編」ということで、海外にでようと思ったキッカケを中心に書いていきたい。
-初めての国際学会@にゅーじーらんど海外に出てみたい、という気持ちが確かに芽生えたのは、2011年に初めて参加した国際学会の時だと思う。この時、私は博士課程1年だったが、国内の研究の世界しか知らなかった私にとって衝撃的な体験だった。
-その国際学会はSociety for Conservation Biologyの年会で、世界各国から保全生態学の第一線で活躍している研究者が集まる。当時、修士課程の論文が出版されたということでこの学会（ニュージーランド、オークランド）に参加したのだが、周囲のレベルの高さ（あるいは高そうに見えること）に圧倒され、自分がここにいていいものか、とさえ思ってしまった。基調講演はさることながら、学生発表賞のプレゼンも洗練されていて、まるでTEDトークのようなものが多かった。ああ、これが国際レベルの研究環境なのか！（のちに英語がある程度堪能になり、実はたいしたことがない場合も多いとわかるのだが。）
-しかし、それまで英語によるコミュニケーションをまったく訓練してこなかった私は、周りが何を話しているのか全く理解できない。発表もすごそうなことはわかるのだが、「すごそう」以上のことはわからない。ポスター発表をしたのだが、ほんの数人しか聞きに来ず、来たとしても片言の英語ではまったく意味のある会話ができない。あまりにも緊張してパニックに陥った私は、“Where are you from?”という簡単な質問に対し、“I’m Japan!”（私は日本です！）と答えた記憶がある。英語論文を（マイナーなジャーナルの）紙面で発表し、ノミ程の自信を持ち始めたころだったのだが、それはあっけなく踏みつぶされ、「ああ、自分は国際的な研究の輪の中に入ることはできないのだ」と悟った。研究は論文が命といえど、結局のところ顔を合わせたコミュニケーションがものを言う。いかに自分が「世界」から取り残されているかが痛いほどわかり、打ちひしがれた記憶がいまだ鮮明に残っている。
-帰国後-とりあえずトレーニングショックを受けて帰国した私は、すぐさま英語コミュニケーションのトレーニングを始めた。当時東京大学の大学院（農学生命科学研究科）に在籍していたのだが、大学内で英語コミュニケーションの場を探すと、驚くほど機会が用意されていた。特に、東京大学工学部は留学生が多く、毎週火曜と金曜には留学生を交えたランチタイムがあった。早速その場に突っ込んでいき、話せないながらも英語による会話に慣れようと必死になった。また、週二回（各回1時間程度）では圧倒的に会話量が少ないので、同時にSkype英会話（比較的安価；当時は毎日30分で月5000円だった）を通じてトレーニングするようにするのと、「レッツスピーク」という英語のディクテーション（音声書き取りのトレーニング）をできるだけ毎日するようにした。
-【中古】NHKラジオ英会話レッツスピ-クベストセレクション NHK　CD　book /NHK出版/岩村圭南 (単行本)
-価格：616円（税込、送料無料) (2019/7/29時点)楽天で購入結果、2年後の国際学会ではある程度コミュニケーションが取れるようになり、より国際学会を楽しめるようになった。また、副産物として、このころから英語の「書く」能力も飛躍的に改善された気がする。感覚的に、英語の「変な表現」がわかるようになってきたのだ。論文を書く効率も上がったのではないかと思う。2019年現在、言語の壁はいまだに大きいと感じるが、この時の時間は確実に今に繋がっている。
-立ちはだかる壁しかし、博士課程在学中、私は自分で望んでいたほどの研究業績を上げることは叶わなかった（英語論文は主著2本）。ポスドクでは海外に！と意気込んでいたのだが、それどころか国内での任期付き研究職につくこともおぼつかない状況だった。幸い、当時交流のあった教授の先生に拾ってもらい、そのポスドク期間にある程度業績を上げて海外への道が開けたのだが、その道のりも平坦ではなかったように思う。次のエントリーでは、海外ポスドクポジションへの応募の過程を書いていきたいと思う。
-</p>
-  </section>
-  <footer class="entry-footer">
-
-July 30, 2019&nbsp;·&nbsp;Akira Terui
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="next" href="https://ecological-stats.netlify.app/categories/academic/page/2/">Next Page »</a>
+  </nav>
 </footer>
-  <a class="entry-link" aria-label="post link to 海外で研究職を探す：立志編" href="https://ecological-stats.netlify.app/2019/07/30/jobhunt-motivation/"></a>
-</article>
 
     </main><footer class="footer">
-    <span>&copy; 2021 <a href="https://ecological-stats.netlify.app">ECOSTATS</a></span>
+    <span>&copy; 2022 <a href="https://ecological-stats.netlify.app">ECOSTATS</a></span>
     <span>&middot;</span>
     <span>Powered by <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span>
     <span>&middot;</span>

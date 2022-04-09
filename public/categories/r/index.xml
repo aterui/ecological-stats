@@ -6,7 +6,18 @@
     <description>Recent content in R on ECOSTATS</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 30 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/categories/r/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 09 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/categories/r/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Rの使えるパッケージ/ショートカット</title>
+      <link>https://ecological-stats.netlify.app/2022/04/09/r-package-shortcut/</link>
+      <pubDate>Sat, 09 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://ecological-stats.netlify.app/2022/04/09/r-package-shortcut/</guid>
+      <description>Packagetidyversepatchworksf/raster/stars/exactextractrwhiteboxShortcutCode block label (Ctrl + Shift + R)Multi-line (un)comment (Ctrl + Shift + C)Pipe (Ctrl + Shift + M)Packagetidyverseデータ整理や図表作成に有用なさまざまなパッケージをまとめたもの。もはやこのパッケージなしにはRを使えない。とくにdplyr およびggplot2 に含まれる関数群にはお世話になりっぱなしである。このあたりの関数の使い方はWeb上にあふれているので割愛。dplyrであればHeavyWatalさんのWebsiteが分かりやすい。ggplot2に関してはFrom data to Vizがビジュアルから入れるのでとっつきやすい。
+patchworkggplot2とセットで使うとことを想定したパッケージ（patchwork）。データフレームをグループごとにプロットする場合、facet_wrapやfacet_gridなどの関数を使うことが多いと思う。これらは非常に有用な関数なのだが、すべてのパネルで同じ構造（xとyが一緒など）をとる必要がある。しかし、論文の図を作る時、フォーマットの異なる図を横に並べて一つの図としてまとめたいことも多いと思う（例えば散布図と箱ひげ図を並べる、など）。そんなときに役立つのがpatchworkである。このパッケージを使うと、複数のggplotオブジェクトを好きなように配置できる。irisを使って例を下に示す。
+pacman::p_load(tidyverse,patchwork)# scatter plotg1 &amp;lt;- iris %&amp;gt;% ggplot(aes(x = Sepal.Width,y = Sepal.Length,color = Species)) +geom_point(alpha = 0.3) +theme_bw()# box plotg2 &amp;lt;- iris %&amp;gt;%ggplot(aes(x = Species,y = Sepal.</description>
+    </item>
+    
     <item>
       <title>Rでシミュレーション3 - foreach</title>
       <link>https://ecological-stats.netlify.app/2021/05/30/foreach/</link>

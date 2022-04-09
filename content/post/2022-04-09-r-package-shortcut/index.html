@@ -1,0 +1,99 @@
+---
+title: Rの使えるパッケージ/ショートカット
+author: ''
+date: '2022-04-09'
+slug: r-package-shortcut
+output:
+  blogdown::html_page:
+    toc: true
+categories:
+  - R
+  - academic
+tags:
+  - miscellaneous
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#package">Package</a>
+<ul>
+<li><a href="#tidyverse">tidyverse</a></li>
+<li><a href="#patchwork">patchwork</a></li>
+<li><a href="#sfrasterstarsexactextractr">sf/raster/stars/exactextractr</a></li>
+<li><a href="#whitebox">whitebox</a></li>
+</ul></li>
+<li><a href="#shortcut">Shortcut</a>
+<ul>
+<li><a href="#code-block-label-ctrl-shift-r">Code block label (<code>Ctrl + Shift + R</code>)</a></li>
+<li><a href="#multi-line-uncomment-ctrl-shift-c">Multi-line (un)comment (<code>Ctrl + Shift + C</code>)</a></li>
+<li><a href="#pipe-ctrl-shift-m">Pipe (<code>Ctrl + Shift + M</code>)</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="package" class="section level1">
+<h1>Package</h1>
+<div id="tidyverse" class="section level2">
+<h2>tidyverse</h2>
+<p>データ整理や図表作成に有用なさまざまなパッケージをまとめたもの。もはやこのパッケージなしにはRを使えない。とくに<code>dplyr</code> および<code>ggplot2</code> に含まれる関数群にはお世話になりっぱなしである。このあたりの関数の使い方はWeb上にあふれているので割愛。<code>dplyr</code>であれば<a href="https://heavywatal.github.io/rstats/dplyr.html">HeavyWatalさんのWebsite</a>が分かりやすい。<code>ggplot2</code>に関しては<a href="https://www.data-to-viz.com/">From data to Viz</a>がビジュアルから入れるのでとっつきやすい。</p>
+</div>
+<div id="patchwork" class="section level2">
+<h2>patchwork</h2>
+<p><code>ggplot2</code>とセットで使うとことを想定したパッケージ（<a href="https://patchwork.data-imaginist.com/">patchwork</a>）。データフレームをグループごとにプロットする場合、<code>facet_wrap</code>や<code>facet_grid</code>などの関数を使うことが多いと思う。これらは非常に有用な関数なのだが、すべてのパネルで同じ構造（<code>x</code>と<code>y</code>が一緒など）をとる必要がある。しかし、論文の図を作る時、フォーマットの異なる図を横に並べて一つの図としてまとめたいことも多いと思う（例えば散布図と箱ひげ図を並べる、など）。そんなときに役立つのが<code>patchwork</code>である。このパッケージを使うと、複数の<code>ggplot</code>オブジェクトを好きなように配置できる。<code>iris</code>を使って例を下に示す。</p>
+<pre class="r"><code>pacman::p_load(tidyverse,
+               patchwork)
+
+# scatter plot
+g1 &lt;- iris %&gt;% 
+  ggplot(aes(x = Sepal.Width,
+             y = Sepal.Length,
+             color = Species)) +
+  geom_point(alpha = 0.3) +
+  theme_bw()
+
+# box plot
+g2 &lt;- iris %&gt;%
+  ggplot(aes(x = Species,
+             y = Sepal.Length)) +
+  geom_boxplot(fill = &quot;steelblue&quot;,
+               alpha = 0.3) +
+  theme_bw()
+
+# layout horizontal
+g1 + g2</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="r"><code># layout vertical
+g1 / g2</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
+<p>複数の図をまとめるとき、図の端に“A”などのラベルをつけたいことも多いと思う。このパッケージはそんな状況にも<code>plot_annotation</code>で対応している。</p>
+<pre class="r"><code># annotation
+g1 + g2 + plot_annotation(tag_levels = &quot;A&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>ほかにも凡例の位置の微調整、パネル毎に大きさの調節、空白の挿入などができる。詳細は<a href="https://patchwork.data-imaginist.com/">patchworkのウェブサイト</a>でみることができる。</p>
+</div>
+<div id="sfrasterstarsexactextractr" class="section level2">
+<h2>sf/raster/stars/exactextractr</h2>
+<p>いままでGISが本当に嫌いだった。その大きな理由の一つは、ArcGISなどを使うと、GUI上でカチカチとクリックを繰り返す作業が非常に多いからである。作業記録が残らないので、再現性の担保が非常に難しい。しかし、最近ではRでGISがかなり使えるようになっており、いくつかのパッケージを組み合わせればArcGISを使う必要はほぼない。その代表格となるパッケージが<code>sf</code>と<code>raster</code>だろう。<code>sf</code>はベクターファイルを処理する関数群、<code>raster</code>はラスターデータを処理する関数群がそろっている。さらに、<code>stars</code>や<code>exactextractr</code>を組み合わせれば完璧である。また、<code>ggplot2</code>との相性がよく、Rでそのまま地図を作ることができるのも大きなメリットだ。検索すればいくつかサイトがでてくるが、私は<a href="https://tmieno2.github.io/R-as-GIS-for-Economists/">こちら</a>で勉強した。残念ながら日本語のサイトはないように思う。</p>
+</div>
+<div id="whitebox" class="section level2">
+<h2>whitebox</h2>
+<p><code>whitebox</code>が有用な人は河川を対象に研究している人に限られているかもしれないが、これはぜひ紹介しておきたい。GISの作業のなかでも、流域解析が一番面倒といっても過言ではなく、この作業だけはRで実装することがとても難しかった。しかし、<code>whitebox</code>を使えば、Rの中で流域解析を思う存分まわすことができる。河川ポリラインの抽出から流域ポリゴンの作成まで、一通りの作業が可能である。パッケージのウェブサイト（<a href="https://giswqs.github.io/whiteboxR/">whitebox</a>）から一通り使い方を学べる。</p>
+</div>
+</div>
+<div id="shortcut" class="section level1">
+<h1>Shortcut</h1>
+<div id="code-block-label-ctrl-shift-r" class="section level2">
+<h2>Code block label (<code>Ctrl + Shift + R</code>)</h2>
+<p>適宜コードブロックのラベルを入れると、ブロックラベルをヘッダーとしたアウトラインがRstudio内で自動生成されるため、コードの管理が楽になる。</p>
+</div>
+<div id="multi-line-uncomment-ctrl-shift-c" class="section level2">
+<h2>Multi-line (un)comment (<code>Ctrl + Shift + C</code>)</h2>
+<p>複数ラインをコメントアウト（あるいはコメント解除）したいときに便利。ラインを選択し、<code>Ctrl + Shift + C</code>を入れると選択したラインのすべてがコメントアウトされる。</p>
+</div>
+<div id="pipe-ctrl-shift-m" class="section level2">
+<h2>Pipe (<code>Ctrl + Shift + M</code>)</h2>
+<p><code>tidyverse</code>を使うときに欠かせないパイプ<code>%&gt;%1</code>のショートカット。</p>
+</div>
+</div>
