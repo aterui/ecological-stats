@@ -7,7 +7,7 @@
 <meta name="robots" content="index, follow">
 <title>Rの使えるパッケージ/ショートカット | ECOSTATS</title>
 
-<meta name="keywords" content="miscellaneous" />
+<meta name="keywords" content="tidyverse, miscellaneous" />
 <meta name="description" content="Packagetidyversepatchworksf/raster/stars/exactextractrwhiteboxShortcutCode block label (Ctrl &#43; Shift &#43; R)Multi-line (un)comment (Ctrl &#43; Shift &#43; C)Pipe (Ctrl &#43; Shift &#43; M)Packagetidyverseデータ整理や図表作成に有用なさまざまなパッケージをまとめたもの。もはやこのパッケージなしにはRを使えない。とくにdplyr およびggplot2 に含まれる関数群にはお世話になりっぱなしである。このあたりの関数の使い方はWeb上にあふれているので割愛。dplyrであればHeavyWatalさんのWebsiteが分かりやすい。ggplot2に関してはFrom data to Vizがビジュアルから入れるのでとっつきやすい。
 patchworkggplot2とセットで使うとことを想定したパッケージ（patchwork）。データフレームをグループごとにプロットする場合、facet_wrapやfacet_gridなどの関数を使うことが多いと思う。これらは非常に有用な関数なのだが、すべてのパネルで同じ構造（xとyが一緒など）をとる必要がある。しかし、論文の図を作る時、フォーマットの異なる図を横に並べて一つの図としてまとめたいことも多いと思う（例えば散布図と箱ひげ図を並べる、など）。そんなときに役立つのがpatchworkである。このパッケージを使うと、複数のggplotオブジェクトを好きなように配置できる。irisを使って例を下に示す。
 pacman::p_load(tidyverse,patchwork)# scatter plotg1 &lt;- iris %&gt;% ggplot(aes(x = Sepal.Width,y = Sepal.Length,color = Species)) &#43;geom_point(alpha = 0.3) &#43;theme_bw()# box plotg2 &lt;- iris %&gt;%ggplot(aes(x = Species,y = Sepal.">
@@ -81,7 +81,7 @@ pacman::p_load(tidyverse,patchwork)# scatter plotg1 &lt;- iris %&gt;% ggplot(
   "name": "Rの使えるパッケージ\/ショートカット",
   "description": "Package\r\rtidyverse\rpatchwork\rsf/raster/stars/exactextractr\rwhitebox\r\rShortcut\r\rCode block label (Ctrl + Shift + R)\rMulti-line (un)comment (Ctrl + Shift + C)\rPipe (Ctrl + Shift + M)\r\r\r\rPackage\rtidyverse\rデータ整理や図表作成に有用なさまざまなパッケージをまとめたもの。もはやこのパッケージなしにはRを使えない。とくにdplyr およびggplot2 に含まれる関数群にはお世話になりっぱなしである。このあたりの関数の使い方はWeb上にあふれているので割愛。dplyrであればHeavyWatalさんのWebsiteが分かりやすい。ggplot2に関してはFrom data to Vizがビジュアルから入れるのでとっつきやすい。\n\rpatchwork\rggplot2とセットで使うとことを想定したパッケージ（patchwork）。データフレームをグループごとにプロットする場合、facet_wrapやfacet_gridなどの関数を使うことが多いと思う。これらは非常に有用な関数なのだが、すべてのパネルで同じ構造（xとyが一緒など）をとる必要がある。しかし、論文の図を作る時、フォーマットの異なる図を横に並べて一つの図としてまとめたいことも多いと思う（例えば散布図と箱ひげ図を並べる、など）。そんなときに役立つのがpatchworkである。このパッケージを使うと、複数のggplotオブジェクトを好きなように配置できる。irisを使って例を下に示す。\npacman::p_load(tidyverse,\rpatchwork)\r# scatter plot\rg1 \u0026lt;- iris %\u0026gt;% ggplot(aes(x = Sepal.Width,\ry = Sepal.Length,\rcolor = Species)) +\rgeom_point(alpha = 0.3) +\rtheme_bw()\r# box plot\rg2 \u0026lt;- iris %\u0026gt;%\rggplot(aes(x = Species,\ry = Sepal.",
   "keywords": [
-    "miscellaneous"
+    "tidyverse", "miscellaneous"
   ],
   "articleBody": "\r\r\rPackage\r\rtidyverse\rpatchwork\rsf/raster/stars/exactextractr\rwhitebox\r\rShortcut\r\rCode block label (Ctrl + Shift + R)\rMulti-line (un)comment (Ctrl + Shift + C)\rPipe (Ctrl + Shift + M)\r\r\r\rPackage\rtidyverse\rデータ整理や図表作成に有用なさまざまなパッケージをまとめたもの。もはやこのパッケージなしにはRを使えない。とくにdplyr およびggplot2 に含まれる関数群にはお世話になりっぱなしである。このあたりの関数の使い方はWeb上にあふれているので割愛。dplyrであればHeavyWatalさんのWebsiteが分かりやすい。ggplot2に関してはFrom data to Vizがビジュアルから入れるのでとっつきやすい。\n\rpatchwork\rggplot2とセットで使うとことを想定したパッケージ（patchwork）。データフレームをグループごとにプロットする場合、facet_wrapやfacet_gridなどの関数を使うことが多いと思う。これらは非常に有用な関数なのだが、すべてのパネルで同じ構造（xとyが一緒など）をとる必要がある。しかし、論文の図を作る時、フォーマットの異なる図を横に並べて一つの図としてまとめたいことも多いと思う（例えば散布図と箱ひげ図を並べる、など）。そんなときに役立つのがpatchworkである。このパッケージを使うと、複数のggplotオブジェクトを好きなように配置できる。irisを使って例を下に示す。\npacman::p_load(tidyverse,\rpatchwork)\r# scatter plot\rg1 % ggplot(aes(x = Sepal.Width,\ry = Sepal.Length,\rcolor = Species)) +\rgeom_point(alpha = 0.3) +\rtheme_bw()\r# box plot\rg2 %\rggplot(aes(x = Species,\ry = Sepal.Length)) +\rgeom_boxplot(fill = \"steelblue\",\ralpha = 0.3) +\rtheme_bw()\r# layout horizontal\rg1 + g2\r# layout vertical\rg1 / g2\r複数の図をまとめるとき、図の端に“A”などのラベルをつけたいことも多いと思う。このパッケージはそんな状況にもplot_annotationで対応している。\n# annotation\rg1 + g2 + plot_annotation(tag_levels = \"A\")\rほかにも凡例の位置の微調整、パネル毎に大きさの調節、空白の挿入などができる。詳細はpatchworkのウェブサイトでみることができる。\n\rsf/raster/stars/exactextractr\rいままでGISが本当に嫌いだった。その大きな理由の一つは、ArcGISなどを使うと、GUI上でカチカチとクリックを繰り返す作業が非常に多いからである。作業記録が残らないので、再現性の担保が非常に難しい。しかし、最近ではRでGISがかなり使えるようになっており、いくつかのパッケージを組み合わせればArcGISを使う必要はほぼない。その代表格となるパッケージがsfとrasterだろう。sfはベクターファイルを処理する関数群、rasterはラスターデータを処理する関数群がそろっている。さらに、starsやexactextractrを組み合わせれば完璧である。また、ggplot2との相性がよく、Rでそのまま地図を作ることができるのも大きなメリットだ。検索すればいくつかサイトがでてくるが、私はこちらで勉強した。残念ながら日本語のサイトはないように思う。\n\rwhitebox\rwhiteboxが有用な人は河川を対象に研究している人に限られているかもしれないが、これはぜひ紹介しておきたい。GISの作業のなかでも、流域解析が一番面倒といっても過言ではなく、この作業だけはRで実装することがとても難しかった。しかし、whiteboxを使えば、Rの中で流域解析を思う存分まわすことができる。河川ポリラインの抽出から流域ポリゴンの作成まで、一通りの作業が可能である。パッケージのウェブサイト（whitebox）から一通り使い方を学べる。\n\r\rShortcut\rCode block label (Ctrl + Shift + R)\r適宜コードブロックのラベルを入れると、ブロックラベルをヘッダーとしたアウトラインがRstudio内で自動生成されるため、コードの管理が楽になる。\n\rMulti-line (un)comment (Ctrl + Shift + C)\r複数ラインをコメントアウト（あるいはコメント解除）したいときに便利。ラインを選択し、Ctrl + Shift + Cを入れると選択したラインのすべてがコメントアウトされる。\n\rPipe (Ctrl + Shift + M)\rtidyverseを使うときに欠かせないパイプ%%1のショートカット。\n\r\r",
   "wordCount" : "139",
@@ -321,9 +321,15 @@ g1 + g2 + plot_annotation(tag_levels = &quot;A&quot;)</code></pre>
 </div>
   <footer class="post-footer">
     <ul class="post-tags">
+      <li><a href="https://ecological-stats.netlify.app/tags/tidyverse/">tidyverse</a></li>
       <li><a href="https://ecological-stats.netlify.app/tags/miscellaneous/">miscellaneous</a></li>
     </ul>
     <nav class="paginav">
+      <a class="prev" href="https://ecological-stats.netlify.app/2022/05/15/ggplot/">
+        <span class="title">« Prev Page</span>
+        <br>
+        <span>出版できる図表をggplotで</span>
+      </a>
       <a class="next" href="https://ecological-stats.netlify.app/2021/12/07/checkpoint/">
         <span class="title">Next Page »</span>
         <br>
@@ -338,7 +344,7 @@ g1 + g2 + plot_annotation(tag_levels = &quot;A&quot;)</code></pre>
 
 <div class="share-buttons">
     <a target="_blank" rel="noopener noreferrer" aria-label="share Rの使えるパッケージ/ショートカット on twitter"
-        href="https://twitter.com/intent/tweet/?text=R%e3%81%ae%e4%bd%bf%e3%81%88%e3%82%8b%e3%83%91%e3%83%83%e3%82%b1%e3%83%bc%e3%82%b8%2f%e3%82%b7%e3%83%a7%e3%83%bc%e3%83%88%e3%82%ab%e3%83%83%e3%83%88&amp;url=https%3a%2f%2fecological-stats.netlify.app%2f2022%2f04%2f09%2fr-package-shortcut%2f&amp;hashtags=miscellaneous">
+        href="https://twitter.com/intent/tweet/?text=R%e3%81%ae%e4%bd%bf%e3%81%88%e3%82%8b%e3%83%91%e3%83%83%e3%82%b1%e3%83%bc%e3%82%b8%2f%e3%82%b7%e3%83%a7%e3%83%bc%e3%83%88%e3%82%ab%e3%83%83%e3%83%88&amp;url=https%3a%2f%2fecological-stats.netlify.app%2f2022%2f04%2f09%2fr-package-shortcut%2f&amp;hashtags=tidyverse%2cmiscellaneous">
         <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
             <path
                 d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />

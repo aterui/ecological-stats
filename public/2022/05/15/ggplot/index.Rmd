@@ -1,0 +1,260 @@
+---
+title: 出版できる図表をggplotで
+author: ''
+date: '2022-05-15'
+output:
+  blogdown::html_page:
+    toc: true
+slug: ggplot
+categories:
+  - R
+  - academic
+tags:
+  - ggplot
+  - tidyverse
+---
+
+```{r, include = F}
+
+library(tidyverse)
+
+```
+
+見栄えのいい図表を作ることはとても好きで、不必要なほどにこだわってしまうこともある。しかし、「査読コメントに対応するために、図表を作り直すこと」は大嫌いであった\*。これには理由がある。学生のころはＲの図表作成能力が低かったため、Rで図表のベースをつくったら、細かい調整をパワポやイラストレーターでしていたのだ。この作業は馬鹿にならない時間がかかるのだが、ちょっとした解析の修正や、リバイスの度にやり直しになる。
+
+この作業による時間のロスが無駄だと感じたため、**そのまま出版できる図表をコードを走らせるだけで作れるよう**せっせと豆知識をためてきた。最近では`Rmarkdown`と合わせれば、MicrosoftのOfficeに頼らずともすべての作業がRで完結する。ここでは、`ggplot`関連で案外わかるまで時間のかかったものに焦点をあててまとめる。もっといい書き方もあるかもしれないので、そのときはこっそり教えてほしい。今回は種数と面積の関係を模した以下のダミーデータを使って例を示す。
+
+```{r}
+# dummy data
+x <- runif(100, 0.1, 1000) # hypothetical area
+m <- model.matrix(~log(x)) # model matrix
+y <- rpois(length(x), exp(m %*% c(log(5), 0.5))) # hypothetical richness
+
+df0 <- tibble(area = x,
+              gamma = y,
+              group = rep(letters[1:4], each = 25)) %>% 
+  mutate(alpha = rbeta(length(y), 5, 5) * gamma,
+         beta = gamma / alpha) %>% 
+  pivot_longer(cols = c(alpha, beta, gamma),
+               names_to = "metric",
+               values_to = "diversity")
+
+print(df0)
+
+```
+
+## 応答変数（Y軸）の異なる図を並べる
+
+応答変数の異なる図を一つにまとめたいことも多い。今回のダミーデータの例で言えば、複数の多様性の尺度を並べて示したほうが分かりやすいかもしれない。`facet_` 系の関数を使うことになるが、デフォルトではストライプは上（`facet_wrap`）や右（`facet_grid`）に出てきてしまう。
+
+```{r}
+# wrap
+df0 %>% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  facet_wrap(facets = ~metric,
+             nrow = 3,
+             ncol = 1)
+
+# grid
+df0 %>% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  labs(x = expression("Area ("*m^2*")"),
+       y = "Diversity") +
+  facet_grid(rows = vars(metric), 
+             cols = vars(group))
+```
+
+`strip.position`（`facet_wrap()`）もしくは`switch`（`facet_grid()`）の引数でこの問題に対処できる。ただし、これだけではストライプが軸の値とプロットの間に出てきてしまうので、`theme(strip.placement = "outside")` として位置を調整する必要がある。
+
+```{r}
+# wrap
+df0 %>% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  facet_wrap(facets = ~metric,
+             nrow = 3,
+             ncol = 1,
+             strip.position = "left") +
+  theme(strip.placement = "outside", # place label outside
+        strip.background = element_blank()) # blanck background color for stripe
+
+# grid
+df0 %>% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  facet_grid(rows = vars(metric), 
+             cols = vars(group),
+             switch = "y") +
+  theme(strip.placement = "outside", # place label outside
+        strip.background = element_blank()) # blank background color for stripe
+```
+
+## 軸のスケールをパネルごとに変える
+
+`facet_wrap()`や`facet_grid()`を使うと、すべてのパネルの軸スケールが統一されてしまう。この問題には`scales`で調整できる。両軸とも調整する場合は`"free"`、どちらかのみの場合は`"x_free"`もしくは`"y_free"`とする。`facet_wrap()` はすべてのパネルが別個に調整されるが、`facet_grid()` の場合は各行・各列内ではスケールが固定される違いがある。
+
+```{r}
+# wrap
+df0 %>% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  facet_wrap(facets = ~metric,
+             nrow = 3,
+             ncol = 1,
+             strip.position = "left",
+             scales = "free") +
+  theme(strip.placement = "outside", # place label outside
+        strip.background = element_blank()) # blanck background color for stripe
+
+# grid
+df0 %>% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  labs(x = expression("Area ("*m^2*")"),
+       y = NULL) +
+  facet_grid(rows = vars(metric), 
+             cols = vars(group),
+             switch = "y",
+             scales = "free") +
+  theme(strip.placement = "outside", # place label outside
+        strip.background = element_blank()) # blank background color for stripe
+```
+
+## 変数変換
+
+軸を対数スケールなどで表示した場合は、`scale_x_continuous()`(もしくは`scale_y_continuous()`)の`trans`で指定できる。
+
+```{r}
+# grid
+df0 %>% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  facet_grid(rows = vars(metric), 
+             cols = vars(group),
+             switch = "y",
+             scales = "free") +
+  scale_x_continuous(trans = "log10") + # log10 transformation
+  scale_y_continuous(trans = "log10") + # log10 transformation
+  theme(strip.placement = "outside", # place label outside
+        strip.background = element_blank()) # blank background color for stripe
+```
+
+## 特殊文字
+
+特殊文字は`expression()`を使うことで対応できるが、挙動が実にわかりにくい。通常ラベルを書こうとおもったら、character stringとして`"Label A"`と書くが、例えば上付き文字を書こうとして`expression("Label^A")`としてもうまくゆかない。上付き文字のような特殊文字は`""`の外側に置き（つまり`expression("Label"^A)`）、さらに通常文字を続けるためには`*`（スペースなし）もしくは`~`（スペースあり）でつないでやらなければならない。こう書いてもわかりにくいと思うので、下に対応表をおいておく。また、このラベリングの挙動は`facet_`関数を使うともっとこんがらがる。以下、いくつかパターンに分けて説明する。
+
+```{r, echo = F}
+
+tibble(Code = c('expression(alpha)',
+                'expression(alpha~"diversity")',
+                'expression(alpha*"diversity")',
+                'expression(a^{sup})',
+                'expression(a[sub])'),
+       Output = c('$\\alpha$',
+                  '$\\alpha$ diversity',
+                  '$\\alpha$diversity',
+                  '$a^{sup}$',
+                  '$a_{sub}$')) %>% 
+  knitr::kable()
+```
+
+### 軸名
+
+軸名は一番シンプルに対応できる。`ggplot`では`labs()`を使うことで軸名や凡例の名前を柔軟に指定できるので、ここに`expression()`を使いながら軸名を指定してやればよい。
+
+```{r}
+
+df0 %>% 
+  filter(metric == "gamma") %>% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  scale_x_continuous(trans = "log10") +
+  scale_y_continuous(trans = "log10") +
+  labs(x = expression("Area ("*m^2*")"),
+       y = expression(gamma~"diversity"))
+```
+
+### 軸の値
+
+軸の値に特殊文字を使う場合、もう少し工夫が必要になる。下の例では、x軸の値にギリシャ文字が表れるが、それぞれに対応する`expression()`形式を`scale_x_discrete(labels = c("somthing" = expression(something)))`の中で指定している。データフレームのもとの値（`alpha`、`beta`、`gamma`）を参照しながら（左辺）、対応する値の名前を指定（右辺）できる。
+
+```{r}
+df0 %>% 
+  ggplot(aes(x = metric,
+             y = diversity)) +
+  geom_boxplot(alpha = 0.3,
+               fill = "salmon") +
+  scale_x_discrete(labels = c("alpha" = expression(alpha~"diversity"),
+                              "beta" = expression(beta~"diversity"),
+                              "gamma" = expression(gamma~"diversity"))) +
+  labs(y = expression(gamma~"diversity"),
+       x = NULL)
+```
+
+### パネルストライプ
+
+`facet_wrap`、 `facet_grid` を使うときは仕様が異なり、ストライプのラベルは`expression()`で対応できない。通常の文字であれば、`as_labeller()`を使うことでデータフレーム内の値を参照しながら対応するラベルを指定できる。
+
+```{r}
+
+df0 %>% 
+  filter(metric == "gamma") %>% 
+  ggplot(aes(x = area,
+             y = diversity)) +
+  geom_point() +
+  facet_wrap(facets = ~group,
+             labeller = as_labeller(c(`a` = "group theta",
+                                      `b` = "group delta",
+                                      `c` = "group phi",
+                                      `d` = "group kappa")))
+```
+
+しかし、ここに`expression()`をかませるとうまくいかない。
+
+```{r}
+df0 %>% 
+  filter(metric == "gamma") %>% 
+  ggplot(aes(x = area,
+             y = diversity)) +
+  geom_point() +
+  facet_wrap(facets = ~group,
+             labeller = as_labeller(c(`a` = expression("group"*theta),
+                                      `b` = "group delta",
+                                      `c` = "group phi",
+                                      `d` = "group kappa")))
+```
+
+スマートな解決策を見つけられていないが、次善策としてデータフレームの入力値そのものを変え（`case_when()`）、`labeller = label_parsed`とすれば対応できる。入力値を変えるときは、`expression()`の書き方にならえばよい。下の例ではわざわざラベルを因子型に置き換えているが、これはパネルの表れる順番を調整するために行っている（`levels = label`）。
+
+```{r}
+
+label <- c("group~delta",
+           "group^{kappa}",
+           "group[phi]",
+           "group~theta")
+
+df0 %>% 
+  filter(metric == "gamma") %>% 
+  mutate(group_label = case_when(group == "a" ~ label[1], # replace "a" with "label[i]"
+                                 group == "b" ~ label[2], # ditto
+                                 group == "c" ~ label[3],
+                                 group == "d" ~ label[4]),
+         group_label = factor(group_label, levels = label)) %>% # reorder
+  ggplot(aes(x = area,
+             y = diversity)) +
+  geom_point() +
+  facet_wrap(facets = ~group_label,
+             labeller = label_parsed) +
+  labs(x = expression("Area ("*cm^2*")"),
+       y = expression(gamma~"diversity"))
+```

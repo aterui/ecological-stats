@@ -165,6 +165,25 @@ if (!doNotTrack) {
 
   <header class="entry-header">
     <h2>
+      出版できる図表をggplotで
+    </h2>
+  </header>
+  <section class="entry-content">
+    <p>応答変数（Y軸）の異なる図を並べる軸のスケールをパネルごとに変える変数変換特殊文字軸名軸の値パネルストライプ見栄えのいい図表を作ることはとても好きで、不必要なほどにこだわってしまうこともある。しかし、「査読コメントに対応するために、図表を作り直すこと」は大嫌いであった*。これには理由がある。学生のころはＲの図表作成能力が低かったため、Rで図表のベースをつくったら、細かい調整をパワポやイラストレーターでしていたのだ。この作業は馬鹿にならない時間がかかるのだが、ちょっとした解析の修正や、リバイスの度にやり直しになる。
+この作業による時間のロスが無駄だと感じたため、そのまま出版できる図表をコードを走らせるだけで作れるようせっせと豆知識をためてきた。最近ではRmarkdownと合わせれば、MicrosoftのOfficeに頼らずともすべての作業がRで完結する。ここでは、ggplot関連で案外わかるまで時間のかかったものに焦点をあててまとめる。もっといい書き方もあるかもしれないので、そのときはこっそり教えてほしい。今回は種数と面積の関係を模した以下のダミーデータを使って例を示す。
+# dummy datax &lt;- runif(100, 0.1, 1000) # hypothetical aream &lt;- model.matrix(~log(x)) # model matrixy &lt;- rpois(length(x), exp(m %*% c(log(5), 0.5))) # hypothetical richnessdf0 &lt;- tibble(area = x,gamma = y,group = rep(letters[1:4], each = 25)) %&gt;% mutate(alpha = rbeta(length(y), 5, 5) * gamma,beta = gamma / alpha) %&gt;% pivot_longer(cols = c(alpha, beta, gamma),names_to = &#34;metric&#34;,values_to = &#34;diversity&#34;)print(df0)## # A tibble: 300 x 4## area group metric diversity## &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt;## 1 761....</p>
+  </section>
+  <footer class="entry-footer">
+
+May 15, 2022&nbsp;·&nbsp;Akira Terui
+</footer>
+  <a class="entry-link" aria-label="post link to 出版できる図表をggplotで" href="https://ecological-stats.netlify.app/2022/05/15/ggplot/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+
+  <header class="entry-header">
+    <h2>
       Rの使えるパッケージ/ショートカット
     </h2>
   </header>
