@@ -6,7 +6,22 @@
     <description>Recent content in R on ECOSTATS</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 15 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/categories/r/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 30 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/categories/r/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>RでGIS：ベクター</title>
+      <link>https://ecological-stats.netlify.app/2022/07/30/r-gis-sf/</link>
+      <pubDate>Sat, 30 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://ecological-stats.netlify.app/2022/07/30/r-gis-sf/</guid>
+      <description>RでGISGIS用のRパッケージsfによるベクター処理データを読み込むフィールド編集レイヤー間の紐づけまとめRでGISGISというとArcGISもしくはQGISを想定しがちだけど、個人的にはこれらGUIに依拠したSoftware（マウスでカチカチする系）は好みではないし、おすすめしない。というのも、何度もマウスでクリックしながら作業を進めるので、以下のリスクがある。
+作業行程の再現性を担保しにくい
+エラーがあった場合、すべての行程を繰り返す必要がある
+うっかりミスしやすい
+これらの理由から、私はGISもスクリプトベースで作業行程を記録すべきと思う。スクリプトベースのGISというとPostGISが標準だったと思うが、最近ではこれらの関数群はほぼすべてRで使えるようになっているし、工夫すれば計算速度もArcGISと遜色ない。しかし、スクリプトベースのGISに関する資料は英語によるものがほとんどのため、アクセスしにくいといえばそうかもしれない。そこで、RのGIS処理について、いくつかの記事にわけて紹介したいと思う。なお、このブログで書かれていることの大半はTaro Mienoさん(University of Nebraska Lincoln)のオンライン資料で勉強させていただいた。とても事細かな説明があるので、この記事を読んで興味がわいた方はぜひこちらで勉強するといいと思う。
+GIS用のRパッケージどのようなタイプのレイヤー（ベクター、ラスター）を扱うかによって、必要となるパッケージは変わる。基本的な作業はsf, raster, terraあたりで済むが、多少込み入った作業には他の補助的なパッケージも必要になる。以下の表に簡単にまとめる。
+パッケージ名レイヤタイプ備考sfベクターベクター処理の場合はsf一択。大体これで足りる（Website）。rmapshaperベクターフィーチャーが重いときに頂点を削って計算を高速化する。（Website）rasterラスターラスター処理のデファクトスタンダードだったが、C++ベースのterraに移行中（Website）。terraラスターラスター処理の新しいデファクトスタンダードになりつつある（Website）。starsベクター、ラスター時空間情報のついたラスター処理に特化。ラスター｜ベクター変換の際にも重宝する（Website）。exactextractrベクター、ラスターフィーチャーごとにラスターデータを集計するときに使う（Website）。tmapNAGISレイヤーの描画（Website）sfによるベクター処理データを読み込むベクター処理の鉄板であるsfを使ってみる。sfについてくるデータセットを使う。拡張子を見てもらうとわかるが、呼び出されるファイルはシェイプファイル（.</description>
+    </item>
+    
     <item>
       <title>出版できる図表をggplotで</title>
       <link>https://ecological-stats.netlify.app/2022/05/15/ggplot/</link>
@@ -15,7 +30,7 @@
       <guid>https://ecological-stats.netlify.app/2022/05/15/ggplot/</guid>
       <description>応答変数（Y軸）の異なる図を並べる軸のスケールをパネルごとに変える変数変換特殊文字軸名軸の値パネルストライプ見栄えのいい図表を作ることはとても好きで、不必要なほどにこだわってしまうこともある。しかし、「査読コメントに対応するために、図表を作り直すこと」は大嫌いであった*。これには理由がある。学生のころはＲの図表作成能力が低かったため、Rで図表のベースをつくったら、細かい調整をパワポやイラストレーターでしていたのだ。この作業は馬鹿にならない時間がかかるのだが、ちょっとした解析の修正や、リバイスの度にやり直しになる。
 この作業による時間のロスが無駄だと感じたため、そのまま出版できる図表をコードを走らせるだけで作れるようせっせと豆知識をためてきた。最近ではRmarkdownと合わせれば、MicrosoftのOfficeに頼らずともすべての作業がRで完結する。ここでは、ggplot関連で案外わかるまで時間のかかったものに焦点をあててまとめる。もっといい書き方もあるかもしれないので、そのときはこっそり教えてほしい。今回は種数と面積の関係を模した以下のダミーデータを使って例を示す。
-# dummy datax &amp;lt;- runif(100, 0.1, 1000) # hypothetical aream &amp;lt;- model.matrix(~log(x)) # model matrixy &amp;lt;- rpois(length(x), exp(m %*% c(log(5), 0.5))) # hypothetical richnessdf0 &amp;lt;- tibble(area = x,gamma = y,group = rep(letters[1:4], each = 25)) %&amp;gt;% mutate(alpha = rbeta(length(y), 5, 5) * gamma,beta = gamma / alpha) %&amp;gt;% pivot_longer(cols = c(alpha, beta, gamma),names_to = &amp;quot;metric&amp;quot;,values_to = &amp;quot;diversity&amp;quot;)print(df0)## # A tibble: 300 x 4## area group metric diversity## &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt;## 1 761.</description>
+# dummy datax &amp;lt;- runif(100, 0.1, 1000) # hypothetical aream &amp;lt;- model.matrix(~log(x)) # model matrixy &amp;lt;- rpois(length(x), exp(m %*% c(log(5), 0.5))) # hypothetical richnessdf0 &amp;lt;- tibble(area = x,gamma = y,group = rep(letters[1:4], each = 25)) %&amp;gt;% mutate(alpha = rbeta(length(y), 5, 5) * gamma,beta = gamma / alpha) %&amp;gt;% pivot_longer(cols = c(alpha, beta, gamma),names_to = &amp;quot;metric&amp;quot;,values_to = &amp;quot;diversity&amp;quot;)print(df0)## # A tibble: 300 x 4## area group metric diversity## &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt;## 1 630.</description>
     </item>
     
     <item>

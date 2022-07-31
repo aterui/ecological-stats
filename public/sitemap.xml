@@ -2,25 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://ecological-stats.netlify.app/categories/</loc>
+    <lastmod>2022-07-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/</loc>
+    <lastmod>2022-07-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/categories/gis/</loc>
+    <lastmod>2022-07-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/post/</loc>
+    <lastmod>2022-07-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/categories/r/</loc>
+    <lastmod>2022-07-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/2022/07/30/r-gis-sf/</loc>
+    <lastmod>2022-07-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/tags/sf/</loc>
+    <lastmod>2022-07-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/tags/</loc>
+    <lastmod>2022-07-30T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://ecological-stats.netlify.app/categories/academic/</loc>
     <lastmod>2022-05-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ecological-stats.netlify.app/categories/</loc>
-    <lastmod>2022-05-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ecological-stats.netlify.app/</loc>
-    <lastmod>2022-05-15T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://ecological-stats.netlify.app/tags/ggplot/</loc>
-    <lastmod>2022-05-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ecological-stats.netlify.app/post/</loc>
-    <lastmod>2022-05-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ecological-stats.netlify.app/categories/r/</loc>
-    <lastmod>2022-05-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ecological-stats.netlify.app/tags/</loc>
     <lastmod>2022-05-15T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/tags/tidyverse/</loc>
