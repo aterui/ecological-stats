@@ -21,7 +21,7 @@ I have been spending hours to list my pubs for my CV or co-authors for a grant p
 
 ## Publication list
 
-A quick example for a pub list:
+Quick example for a pub list:
 
 ```{r}
 
@@ -35,7 +35,7 @@ pacman::p_load(tidyverse,
 
 # data --------------------------------------------------------------------
 
-## your google id - can be found in a link bar of your google scholar page
+## your google id - can be found in the link bar of your google scholar page
 sid <- "H9OuCKsAAAAJ"
 
 ## get publication list
