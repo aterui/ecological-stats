@@ -6,7 +6,16 @@
     <description>Recent content in academic on ECOSTATS</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 15 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/categories/academic/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 02 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/categories/academic/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Extract your publication list from google scholar in R</title>
+      <link>https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/</link>
+      <pubDate>Fri, 02 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/</guid>
+      <description>Publication listCoauthor listI have been spending hours to list my pubs for my CV or co-authors for a grant proposal. But now, we can automate this process with R package scholar (see R documentation for general guidance). With some stringr and dplyr functions, it’s pretty easy to export a table of pubs/coauthors via Rmarkdown (if you are unfamiliar with Rmarkdown, see Rmarkdown cookbook).</description>
+    </item>
+    
     <item>
       <title>出版できる図表をggplotで</title>
       <link>https://ecological-stats.netlify.app/2022/05/15/ggplot/</link>

@@ -1,0 +1,2273 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Extract your publication list from google scholar in R | ECOSTATS</title>
+
+<meta name="keywords" content="scholar" />
+<meta name="description" content="Publication listCoauthor listI have been spending hours to list my pubs for my CV or co-authors for a grant proposal. But now, we can automate this process with R package scholar (see R documentation for general guidance). With some stringr and dplyr functions, it’s pretty easy to export a table of pubs/coauthors via Rmarkdown (if you are unfamiliar with Rmarkdown, see Rmarkdown cookbook).">
+<meta name="author" content="Akira Terui">
+<link rel="canonical" href="https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/" />
+<link href="/assets/css/stylesheet.min.d08f6c302eba3eaecd589684c093cecdfe7dfb8745a207401bd0583d3bb31837.css" integrity="sha256-0I9sMC66Pq7NWJaEwJPOzf59&#43;4dFogdAG9BYPTuzGDc=" rel="preload stylesheet"
+    as="style">
+
+<link rel="icon" href="https://ecological-stats.netlify.app/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ecological-stats.netlify.app/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ecological-stats.netlify.app/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ecological-stats.netlify.app/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ecological-stats.netlify.app/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.81.0" />
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-175522371-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<meta property="og:title" content="Extract your publication list from google scholar in R" />
+<meta property="og:description" content="Publication listCoauthor listI have been spending hours to list my pubs for my CV or co-authors for a grant proposal. But now, we can automate this process with R package scholar (see R documentation for general guidance). With some stringr and dplyr functions, it’s pretty easy to export a table of pubs/coauthors via Rmarkdown (if you are unfamiliar with Rmarkdown, see Rmarkdown cookbook)." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-09-02T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2022-09-02T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Extract your publication list from google scholar in R"/>
+<meta name="twitter:description" content="Publication listCoauthor listI have been spending hours to list my pubs for my CV or co-authors for a grant proposal. But now, we can automate this process with R package scholar (see R documentation for general guidance). With some stringr and dplyr functions, it’s pretty easy to export a table of pubs/coauthors via Rmarkdown (if you are unfamiliar with Rmarkdown, see Rmarkdown cookbook)."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Posts",
+      "item": "https://ecological-stats.netlify.app/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Extract your publication list from google scholar in R",
+      "item": "https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Extract your publication list from google scholar in R",
+  "name": "Extract your publication list from google scholar in R",
+  "description": "Publication list\rCoauthor list\r\r\rI have been spending hours to list my pubs for my CV or co-authors for a grant proposal. But now, we can automate this process with R package scholar (see R documentation for general guidance). With some stringr and dplyr functions, it’s pretty easy to export a table of pubs/coauthors via Rmarkdown (if you are unfamiliar with Rmarkdown, see Rmarkdown cookbook).",
+  "keywords": [
+    "scholar"
+  ],
+  "articleBody": "\r\r\r\rPublication list\rCoauthor list\r\r\rI have been spending hours to list my pubs for my CV or co-authors for a grant proposal. But now, we can automate this process with R package scholar (see R documentation for general guidance). With some stringr and dplyr functions, it’s pretty easy to export a table of pubs/coauthors via Rmarkdown (if you are unfamiliar with Rmarkdown, see Rmarkdown cookbook). A procedure would be:\nextract your pub list\rtransform with stringr \u0026 dply functions\rexport with Rmarkdown (or simply write_csv())\r\rPublication list\rA quick example for a pub list:\n## GET YOUR PUB LIST\r# library -----------------------------------------------------------------\rrm(list = ls())\rpacman::p_load(tidyverse,\rscholar)\r# data --------------------------------------------------------------------\r## your google id - can be found in a link bar of your google scholar page\rsid % as_tibble()\r## html output - needs adjusments for word/pdf outputs\rpubs %% kableExtra::kbl() %% kableExtra::kable_paper() %% kableExtra::scroll_box(height = \"300px\")\r\r\rtitle\r\rauthor\r\rjournal\r\rnumber\r\rcites\r\ryear\r\rcid\r\rpubid\r\r\r\r\r\rMetapopulation stability in branching river networks\r\rA Terui, N Ishiyama, H Urabe, S Ono, JC Finlay, F Nakamura\r\rProceedings of the National Academy of Sciences\r\r115 (26), E5963-E5969\r\r50\r\r2018\r\r3464610354397260439\r\rmlAyqtXpCwEC\r\r\r\rAsymmetric dispersal structures a riverine metapopulation of the freshwater pearl mussel Margaritifera laevis\r\rA Terui, Y Miyazaki, A Yoshioka, K Kaifu, SS Matsuzaki, I Washitani\r\rEcology and evolution\r\r4 (15), 3004-3014\r\r33\r\r2014\r\r13027117053567911900\r\rTyk-4Ss8FVUC\r\r\r\rDispersal of larvae of Margaritifera laevis by its host fish\r\rA Terui, Y Miyazaki, A Yoshioka, T Kadoya, F Jopp, I Washitani\r\rFreshwater Science\r\r33 (1), 112-123\r\r27\r\r2014\r\r10199785609446090856\r\r2osOgNQ5qMEC\r\r\r\rParasite infection induces size-dependent host dispersal: consequences for parasite persistence\r\rA Terui, K Ooue, H Urabe, F Nakamura\r\rProceedings of the Royal Society B: Biological Sciences\r\r284 (1866), 20171491\r\r18\r\r2017\r\r14498315894104540030\r\rXvxMoLDsR5gC\r\r\r\rInfluence of connectivity, habitat quality and invasive species on egg and larval distributions and local abundance of crucian carp in Japanese agricultural landscapes\r\rSM Shin-ichiro, A Terui, K Kodama, M Tada, T Yoshida, I Washitani\r\rBiological Conservation\r\r144 (8), 2081-2087\r\r18\r\r2011\r\r2733290986498968443\r\ru5HHmVD_uO8C\r\r\r\rIllustrated checklist of fishes from the Shubuto River System, southwestern Hokkaido, Japan\r\rY Miyazaki, A Terui, H Senou, I Washitani\r\rCheck List\r\r9 (1), 63-72\r\r17\r\r2013\r\r15896098794152814267\r\rIjCSPb-OGe4C\r\r\r\rA delayed effect of the aquatic parasite Margaritifera laevis on the growth of the salmonid host fish Oncorhynchus masou masou\r\rK Ooue, A Terui, H Urabe, F Nakamura\r\rLimnology\r\r18 (3), 345-351\r\r15\r\r2017\r\r12915293467188528888\r\rNXb4pA-qfm4C\r\r\r\rA “parasite-tag” approach reveals long-distance dispersal of the riverine mussel Margaritifera laevis by its host fish\r\rA Terui, Y Miyazaki\r\rHydrobiologia\r\r760 (1), 189-196\r\r15\r\r2015\r\r15345645246993949702\r\rL7CI7m0gUJcC\r\r\r\rFactors affecting the local occurrence of the near-threatened bitterling (Tanakia lanceolata) in agricultural canal networks: strong attachment to its potential host mussels\r\rA Terui, SS Matsuzaki, K Kodama, M Tada, I Washitani\r\rHydrobiologia\r\r675 (1), 19-28\r\r14\r\r2011\r\r4495101694570705096\r\rd1gkVwhDpl0C\r\r\r\rHow much abandoned farmland is required to harbor comparable species richness and abundance of bird communities in wetland? Hierarchical community model suggests the importance …\r\rM Hanioka, Y Yamaura, S Yamanaka, M Senzaki, K Kawamura, A Terui, …\r\rBiodiversity and conservation\r\r27 (8), 1831-1848\r\r13\r\r2018\r\r18295977239229834349\r\r6ZxmRoH8BuwC\r\r\r\rStream resource gradients drive consumption rates of supplemental prey in the adjacent riparian zone\r\rA Terui, JN Negishi, N Watanabe, F Nakamura\r\rEcosystems\r\r21 (4), 772-781\r\r13\r\r2018\r\r11039898352231311044\r\r4hFrxpcac9AC\r\r\r\rHigh resilience of aquatic community to a 100-year flood in a gravel-bed river\r\rJN Negishi, A Terui, B Nessa, K Miura, T Oiso, K Sumitomo, T Kyuka, …\r\rLandscape and Ecological Engineering\r\r15 (2), 143-154\r\r12\r\r2019\r\r16668563894363926134\r\rpUxgyZctzPYC\r\r\r\rPredicting the ecological impacts of large‐dam removals on a river network based on habitat‐network structure and flow regimes\r\rN Ishiyama, M Ryo, T Kataoka, S Nagayama, M Sueyoshi, A Terui, T Mori, …\r\rConservation Biology\r\r32 (6), 1403-1413\r\r11\r\r2018\r\r11677432363381237923\r\r2VqYfGB8ITEC\r\r\r\rDetection of vegetation trends in highly variable environments after grazing exclusion in Mongolia\r\rK Kakinuma, A Terui, T Sasaki, A Koyama, U Jamsran, T Okuro, …\r\rJournal of Vegetation Science\r\r28 (5), 965-974\r\r11\r\r2017\r\r13117287021548228709\r\rumqufdRvDiIC\r\r\r\rEcological evaluation of the conservation of fish fauna in the Shubuto River system, southwestern Hokkaido.\r\rY Miyazaki, A Terui, S Kubo, N Hatai, K Takahashi, H Saitoh, I Washitani\r\rJapanese Journal of Conservation Ecology\r\r16 (2), 213-219\r\r10\r\r2011\r\r6408254242448663837\r\r9yKSN-GCB0IC\r\r\r\rPopulation status and factors affecting local density of endangered Japanese freshwater pearl mussel, Margaritifera laevis, in Shubuto River basin, Hokkaido.\r\rA Terui, Y Miyazaki, SS Matsuzaki, I Washitani\r\rJapanese Journal of Conservation Ecology\r\r16 (2), 149-157\r\r10\r\r2011\r\r6889015042940339944\r\ru-x6o8ySG0sC\r\r\r\rTemporal dynamics of fluvial fish community caused by marine amphidromous species in the Shubuto River, southwestern Hokkaido, Japan\r\rY Miyazaki, A Terui\r\rIchthyological research\r\r63 (1), 173-179\r\r9\r\r2016\r\r13804860059813398034\r\rhMsQuOkrut0C\r\r\r\rRivFishTIME: A global database of fish time‐series to study global change ecology in riverine systems\r\rL Comte, J Carvajal‐Quintero, PA Tedesco, X Giam, U Brose, T Erős, …\r\rGlobal Ecology and Biogeography\r\r30 (1), 38-50\r\r8\r\r2021\r\r7210329059921443522\r\rTNEldfgDb5MC\r\r\r\rLong-term declines in common breeding seabirds in Japan\r\rM Senzaki, A Terui, N Tomita, F Sato, Y Fukuda, Y Kataoka, Y Watanuki\r\rBird Conservation International\r\r30 (3), 434-446\r\r8\r\r2020\r\r7164719196565091022\r\rC5mqfHIFIucC\r\r\r\rSpecies-specific use of allochthonous resources by ground beetles (Carabidae) at a river–land interface\r\rA Terui, T Akasaka, JN Negishi, F Uemura, F Nakamura\r\rEcological research\r\r32 (1), 27-35\r\r6\r\r2017\r\r2664542394393271399\r\rFAceZFleit8C\r\r\r\rDifference in habitat use between the two related goby species of Gymnogobius opperiens and Gymnogobius urotaenia: a case study in the Shubuto River System, Hokkaido, Japan\r\rY Miyazaki, A Terui\r\rIchthyological research\r\r63 (3), 317-323\r\r6\r\r2016\r\r7746193241917481679\r\rkh2fBNsKQNwC\r\r\r\rEmergent dual scaling of riverine biodiversity\r\rA Terui, S Kim, CL Dolph, T Kadoya, Y Miyazaki\r\rProceedings of the National Academy of Sciences\r\r118 (47), e2105574118\r\r5\r\r2021\r\r16440814085696101323\r\rJhbybO29vGQC\r\r\r\rThree ecological factors influencing riverine fish diversity in the Shubuto River system, Japan: habitat capacity, habitat heterogeneity and immigration\r\rA Terui, Y Miyazaki\r\rLimnology\r\r17 (2), 143-149\r\r5\r\r2016\r\r9841985143584598706\r\rbz8QjSJIRt4C\r\r\r\rRestoration of the shifting mosaic of floodplain forests under a flow regime altered by a dam\r\rF Nakamura, Y Watanabe, J Negishi, T Akasaka, Y Yabuhara, A Terui, …\r\rEcological Engineering\r\r157, 105974\r\r4\r\r2020\r\r8593829870272509529\r\r_TjUWtciUekC\r\r\r\rCombined effects of immigration potential and habitat quality on diadromous fishes\r\rA Terui, Y Miyazaki\r\rLimnology\r\r18 (1), 121-129\r\r4\r\r2017\r\r13437630171012378566\r\r9pM33mqn1YgC\r\r\r\rA cryptic Allee effect: spatial contexts mask an existing fitness–density relationship\r\rA Terui, Y Miyazaki, A Yoshioka, SS Matsuzaki\r\rRoyal Society Open Science\r\r2 (6), 150034\r\r4\r\r2015\r\r5955060897611196204\r\rILKRHgRFtOwC\r\r\r\rQuantifying cryptic function loss during community disassembly\r\rA Terui, JC Finlay, AT Hansen, JL Kozarek\r\rJournal of Applied Ecology\r\r56 (12), 2710-2722\r\r3\r\r2019\r\r3131442279887291893\r\reLRq4zTgah0C\r\r\r\rFish species composition of temporary small lentic habitats in the floodplains of the Shubuto River System: factors affecting species richness and suggestions for conservation …\r\rY Miyazaki, A Terui, A Yoshioka, K Kaifu, I Washitani\r\rJapanese Journal of Conservation Ecology\r\r18 (1), 55-68\r\r3\r\r2013\r\r10265235201855021860\r\rDUooU5lO8OsC\r\r\r\rChanges in the strictly freshwater fish fauna around Lake Mikata, Fukui Prefecture, Japan, inferred from monitoring data and ecological trait information.\r\rSS Matsuzaki, K Kodama, A Terui, H Takeshima, T Sato, O Tominaga, …\r\rJapanese Journal of Conservation Ecology\r\r16 (2), 205-212\r\r3\r\r2011\r\r16784091824624973592\r\rzYLM7Y9cAGgC\r\r\r\rNon‐random dispersal in sympatric stream fishes: Influences of natural disturbance and body size\r\rA Terui, S Kim, KC Pregler, Y Kanno\r\rFreshwater Biology\r\r66 (10), 1865-1875\r\r2\r\r2021\r\r14028339771303816850\r\rCKf5m1HYVjMC\r\r\r\rModeling dispersal using capture–recapture data: A comparison of dispersal models\r\rA Terui\r\rEcological Research\r\r35 (5), 686-699\r\r2\r\r2020\r\r17351364749502466945\r\rt9Ks5LMjN0QC\r\r\r\rSpatial disturbance synchrony alters the association of food chain length and ecosystem size\r\rA Terui, S Nishijima\r\rEcological Research\r\r34 (6), 864-871\r\r2\r\r2019\r\r8856763272689699430\r\rXUAslYVNQLQC\r\r\r\rThe Relative Effects of Biotic and Abiotic Factors on the Recruitment of Freshwater Mussels (Margaritifera laevis)\r\rK Kawajiri, N Ishiyama, K Miura, A Terui, M Sueyoshi, F Nakamura\r\rWater\r\r13 (9), 1289\r\r1\r\r2021\r\r18289670563885527091\r\rgL9scSG3K_gC\r\r\r\rImpact of alien species on the distribution of native submerged macrophytes in small rivers and agricultural canals around Lake Mikata.\r\rS Kubo, A Terui, J Nishihiro, I Washitani\r\rJapanese Journal of Conservation Ecology\r\r17 (2), 165-173\r\r1\r\r2012\r\r14004150295229240402\r\rqjMakFHDy7sC\r\r\r\rMetapopulation‐level associations in positively interacting stream fishes\r\rS Kim, CL Dolph, A Terui\r\rEcography\r\r2022 (3), e06080\r\r0\r\r2022\r\rNA\r\ryaBp1wUtcLsC\r\r\r\rIntentional stocking undermines ecological stability\r\rA Terui, H Urabe, M Senzaki, B Nishizawa\r\rbioRxiv\r\r\r0\r\r2022\r\rNA\r\rSEKBqlyTJecC\r\r\r\r\r\r\rCoauthor list\rQuick example for a co-author list:\n## get coauthor list\rcoauthor % rowwise() %%\rsummarise(year = year,\rauthors = get_complete_authors(sid,\rpubid,\rinitials = FALSE))\r## one author per row\rdf_coauthor % rowwise() %% summarize(year = year,\rauthor = str_split(authors,\rpattern = \",\\\\s\") %% flatten_chr()) %% filter(year = 2019,\rauthor != \"Akira Terui\") %% distinct(author) %% separate(author,\rinto = c(\"a\", \"b\", \"last\"),\rsep = \"\\\\s\",\rfill = \"left\") %% mutate(first = ifelse(is.na(a), b, paste(a, b)),\rfull = paste(last, first, sep = \", \")) %% select(-a, -b) %% arrange(last)\r## html output - needs adjusments for word/pdf outputs\rdf_coauthor %% kableExtra::kbl() %% kableExtra::kable_paper() %% kableExtra::scroll_box(height = \"300px\")\r\r\rlast\r\rfirst\r\rfull\r\r\r\r\r\rAkasaka\r\rTakumi\r\rAkasaka, Takumi\r\r\r\rBecker\r\rFernando G\r\rBecker, Fernando G\r\r\r\rBrose\r\rUlrich\r\rBrose, Ulrich\r\r\r\rCarvajal‐Quintero\r\rJuan\r\rCarvajal‐Quintero, Juan\r\r\r\rCasatti\r\rLilian\r\rCasatti, Lilian\r\r\r\rCastaldelli\r\rGiuseppe\r\rCastaldelli, Giuseppe\r\r\r\rComte\r\rLise\r\rComte, Lise\r\r\r\rDala‐Corte\r\rRenato B\r\rDala‐Corte, Renato B\r\r\r\rDavenport\r\rStephen R\r\rDavenport, Stephen R\r\r\r\rDolph\r\rChristine L\r\rDolph, Christine L\r\r\r\rErős\r\rTibor\r\rErős, Tibor\r\r\r\rFilipe\r\rAna F\r\rFilipe, Ana F\r\r\r\rFinlay\r\rJacques C\r\rFinlay, Jacques C\r\r\r\rFortin\r\rMarie‐Josée\r\rFortin, Marie‐Josée\r\r\r\rFranssen\r\rNathan R\r\rFranssen, Nathan R\r\r\r\rFukuda\r\rYoshihiro\r\rFukuda, Yoshihiro\r\r\r\rGarcía‐Berthou\r\rEmili\r\rGarcía‐Berthou, Emili\r\r\r\rGavioli\r\rAnna\r\rGavioli, Anna\r\r\r\rGiam\r\rXingli\r\rGiam, Xingli\r\r\r\rGido\r\rKeith B\r\rGido, Keith B\r\r\r\rHansen\r\rAmy T\r\rHansen, Amy T\r\r\r\rIrving\r\rKatie\r\rIrving, Katie\r\r\r\rIshiyama\r\rNobuo\r\rIshiyama, Nobuo\r\r\r\rJacquet\r\rClaire\r\rJacquet, Claire\r\r\r\rJimenez‐Segura\r\rLuz\r\rJimenez‐Segura, Luz\r\r\r\rKadoya\r\rTaku\r\rKadoya, Taku\r\r\r\rKanno\r\rYoichiro\r\rKanno, Yoichiro\r\r\r\rKataoka\r\rYoshihiro\r\rKataoka, Yoshihiro\r\r\r\rKawajiri\r\rKeita\r\rKawajiri, Keita\r\r\r\rKim\r\rSeoghyun\r\rKim, Seoghyun\r\r\r\rKonno\r\rMiwa\r\rKonno, Miwa\r\r\r\rKozarek\r\rJessica L\r\rKozarek, Jessica L\r\r\r\rKyuka\r\rTomoko\r\rKyuka, Tomoko\r\r\r\rLarsen\r\rStefano\r\rLarsen, Stefano\r\r\r\rLeitão\r\rRafael P\r\rLeitão, Rafael P\r\r\r\rMcLarney\r\rBill\r\rMcLarney, Bill\r\r\r\rMeador\r\rJason\r\rMeador, Jason\r\r\r\rMilardi\r\rMarco\r\rMilardi, Marco\r\r\r\rMiura\r\rKazuki\r\rMiura, Kazuki\r\r\r\rMiyazaki\r\rYusuke\r\rMiyazaki, Yusuke\r\r\r\rMoffatt\r\rDavid B\r\rMoffatt, David B\r\r\r\rNakamura\r\rFutoshi\r\rNakamura, Futoshi\r\r\r\rNegishi\r\rJunjiro N\r\rNegishi, Junjiro N\r\r\r\rNegishi\r\rJunjiro\r\rNegishi, Junjiro\r\r\r\rNessa\r\rBadrun\r\rNessa, Badrun\r\r\r\rNishijima\r\rShota\r\rNishijima, Shota\r\r\r\rNishizawa\r\rBungo\r\rNishizawa, Bungo\r\r\r\rOcchi\r\rThiago VT\r\rOcchi, Thiago VT\r\r\r\rOiso\r\rTakeaki\r\rOiso, Takeaki\r\r\r\rOlden\r\rJulian D\r\rOlden, Julian D\r\r\r\rPompeu\r\rPaulo S\r\rPompeu, Paulo S\r\r\r\rPregler\r\rKasey C\r\rPregler, Kasey C\r\r\r\rPropst\r\rDavid L\r\rPropst, David L\r\r\r\rPyron\r\rMark\r\rPyron, Mark\r\r\r\rRuhi\r\rAlbert\r\rRuhi, Albert\r\r\r\rSalvador\r\rGilberto N\r\rSalvador, Gilberto N\r\r\r\rSato\r\rFumio\r\rSato, Fumio\r\r\r\rSenzaki\r\rMasayuki\r\rSenzaki, Masayuki\r\r\r\rSharma\r\rSapna\r\rSharma, Sapna\r\r\r\rStefferud\r\rJerome A\r\rStefferud, Jerome A\r\r\r\rSueyoshi\r\rMasanao\r\rSueyoshi, Masanao\r\r\r\rSumitomo\r\rKeizo\r\rSumitomo, Keizo\r\r\r\rSutela\r\rTapio\r\rSutela, Tapio\r\r\r\rTaylor\r\rChristopher\r\rTaylor, Christopher\r\r\r\rTedesco\r\rPablo A\r\rTedesco, Pablo A\r\r\r\rTomita\r\rNaoki\r\rTomita, Naoki\r\r\r\rUrabe\r\rHirokazu\r\rUrabe, Hirokazu\r\r\r\rVehanen\r\rTeppo\r\rVehanen, Teppo\r\r\r\rVitule\r\rJean RS\r\rVitule, Jean RS\r\r\r\rWatanabe\r\rYasuharu\r\rWatanabe, Yasuharu\r\r\r\rWatanuki\r\rYutaka\r\rWatanuki, Yutaka\r\r\r\rYabuhara\r\rYuki\r\rYabuhara, Yuki\r\r\r\rYamanaka\r\rSatoshi\r\rYamanaka, Satoshi\r\r\r\rYonemoto\r\rMitsuaki\r\rYonemoto, Mitsuaki\r\r\r\rZeni\r\rJaquelini O\r\rZeni, Jaquelini O\r\r\r\r\r\rOutputs can be saved as .pdf, .html, or .docx via Rmarkdown.\n\r",
+  "wordCount" : "1856",
+  "inLanguage": "en",
+  "datePublished": "2022-09-02T00:00:00Z",
+  "dateModified": "2022-09-02T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Akira Terui"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "ECOSTATS",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ecological-stats.netlify.app/favicon.ico"
+    }
+  }
+}
+</script>
+
+
+
+
+
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: #1d1e20;
+                --entry: #2e2e33;
+                --primary: rgba(255, 255, 255, 0.84);
+                --secondary: rgba(255, 255, 255, 0.56);
+                --tertiary: rgba(255, 255, 255, 0.16);
+                --content: rgba(255, 255, 255, 0.74);
+                --hljs-bg: #2e2e33;
+                --code-bg: #37383e;
+                --border: #333;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+    </style>
+
+</noscript>
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ecological-stats.netlify.app" accesskey="h" title="ECOSTATS (Alt + H)">ECOSTATS</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                
+                
+            </span>
+        </div>
+        <ul id="menu" onscroll="menu_on_scroll()">
+            <li>
+                <a href="https://ecological-stats.netlify.app/archives/" title="archive">
+                    <span>archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ecological-stats.netlify.app/categories/" title="categories">
+                    <span>categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ecological-stats.netlify.app/tags/" title="tags">
+                    <span>tags</span>
+                </a>
+            </li></ul>
+    </nav>
+    
+    <script data-ad-client="ca-pub-8263637323017170" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8263637323017170"
+     crossorigin="anonymous"></script>
+    
+</header>
+
+    <main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+
+    <h1 class="post-title">
+      Extract your publication list from google scholar in R
+    </h1>
+    <div class="post-meta">
+
+September 2, 2022&nbsp;·&nbsp;Akira Terui
+
+
+</div>
+  </header> 
+
+  <div class="post-content">
+
+<link href="https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/index_files/pagedtable/css/pagedtable.css" rel="stylesheet" />
+<script src="https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/index_files/pagedtable/js/pagedtable.js"></script>
+<script src="https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/index_files/kePrint/kePrint.js"></script>
+<link href="https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/index_files/lightable/lightable.css" rel="stylesheet" />
+
+<div id="TOC">
+<ul>
+<li><a href="#publication-list" id="toc-publication-list">Publication list</a></li>
+<li><a href="#coauthor-list" id="toc-coauthor-list">Coauthor list</a></li>
+</ul>
+</div>
+
+<p>I have been spending hours to list my pubs for my CV or co-authors for a grant proposal. But now, we can automate this process with R package <code>scholar</code> (see <a href="https://www.rdocumentation.org/packages/scholar/versions/0.2.4">R documentation</a> for general guidance). With some <code>stringr</code> and <code>dplyr</code> functions, it’s pretty easy to export a table of pubs/coauthors via Rmarkdown (if you are unfamiliar with Rmarkdown, see <a href="https://bookdown.org/yihui/rmarkdown-cookbook/">Rmarkdown cookbook</a>). A procedure would be:</p>
+<ol style="list-style-type: decimal">
+<li>extract your pub list</li>
+<li>transform with stringr &amp; dply functions</li>
+<li>export with Rmarkdown (or simply <code>write_csv()</code>)</li>
+</ol>
+<div id="publication-list" class="section level2">
+<h2>Publication list</h2>
+<p>A quick example for a pub list:</p>
+<pre class="r"><code>## GET YOUR PUB LIST
+
+# library -----------------------------------------------------------------
+
+rm(list = ls())
+pacman::p_load(tidyverse,
+               scholar)
+
+# data --------------------------------------------------------------------
+
+## your google id - can be found in a link bar of your google scholar page
+sid &lt;- &quot;H9OuCKsAAAAJ&quot;
+
+## get publication list
+pubs &lt;- get_publications(sid) %&gt;% 
+  as_tibble()
+
+## html output - needs adjusments for word/pdf outputs
+pubs %&gt;% 
+  kableExtra::kbl() %&gt;% 
+  kableExtra::kable_paper() %&gt;% 
+  kableExtra::scroll_box(height = &quot;300px&quot;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
+<table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+title
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+author
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+journal
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+number
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+cites
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+year
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+cid
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+pubid
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Metapopulation stability in branching river networks
+</td>
+<td style="text-align:left;">
+A Terui, N Ishiyama, H Urabe, S Ono, JC Finlay, F Nakamura
+</td>
+<td style="text-align:left;">
+Proceedings of the National Academy of Sciences
+</td>
+<td style="text-align:left;">
+115 (26), E5963-E5969
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+2018
+</td>
+<td style="text-align:left;">
+3464610354397260439
+</td>
+<td style="text-align:left;">
+mlAyqtXpCwEC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Asymmetric dispersal structures a riverine metapopulation of the freshwater pearl mussel Margaritifera laevis
+</td>
+<td style="text-align:left;">
+A Terui, Y Miyazaki, A Yoshioka, K Kaifu, SS Matsuzaki, I Washitani
+</td>
+<td style="text-align:left;">
+Ecology and evolution
+</td>
+<td style="text-align:left;">
+4 (15), 3004-3014
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+2014
+</td>
+<td style="text-align:left;">
+13027117053567911900
+</td>
+<td style="text-align:left;">
+Tyk-4Ss8FVUC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Dispersal of larvae of Margaritifera laevis by its host fish
+</td>
+<td style="text-align:left;">
+A Terui, Y Miyazaki, A Yoshioka, T Kadoya, F Jopp, I Washitani
+</td>
+<td style="text-align:left;">
+Freshwater Science
+</td>
+<td style="text-align:left;">
+33 (1), 112-123
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+2014
+</td>
+<td style="text-align:left;">
+10199785609446090856
+</td>
+<td style="text-align:left;">
+2osOgNQ5qMEC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Parasite infection induces size-dependent host dispersal: consequences for parasite persistence
+</td>
+<td style="text-align:left;">
+A Terui, K Ooue, H Urabe, F Nakamura
+</td>
+<td style="text-align:left;">
+Proceedings of the Royal Society B: Biological Sciences
+</td>
+<td style="text-align:left;">
+284 (1866), 20171491
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:left;">
+14498315894104540030
+</td>
+<td style="text-align:left;">
+XvxMoLDsR5gC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Influence of connectivity, habitat quality and invasive species on egg and larval distributions and local abundance of crucian carp in Japanese agricultural landscapes
+</td>
+<td style="text-align:left;">
+SM Shin-ichiro, A Terui, K Kodama, M Tada, T Yoshida, I Washitani
+</td>
+<td style="text-align:left;">
+Biological Conservation
+</td>
+<td style="text-align:left;">
+144 (8), 2081-2087
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+2011
+</td>
+<td style="text-align:left;">
+2733290986498968443
+</td>
+<td style="text-align:left;">
+u5HHmVD_uO8C
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illustrated checklist of fishes from the Shubuto River System, southwestern Hokkaido, Japan
+</td>
+<td style="text-align:left;">
+Y Miyazaki, A Terui, H Senou, I Washitani
+</td>
+<td style="text-align:left;">
+Check List
+</td>
+<td style="text-align:left;">
+9 (1), 63-72
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+2013
+</td>
+<td style="text-align:left;">
+15896098794152814267
+</td>
+<td style="text-align:left;">
+IjCSPb-OGe4C
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A delayed effect of the aquatic parasite Margaritifera laevis on the growth of the salmonid host fish Oncorhynchus masou masou
+</td>
+<td style="text-align:left;">
+K Ooue, A Terui, H Urabe, F Nakamura
+</td>
+<td style="text-align:left;">
+Limnology
+</td>
+<td style="text-align:left;">
+18 (3), 345-351
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:left;">
+12915293467188528888
+</td>
+<td style="text-align:left;">
+NXb4pA-qfm4C
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A “parasite-tag” approach reveals long-distance dispersal of the riverine mussel Margaritifera laevis by its host fish
+</td>
+<td style="text-align:left;">
+A Terui, Y Miyazaki
+</td>
+<td style="text-align:left;">
+Hydrobiologia
+</td>
+<td style="text-align:left;">
+760 (1), 189-196
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+2015
+</td>
+<td style="text-align:left;">
+15345645246993949702
+</td>
+<td style="text-align:left;">
+L7CI7m0gUJcC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Factors affecting the local occurrence of the near-threatened bitterling (Tanakia lanceolata) in agricultural canal networks: strong attachment to its potential host mussels
+</td>
+<td style="text-align:left;">
+A Terui, SS Matsuzaki, K Kodama, M Tada, I Washitani
+</td>
+<td style="text-align:left;">
+Hydrobiologia
+</td>
+<td style="text-align:left;">
+675 (1), 19-28
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+2011
+</td>
+<td style="text-align:left;">
+4495101694570705096
+</td>
+<td style="text-align:left;">
+d1gkVwhDpl0C
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+How much abandoned farmland is required to harbor comparable species richness and abundance of bird communities in wetland? Hierarchical community model suggests the importance …
+</td>
+<td style="text-align:left;">
+M Hanioka, Y Yamaura, S Yamanaka, M Senzaki, K Kawamura, A Terui, …
+</td>
+<td style="text-align:left;">
+Biodiversity and conservation
+</td>
+<td style="text-align:left;">
+27 (8), 1831-1848
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+2018
+</td>
+<td style="text-align:left;">
+18295977239229834349
+</td>
+<td style="text-align:left;">
+6ZxmRoH8BuwC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Stream resource gradients drive consumption rates of supplemental prey in the adjacent riparian zone
+</td>
+<td style="text-align:left;">
+A Terui, JN Negishi, N Watanabe, F Nakamura
+</td>
+<td style="text-align:left;">
+Ecosystems
+</td>
+<td style="text-align:left;">
+21 (4), 772-781
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+2018
+</td>
+<td style="text-align:left;">
+11039898352231311044
+</td>
+<td style="text-align:left;">
+4hFrxpcac9AC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+High resilience of aquatic community to a 100-year flood in a gravel-bed river
+</td>
+<td style="text-align:left;">
+JN Negishi, A Terui, B Nessa, K Miura, T Oiso, K Sumitomo, T Kyuka, …
+</td>
+<td style="text-align:left;">
+Landscape and Ecological Engineering
+</td>
+<td style="text-align:left;">
+15 (2), 143-154
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+2019
+</td>
+<td style="text-align:left;">
+16668563894363926134
+</td>
+<td style="text-align:left;">
+pUxgyZctzPYC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Predicting the ecological impacts of large‐dam removals on a river network based on habitat‐network structure and flow regimes
+</td>
+<td style="text-align:left;">
+N Ishiyama, M Ryo, T Kataoka, S Nagayama, M Sueyoshi, A Terui, T Mori, …
+</td>
+<td style="text-align:left;">
+Conservation Biology
+</td>
+<td style="text-align:left;">
+32 (6), 1403-1413
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+2018
+</td>
+<td style="text-align:left;">
+11677432363381237923
+</td>
+<td style="text-align:left;">
+2VqYfGB8ITEC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Detection of vegetation trends in highly variable environments after grazing exclusion in Mongolia
+</td>
+<td style="text-align:left;">
+K Kakinuma, A Terui, T Sasaki, A Koyama, U Jamsran, T Okuro, …
+</td>
+<td style="text-align:left;">
+Journal of Vegetation Science
+</td>
+<td style="text-align:left;">
+28 (5), 965-974
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:left;">
+13117287021548228709
+</td>
+<td style="text-align:left;">
+umqufdRvDiIC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ecological evaluation of the conservation of fish fauna in the Shubuto River system, southwestern Hokkaido.
+</td>
+<td style="text-align:left;">
+Y Miyazaki, A Terui, S Kubo, N Hatai, K Takahashi, H Saitoh, I Washitani
+</td>
+<td style="text-align:left;">
+Japanese Journal of Conservation Ecology
+</td>
+<td style="text-align:left;">
+16 (2), 213-219
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2011
+</td>
+<td style="text-align:left;">
+6408254242448663837
+</td>
+<td style="text-align:left;">
+9yKSN-GCB0IC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Population status and factors affecting local density of endangered Japanese freshwater pearl mussel, Margaritifera laevis, in Shubuto River basin, Hokkaido.
+</td>
+<td style="text-align:left;">
+A Terui, Y Miyazaki, SS Matsuzaki, I Washitani
+</td>
+<td style="text-align:left;">
+Japanese Journal of Conservation Ecology
+</td>
+<td style="text-align:left;">
+16 (2), 149-157
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2011
+</td>
+<td style="text-align:left;">
+6889015042940339944
+</td>
+<td style="text-align:left;">
+u-x6o8ySG0sC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Temporal dynamics of fluvial fish community caused by marine amphidromous species in the Shubuto River, southwestern Hokkaido, Japan
+</td>
+<td style="text-align:left;">
+Y Miyazaki, A Terui
+</td>
+<td style="text-align:left;">
+Ichthyological research
+</td>
+<td style="text-align:left;">
+63 (1), 173-179
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+2016
+</td>
+<td style="text-align:left;">
+13804860059813398034
+</td>
+<td style="text-align:left;">
+hMsQuOkrut0C
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RivFishTIME: A global database of fish time‐series to study global change ecology in riverine systems
+</td>
+<td style="text-align:left;">
+L Comte, J Carvajal‐Quintero, PA Tedesco, X Giam, U Brose, T Erős, …
+</td>
+<td style="text-align:left;">
+Global Ecology and Biogeography
+</td>
+<td style="text-align:left;">
+30 (1), 38-50
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+2021
+</td>
+<td style="text-align:left;">
+7210329059921443522
+</td>
+<td style="text-align:left;">
+TNEldfgDb5MC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Long-term declines in common breeding seabirds in Japan
+</td>
+<td style="text-align:left;">
+M Senzaki, A Terui, N Tomita, F Sato, Y Fukuda, Y Kataoka, Y Watanuki
+</td>
+<td style="text-align:left;">
+Bird Conservation International
+</td>
+<td style="text-align:left;">
+30 (3), 434-446
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:left;">
+7164719196565091022
+</td>
+<td style="text-align:left;">
+C5mqfHIFIucC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Species-specific use of allochthonous resources by ground beetles (Carabidae) at a river–land interface
+</td>
+<td style="text-align:left;">
+A Terui, T Akasaka, JN Negishi, F Uemura, F Nakamura
+</td>
+<td style="text-align:left;">
+Ecological research
+</td>
+<td style="text-align:left;">
+32 (1), 27-35
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:left;">
+2664542394393271399
+</td>
+<td style="text-align:left;">
+FAceZFleit8C
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Difference in habitat use between the two related goby species of Gymnogobius opperiens and Gymnogobius urotaenia: a case study in the Shubuto River System, Hokkaido, Japan
+</td>
+<td style="text-align:left;">
+Y Miyazaki, A Terui
+</td>
+<td style="text-align:left;">
+Ichthyological research
+</td>
+<td style="text-align:left;">
+63 (3), 317-323
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+2016
+</td>
+<td style="text-align:left;">
+7746193241917481679
+</td>
+<td style="text-align:left;">
+kh2fBNsKQNwC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Emergent dual scaling of riverine biodiversity
+</td>
+<td style="text-align:left;">
+A Terui, S Kim, CL Dolph, T Kadoya, Y Miyazaki
+</td>
+<td style="text-align:left;">
+Proceedings of the National Academy of Sciences
+</td>
+<td style="text-align:left;">
+118 (47), e2105574118
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+2021
+</td>
+<td style="text-align:left;">
+16440814085696101323
+</td>
+<td style="text-align:left;">
+JhbybO29vGQC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Three ecological factors influencing riverine fish diversity in the Shubuto River system, Japan: habitat capacity, habitat heterogeneity and immigration
+</td>
+<td style="text-align:left;">
+A Terui, Y Miyazaki
+</td>
+<td style="text-align:left;">
+Limnology
+</td>
+<td style="text-align:left;">
+17 (2), 143-149
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+2016
+</td>
+<td style="text-align:left;">
+9841985143584598706
+</td>
+<td style="text-align:left;">
+bz8QjSJIRt4C
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Restoration of the shifting mosaic of floodplain forests under a flow regime altered by a dam
+</td>
+<td style="text-align:left;">
+F Nakamura, Y Watanabe, J Negishi, T Akasaka, Y Yabuhara, A Terui, …
+</td>
+<td style="text-align:left;">
+Ecological Engineering
+</td>
+<td style="text-align:left;">
+157, 105974
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:left;">
+8593829870272509529
+</td>
+<td style="text-align:left;">
+_TjUWtciUekC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Combined effects of immigration potential and habitat quality on diadromous fishes
+</td>
+<td style="text-align:left;">
+A Terui, Y Miyazaki
+</td>
+<td style="text-align:left;">
+Limnology
+</td>
+<td style="text-align:left;">
+18 (1), 121-129
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:left;">
+13437630171012378566
+</td>
+<td style="text-align:left;">
+9pM33mqn1YgC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A cryptic Allee effect: spatial contexts mask an existing fitness–density relationship
+</td>
+<td style="text-align:left;">
+A Terui, Y Miyazaki, A Yoshioka, SS Matsuzaki
+</td>
+<td style="text-align:left;">
+Royal Society Open Science
+</td>
+<td style="text-align:left;">
+2 (6), 150034
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2015
+</td>
+<td style="text-align:left;">
+5955060897611196204
+</td>
+<td style="text-align:left;">
+ILKRHgRFtOwC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quantifying cryptic function loss during community disassembly
+</td>
+<td style="text-align:left;">
+A Terui, JC Finlay, AT Hansen, JL Kozarek
+</td>
+<td style="text-align:left;">
+Journal of Applied Ecology
+</td>
+<td style="text-align:left;">
+56 (12), 2710-2722
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2019
+</td>
+<td style="text-align:left;">
+3131442279887291893
+</td>
+<td style="text-align:left;">
+eLRq4zTgah0C
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fish species composition of temporary small lentic habitats in the floodplains of the Shubuto River System: factors affecting species richness and suggestions for conservation …
+</td>
+<td style="text-align:left;">
+Y Miyazaki, A Terui, A Yoshioka, K Kaifu, I Washitani
+</td>
+<td style="text-align:left;">
+Japanese Journal of Conservation Ecology
+</td>
+<td style="text-align:left;">
+18 (1), 55-68
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2013
+</td>
+<td style="text-align:left;">
+10265235201855021860
+</td>
+<td style="text-align:left;">
+DUooU5lO8OsC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Changes in the strictly freshwater fish fauna around Lake Mikata, Fukui Prefecture, Japan, inferred from monitoring data and ecological trait information.
+</td>
+<td style="text-align:left;">
+SS Matsuzaki, K Kodama, A Terui, H Takeshima, T Sato, O Tominaga, …
+</td>
+<td style="text-align:left;">
+Japanese Journal of Conservation Ecology
+</td>
+<td style="text-align:left;">
+16 (2), 205-212
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2011
+</td>
+<td style="text-align:left;">
+16784091824624973592
+</td>
+<td style="text-align:left;">
+zYLM7Y9cAGgC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Non‐random dispersal in sympatric stream fishes: Influences of natural disturbance and body size
+</td>
+<td style="text-align:left;">
+A Terui, S Kim, KC Pregler, Y Kanno
+</td>
+<td style="text-align:left;">
+Freshwater Biology
+</td>
+<td style="text-align:left;">
+66 (10), 1865-1875
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2021
+</td>
+<td style="text-align:left;">
+14028339771303816850
+</td>
+<td style="text-align:left;">
+CKf5m1HYVjMC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Modeling dispersal using capture–recapture data: A comparison of dispersal models
+</td>
+<td style="text-align:left;">
+A Terui
+</td>
+<td style="text-align:left;">
+Ecological Research
+</td>
+<td style="text-align:left;">
+35 (5), 686-699
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:left;">
+17351364749502466945
+</td>
+<td style="text-align:left;">
+t9Ks5LMjN0QC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Spatial disturbance synchrony alters the association of food chain length and ecosystem size
+</td>
+<td style="text-align:left;">
+A Terui, S Nishijima
+</td>
+<td style="text-align:left;">
+Ecological Research
+</td>
+<td style="text-align:left;">
+34 (6), 864-871
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2019
+</td>
+<td style="text-align:left;">
+8856763272689699430
+</td>
+<td style="text-align:left;">
+XUAslYVNQLQC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+The Relative Effects of Biotic and Abiotic Factors on the Recruitment of Freshwater Mussels (Margaritifera laevis)
+</td>
+<td style="text-align:left;">
+K Kawajiri, N Ishiyama, K Miura, A Terui, M Sueyoshi, F Nakamura
+</td>
+<td style="text-align:left;">
+Water
+</td>
+<td style="text-align:left;">
+13 (9), 1289
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2021
+</td>
+<td style="text-align:left;">
+18289670563885527091
+</td>
+<td style="text-align:left;">
+gL9scSG3K_gC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Impact of alien species on the distribution of native submerged macrophytes in small rivers and agricultural canals around Lake Mikata.
+</td>
+<td style="text-align:left;">
+S Kubo, A Terui, J Nishihiro, I Washitani
+</td>
+<td style="text-align:left;">
+Japanese Journal of Conservation Ecology
+</td>
+<td style="text-align:left;">
+17 (2), 165-173
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+14004150295229240402
+</td>
+<td style="text-align:left;">
+qjMakFHDy7sC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Metapopulation‐level associations in positively interacting stream fishes
+</td>
+<td style="text-align:left;">
+S Kim, CL Dolph, A Terui
+</td>
+<td style="text-align:left;">
+Ecography
+</td>
+<td style="text-align:left;">
+2022 (3), e06080
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2022
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+yaBp1wUtcLsC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Intentional stocking undermines ecological stability
+</td>
+<td style="text-align:left;">
+A Terui, H Urabe, M Senzaki, B Nishizawa
+</td>
+<td style="text-align:left;">
+bioRxiv
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2022
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+SEKBqlyTJecC
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="coauthor-list" class="section level2">
+<h2>Coauthor list</h2>
+<p>Quick example for a co-author list:</p>
+<pre class="r"><code>## get coauthor list
+coauthor &lt;- pubs %&gt;% 
+  rowwise() %&gt;%
+  summarise(year = year,
+            authors = get_complete_authors(sid,
+                                           pubid,
+                                           initials = FALSE))
+## one author per row
+df_coauthor &lt;- coauthor %&gt;% 
+  rowwise() %&gt;% 
+  summarize(year = year,
+            author = str_split(authors,
+                               pattern = &quot;,\\s&quot;) %&gt;% 
+              flatten_chr()) %&gt;% 
+  filter(year &gt;= 2019,
+         author != &quot;Akira Terui&quot;) %&gt;% 
+  distinct(author) %&gt;% 
+  separate(author,
+           into = c(&quot;a&quot;, &quot;b&quot;, &quot;last&quot;),
+           sep = &quot;\\s&quot;,
+           fill = &quot;left&quot;) %&gt;% 
+  mutate(first = ifelse(is.na(a), b, paste(a, b)),
+         full = paste(last, first, sep = &quot;, &quot;)) %&gt;% 
+  select(-a, -b) %&gt;% 
+  arrange(last)
+
+## html output - needs adjusments for word/pdf outputs
+df_coauthor %&gt;% 
+  kableExtra::kbl() %&gt;% 
+  kableExtra::kable_paper() %&gt;% 
+  kableExtra::scroll_box(height = &quot;300px&quot;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
+<table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+last
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+first
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+full
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Akasaka
+</td>
+<td style="text-align:left;">
+Takumi
+</td>
+<td style="text-align:left;">
+Akasaka, Takumi
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Becker
+</td>
+<td style="text-align:left;">
+Fernando G
+</td>
+<td style="text-align:left;">
+Becker, Fernando G
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Brose
+</td>
+<td style="text-align:left;">
+Ulrich
+</td>
+<td style="text-align:left;">
+Brose, Ulrich
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Carvajal‐Quintero
+</td>
+<td style="text-align:left;">
+Juan
+</td>
+<td style="text-align:left;">
+Carvajal‐Quintero, Juan
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Casatti
+</td>
+<td style="text-align:left;">
+Lilian
+</td>
+<td style="text-align:left;">
+Casatti, Lilian
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Castaldelli
+</td>
+<td style="text-align:left;">
+Giuseppe
+</td>
+<td style="text-align:left;">
+Castaldelli, Giuseppe
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Comte
+</td>
+<td style="text-align:left;">
+Lise
+</td>
+<td style="text-align:left;">
+Comte, Lise
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Dala‐Corte
+</td>
+<td style="text-align:left;">
+Renato B
+</td>
+<td style="text-align:left;">
+Dala‐Corte, Renato B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Davenport
+</td>
+<td style="text-align:left;">
+Stephen R
+</td>
+<td style="text-align:left;">
+Davenport, Stephen R
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Dolph
+</td>
+<td style="text-align:left;">
+Christine L
+</td>
+<td style="text-align:left;">
+Dolph, Christine L
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Erős
+</td>
+<td style="text-align:left;">
+Tibor
+</td>
+<td style="text-align:left;">
+Erős, Tibor
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Filipe
+</td>
+<td style="text-align:left;">
+Ana F
+</td>
+<td style="text-align:left;">
+Filipe, Ana F
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Finlay
+</td>
+<td style="text-align:left;">
+Jacques C
+</td>
+<td style="text-align:left;">
+Finlay, Jacques C
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fortin
+</td>
+<td style="text-align:left;">
+Marie‐Josée
+</td>
+<td style="text-align:left;">
+Fortin, Marie‐Josée
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Franssen
+</td>
+<td style="text-align:left;">
+Nathan R
+</td>
+<td style="text-align:left;">
+Franssen, Nathan R
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fukuda
+</td>
+<td style="text-align:left;">
+Yoshihiro
+</td>
+<td style="text-align:left;">
+Fukuda, Yoshihiro
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+García‐Berthou
+</td>
+<td style="text-align:left;">
+Emili
+</td>
+<td style="text-align:left;">
+García‐Berthou, Emili
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gavioli
+</td>
+<td style="text-align:left;">
+Anna
+</td>
+<td style="text-align:left;">
+Gavioli, Anna
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Giam
+</td>
+<td style="text-align:left;">
+Xingli
+</td>
+<td style="text-align:left;">
+Giam, Xingli
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gido
+</td>
+<td style="text-align:left;">
+Keith B
+</td>
+<td style="text-align:left;">
+Gido, Keith B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hansen
+</td>
+<td style="text-align:left;">
+Amy T
+</td>
+<td style="text-align:left;">
+Hansen, Amy T
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Irving
+</td>
+<td style="text-align:left;">
+Katie
+</td>
+<td style="text-align:left;">
+Irving, Katie
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ishiyama
+</td>
+<td style="text-align:left;">
+Nobuo
+</td>
+<td style="text-align:left;">
+Ishiyama, Nobuo
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Jacquet
+</td>
+<td style="text-align:left;">
+Claire
+</td>
+<td style="text-align:left;">
+Jacquet, Claire
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Jimenez‐Segura
+</td>
+<td style="text-align:left;">
+Luz
+</td>
+<td style="text-align:left;">
+Jimenez‐Segura, Luz
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kadoya
+</td>
+<td style="text-align:left;">
+Taku
+</td>
+<td style="text-align:left;">
+Kadoya, Taku
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kanno
+</td>
+<td style="text-align:left;">
+Yoichiro
+</td>
+<td style="text-align:left;">
+Kanno, Yoichiro
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kataoka
+</td>
+<td style="text-align:left;">
+Yoshihiro
+</td>
+<td style="text-align:left;">
+Kataoka, Yoshihiro
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kawajiri
+</td>
+<td style="text-align:left;">
+Keita
+</td>
+<td style="text-align:left;">
+Kawajiri, Keita
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kim
+</td>
+<td style="text-align:left;">
+Seoghyun
+</td>
+<td style="text-align:left;">
+Kim, Seoghyun
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Konno
+</td>
+<td style="text-align:left;">
+Miwa
+</td>
+<td style="text-align:left;">
+Konno, Miwa
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kozarek
+</td>
+<td style="text-align:left;">
+Jessica L
+</td>
+<td style="text-align:left;">
+Kozarek, Jessica L
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kyuka
+</td>
+<td style="text-align:left;">
+Tomoko
+</td>
+<td style="text-align:left;">
+Kyuka, Tomoko
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Larsen
+</td>
+<td style="text-align:left;">
+Stefano
+</td>
+<td style="text-align:left;">
+Larsen, Stefano
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Leitão
+</td>
+<td style="text-align:left;">
+Rafael P
+</td>
+<td style="text-align:left;">
+Leitão, Rafael P
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+McLarney
+</td>
+<td style="text-align:left;">
+Bill
+</td>
+<td style="text-align:left;">
+McLarney, Bill
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Meador
+</td>
+<td style="text-align:left;">
+Jason
+</td>
+<td style="text-align:left;">
+Meador, Jason
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Milardi
+</td>
+<td style="text-align:left;">
+Marco
+</td>
+<td style="text-align:left;">
+Milardi, Marco
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Miura
+</td>
+<td style="text-align:left;">
+Kazuki
+</td>
+<td style="text-align:left;">
+Miura, Kazuki
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Miyazaki
+</td>
+<td style="text-align:left;">
+Yusuke
+</td>
+<td style="text-align:left;">
+Miyazaki, Yusuke
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Moffatt
+</td>
+<td style="text-align:left;">
+David B
+</td>
+<td style="text-align:left;">
+Moffatt, David B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nakamura
+</td>
+<td style="text-align:left;">
+Futoshi
+</td>
+<td style="text-align:left;">
+Nakamura, Futoshi
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Negishi
+</td>
+<td style="text-align:left;">
+Junjiro N
+</td>
+<td style="text-align:left;">
+Negishi, Junjiro N
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Negishi
+</td>
+<td style="text-align:left;">
+Junjiro
+</td>
+<td style="text-align:left;">
+Negishi, Junjiro
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nessa
+</td>
+<td style="text-align:left;">
+Badrun
+</td>
+<td style="text-align:left;">
+Nessa, Badrun
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nishijima
+</td>
+<td style="text-align:left;">
+Shota
+</td>
+<td style="text-align:left;">
+Nishijima, Shota
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nishizawa
+</td>
+<td style="text-align:left;">
+Bungo
+</td>
+<td style="text-align:left;">
+Nishizawa, Bungo
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Occhi
+</td>
+<td style="text-align:left;">
+Thiago VT
+</td>
+<td style="text-align:left;">
+Occhi, Thiago VT
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Oiso
+</td>
+<td style="text-align:left;">
+Takeaki
+</td>
+<td style="text-align:left;">
+Oiso, Takeaki
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Olden
+</td>
+<td style="text-align:left;">
+Julian D
+</td>
+<td style="text-align:left;">
+Olden, Julian D
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pompeu
+</td>
+<td style="text-align:left;">
+Paulo S
+</td>
+<td style="text-align:left;">
+Pompeu, Paulo S
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pregler
+</td>
+<td style="text-align:left;">
+Kasey C
+</td>
+<td style="text-align:left;">
+Pregler, Kasey C
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Propst
+</td>
+<td style="text-align:left;">
+David L
+</td>
+<td style="text-align:left;">
+Propst, David L
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pyron
+</td>
+<td style="text-align:left;">
+Mark
+</td>
+<td style="text-align:left;">
+Pyron, Mark
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ruhi
+</td>
+<td style="text-align:left;">
+Albert
+</td>
+<td style="text-align:left;">
+Ruhi, Albert
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Salvador
+</td>
+<td style="text-align:left;">
+Gilberto N
+</td>
+<td style="text-align:left;">
+Salvador, Gilberto N
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sato
+</td>
+<td style="text-align:left;">
+Fumio
+</td>
+<td style="text-align:left;">
+Sato, Fumio
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Senzaki
+</td>
+<td style="text-align:left;">
+Masayuki
+</td>
+<td style="text-align:left;">
+Senzaki, Masayuki
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sharma
+</td>
+<td style="text-align:left;">
+Sapna
+</td>
+<td style="text-align:left;">
+Sharma, Sapna
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Stefferud
+</td>
+<td style="text-align:left;">
+Jerome A
+</td>
+<td style="text-align:left;">
+Stefferud, Jerome A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sueyoshi
+</td>
+<td style="text-align:left;">
+Masanao
+</td>
+<td style="text-align:left;">
+Sueyoshi, Masanao
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sumitomo
+</td>
+<td style="text-align:left;">
+Keizo
+</td>
+<td style="text-align:left;">
+Sumitomo, Keizo
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sutela
+</td>
+<td style="text-align:left;">
+Tapio
+</td>
+<td style="text-align:left;">
+Sutela, Tapio
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Taylor
+</td>
+<td style="text-align:left;">
+Christopher
+</td>
+<td style="text-align:left;">
+Taylor, Christopher
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tedesco
+</td>
+<td style="text-align:left;">
+Pablo A
+</td>
+<td style="text-align:left;">
+Tedesco, Pablo A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tomita
+</td>
+<td style="text-align:left;">
+Naoki
+</td>
+<td style="text-align:left;">
+Tomita, Naoki
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Urabe
+</td>
+<td style="text-align:left;">
+Hirokazu
+</td>
+<td style="text-align:left;">
+Urabe, Hirokazu
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Vehanen
+</td>
+<td style="text-align:left;">
+Teppo
+</td>
+<td style="text-align:left;">
+Vehanen, Teppo
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Vitule
+</td>
+<td style="text-align:left;">
+Jean RS
+</td>
+<td style="text-align:left;">
+Vitule, Jean RS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Watanabe
+</td>
+<td style="text-align:left;">
+Yasuharu
+</td>
+<td style="text-align:left;">
+Watanabe, Yasuharu
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Watanuki
+</td>
+<td style="text-align:left;">
+Yutaka
+</td>
+<td style="text-align:left;">
+Watanuki, Yutaka
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Yabuhara
+</td>
+<td style="text-align:left;">
+Yuki
+</td>
+<td style="text-align:left;">
+Yabuhara, Yuki
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Yamanaka
+</td>
+<td style="text-align:left;">
+Satoshi
+</td>
+<td style="text-align:left;">
+Yamanaka, Satoshi
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Yonemoto
+</td>
+<td style="text-align:left;">
+Mitsuaki
+</td>
+<td style="text-align:left;">
+Yonemoto, Mitsuaki
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Zeni
+</td>
+<td style="text-align:left;">
+Jaquelini O
+</td>
+<td style="text-align:left;">
+Zeni, Jaquelini O
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Outputs can be saved as <code>.pdf</code>, <code>.html</code>, or <code>.docx</code> via Rmarkdown.</p>
+</div>
+
+</div>
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ecological-stats.netlify.app/tags/scholar/">scholar</a></li>
+    </ul>
+    <nav class="paginav">
+      <a class="next" href="https://ecological-stats.netlify.app/2022/07/30/r-gis-sf/">
+        <span class="title">Next Page »</span>
+        <br>
+        <span>RでGIS：ベクター</span>
+      </a>
+    </nav>
+
+
+
+
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Extract your publication list from google scholar in R on twitter"
+        href="https://twitter.com/intent/tweet/?text=Extract%20your%20publication%20list%20from%20google%20scholar%20in%20R&amp;url=https%3a%2f%2fecological-stats.netlify.app%2f2022%2f09%2f02%2fextract-your-publication-list-from-google-scholar-in-r%2f&amp;hashtags=scholar">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Extract your publication list from google scholar in R on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fecological-stats.netlify.app%2f2022%2f09%2f02%2fextract-your-publication-list-from-google-scholar-in-r%2f&amp;title=Extract%20your%20publication%20list%20from%20google%20scholar%20in%20R&amp;summary=Extract%20your%20publication%20list%20from%20google%20scholar%20in%20R&amp;source=https%3a%2f%2fecological-stats.netlify.app%2f2022%2f09%2f02%2fextract-your-publication-list-from-google-scholar-in-r%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Extract your publication list from google scholar in R on reddit"
+        href="https://reddit.com/submit?url=https%3a%2f%2fecological-stats.netlify.app%2f2022%2f09%2f02%2fextract-your-publication-list-from-google-scholar-in-r%2f&title=Extract%20your%20publication%20list%20from%20google%20scholar%20in%20R">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Extract your publication list from google scholar in R on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fecological-stats.netlify.app%2f2022%2f09%2f02%2fextract-your-publication-list-from-google-scholar-in-r%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Extract your publication list from google scholar in R on whatsapp"
+        href="https://api.whatsapp.com/send?text=Extract%20your%20publication%20list%20from%20google%20scholar%20in%20R%20-%20https%3a%2f%2fecological-stats.netlify.app%2f2022%2f09%2f02%2fextract-your-publication-list-from-google-scholar-in-r%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Extract your publication list from google scholar in R on telegram"
+        href="https://telegram.me/share/url?text=Extract%20your%20publication%20list%20from%20google%20scholar%20in%20R&amp;url=https%3a%2f%2fecological-stats.netlify.app%2f2022%2f09%2f02%2fextract-your-publication-list-from-google-scholar-in-r%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28">
+            <path
+                d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+  </footer>
+</article>
+    </main><footer class="footer">
+    <span>&copy; 2022 <a href="https://ecological-stats.netlify.app">ECOSTATS</a></span>
+    <span>&middot;</span>
+    <span>Powered by <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span>
+    <span>&middot;</span>
+    <span>Theme <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a></span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+
+
+<script defer src="/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js" integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5&#43;kdJvBz5iKbt6B5PJI="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<script>
+    window.onload = function () {
+        if (localStorage.getItem("menu-scroll-position")) {
+            document.getElementById('menu').scrollLeft = localStorage.getItem("menu-scroll-position");
+        }
+    }
+
+    function menu_on_scroll() {
+        localStorage.setItem("menu-scroll-position", document.getElementById('menu').scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+
+
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+</body>
+
+</html>
