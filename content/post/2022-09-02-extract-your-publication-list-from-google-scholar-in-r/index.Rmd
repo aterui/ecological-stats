@@ -16,7 +16,7 @@ tags:
 I have been spending hours to list my pubs for my CV or co-authors for a grant proposal. But now, we can automate this process with R package `scholar` (see [R documentation](https://www.rdocumentation.org/packages/scholar/versions/0.2.4) for general guidance). With some `stringr` and `dplyr` functions, it's pretty easy to export a table of pubs/coauthors via Rmarkdown (if you are unfamiliar with Rmarkdown, see [Rmarkdown cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/)). A procedure would be:
 
 1.  extract your pub list
-2.  transform with stringr & dply functions
+2.  transform with `stringr` & `dplyr` functions
 3.  export with Rmarkdown (or simply `write_csv()`)
 
 ## Publication list
