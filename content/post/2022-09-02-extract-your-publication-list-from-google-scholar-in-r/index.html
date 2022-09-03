@@ -6,7 +6,6 @@ slug: extract-your-publication-list-from-google-scholar-in-r
 output:
   blogdown::html_page:
     toc: true
-    df_print: paged
 categories:
   - R
   - academic
@@ -14,8 +13,6 @@ tags:
   - scholar
 ---
 
-<link href="{{< blogdown/postref >}}index_files/pagedtable/css/pagedtable.css" rel="stylesheet" />
-<script src="{{< blogdown/postref >}}index_files/pagedtable/js/pagedtable.js"></script>
 <script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
 <link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
 
@@ -29,12 +26,12 @@ tags:
 <p>I have been spending hours to list my pubs for my CV or co-authors for a grant proposal. But now, we can automate this process with R package <code>scholar</code> (see <a href="https://www.rdocumentation.org/packages/scholar/versions/0.2.4">R documentation</a> for general guidance). With some <code>stringr</code> and <code>dplyr</code> functions, it’s pretty easy to export a table of pubs/coauthors via Rmarkdown (if you are unfamiliar with Rmarkdown, see <a href="https://bookdown.org/yihui/rmarkdown-cookbook/">Rmarkdown cookbook</a>). A procedure would be:</p>
 <ol style="list-style-type: decimal">
 <li>extract your pub list</li>
-<li>transform with stringr &amp; dply functions</li>
+<li>transform with <code>stringr</code> &amp; <code>dplyr</code> functions</li>
 <li>export with Rmarkdown (or simply <code>write_csv()</code>)</li>
 </ol>
 <div id="publication-list" class="section level2">
 <h2>Publication list</h2>
-<p>A quick example for a pub list:</p>
+<p>Quick example for a pub list:</p>
 <pre class="r"><code>## GET YOUR PUB LIST
 
 # library -----------------------------------------------------------------
@@ -45,7 +42,7 @@ pacman::p_load(tidyverse,
 
 # data --------------------------------------------------------------------
 
-## your google id - can be found in a link bar of your google scholar page
+## your google id - can be found in the link bar of your google scholar page
 sid &lt;- &quot;H9OuCKsAAAAJ&quot;
 
 ## get publication list
