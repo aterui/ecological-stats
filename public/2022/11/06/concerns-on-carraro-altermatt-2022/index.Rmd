@@ -73,7 +73,7 @@ Since $y'$ is a simple multiplication of the original object $y$ ($y$ is the par
     > *Self-similarity is a concept associated with fractal geometry that refers to invariance...The smaller structures are identical to the large-scale ones when they undergo an expansion in their scale. This similarity of parts to the whole is called self-similarity, and it is described by the lack of any characteristic scale, a property called scaling.* (p.99, Rodriquez-Iturbe & Rinaldo 2001)
 
 | Object type      | Property                                           | Example used in Madelbrot 1967    |
-|-----------------|---------------------------------|----------------------|
+|------------------|----------------------------------------------------|-----------------------------------|
 | Scale invariant  | scaling, the lack of characteristic scale          | the length of a coast line        |
 | Scale dependence | non-scaling, the existence of characteristic scale | the perimeter of a perfect circle |
 
