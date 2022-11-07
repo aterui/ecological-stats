@@ -64,9 +64,13 @@ $$
 y'=f(2x)=c(2x)^{-z} = 2^{-z}cx^{-z} = 2^{-z}f(x) = 2^{-z}y
 $$
 
-Since $y'$ is a simple multiplication of the original object $y$ ($y$ is the part of $y'$), this proves that the structural property is retained across observation scale $x$. Therefore, **the** **observed object** $y$ **expressed as a function of scale** $x$ ($y$ equals $f(x)$) **is said to be scale invariant when it follows a power-law**[^1]**.** "Scaling" and "the lack of characteristic scale" are the properties associated with scale-invariance.
+Since $y'$ is a simple multiplication of the original object $y$ ($y$ is the part of $y'$), this proves that the structural property is retained across observation scale $x$. Therefore, **the** **observed object** $y$ **expressed as a function of scale** $x$ ($y$ equals $f(x)$) **is said to be scale invariant when it follows a power-law**[^1]**.** "Scaling" and "the lack of characteristic scale" are the properties associated with scale-invariance[^2].
 
 [^1]: Formally, a function $f(x)$ is said to be scale invariant if it suffices the following equation: $f(\lambda x) = \lambda^z f(x)$, where $\lambda$ is an arbitrary constant and $z$ is the scaling exponent. A power law is one example of satisfying this equation.
+
+[^2]: These terms are clearly explained in the textbook by [Rodriquez-Iturbe & Rinaldo 2001](https://www.cambridge.org/us/academic/subjects/earth-and-environmental-science/hydrology-hydrogeology-and-water-resources/fractal-river-basins-chance-and-self-organization?format=PB&isbn=9780521004053):
+
+    > *Self-similarity is a concept associated with fractal geometry that refers to invariance...The smaller structures are identical to the large-scale ones when they undergo an expansion in their scale. This similarity of parts to the whole is called self-similarity, and it is described by the lack of any characteristic scale, a property called scaling.* (p.99, Rodriquez-Iturbe & Rinaldo 2001)
 
 | Object type      | Property                                           | Example used in Madelbrot 1967    |
 |------------------|--------------------------------|----------------------|
@@ -74,10 +78,6 @@ Since $y'$ is a simple multiplication of the original object $y$ ($y$ is the par
 | Scale dependence | non-scaling, the existence of characteristic scale | the perimeter of a perfect circle |
 
 : Key terminology
-
-These terms are clearly explained in the textbook by Rodriquez-Iturbe & Rinaldo 2001:
-
-> *Self-similarity is a concept associated with fractal geometry that refers to invariance...The smaller structures are identical to the large-scale ones when they undergo an expansion in their scale. This similarity of parts to the whole is called self-similarity, and it is described by the lack of any characteristic scale, a property called scaling.* (p.99, Rodriquez-Iturbe & Rinaldo 2001)
 
 ## What Carraro & Altermatt found
 
