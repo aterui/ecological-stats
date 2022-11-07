@@ -3,27 +3,33 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://ecological-stats.netlify.app/categories/academic/</loc>
-    <lastmod>2022-09-02T00:00:00+00:00</lastmod>
+    <lastmod>2022-11-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/categories/</loc>
-    <lastmod>2022-09-02T00:00:00+00:00</lastmod>
+    <lastmod>2022-11-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/2022/11/06/concerns-on-carraro-altermatt-2022/</loc>
+    <lastmod>2022-11-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/</loc>
-    <lastmod>2022-09-02T00:00:00+00:00</lastmod>
+    <lastmod>2022-11-06T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/</loc>
-    <lastmod>2022-09-02T00:00:00+00:00</lastmod>
+    <loc>https://ecological-stats.netlify.app/tags/miscellaneous/</loc>
+    <lastmod>2022-11-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/post/</loc>
+    <lastmod>2022-11-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/tags/</loc>
+    <lastmod>2022-11-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/</loc>
     <lastmod>2022-09-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/categories/r/</loc>
     <lastmod>2022-09-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/tags/scholar/</loc>
-    <lastmod>2022-09-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ecological-stats.netlify.app/tags/</loc>
     <lastmod>2022-09-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/categories/gis/</loc>
@@ -43,9 +49,6 @@
   </url><url>
     <loc>https://ecological-stats.netlify.app/2022/05/15/ggplot/</loc>
     <lastmod>2022-05-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ecological-stats.netlify.app/tags/miscellaneous/</loc>
-    <lastmod>2022-04-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://ecological-stats.netlify.app/2022/04/09/r-package-shortcut/</loc>
     <lastmod>2022-04-09T00:00:00+00:00</lastmod>

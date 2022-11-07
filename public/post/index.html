@@ -182,6 +182,24 @@ if (!doNotTrack) {
 
   <header class="entry-header">
     <h2>
+      Concerns on Carraro &amp; Altermatt 2022
+    </h2>
+  </header>
+  <section class="entry-content">
+    <p>I never thought I would write a letter to published research to express deep concerns; this is certainly not something I want to do. Yet, there is no option but to write this post because otherwise, the recent paper by Carraro and Altermatt (2022)1 is a “threat” for me (and for not good reasons). I posted full details as a preprint here (including the re-analysis of their data).
+As a stream ecologist, I’m interested in how a stream network structure dictates ecological dynamics - so the assessment of stream network structure is a critical component in my research....</p>
+  </section>
+  <footer class="entry-footer">
+
+November 6, 2022&nbsp;·&nbsp;Akira Terui
+</footer>
+  <a class="entry-link" aria-label="post link to Concerns on Carraro &amp; Altermatt 2022" href="https://ecological-stats.netlify.app/2022/11/06/concerns-on-carraro-altermatt-2022/"></a>
+</article>
+
+<article class="post-entry"> 
+
+  <header class="entry-header">
+    <h2>
       Extract your publication list from google scholar in R
     </h2>
   </header>
@@ -379,28 +397,6 @@ April 11, 2021&nbsp;·&nbsp;Akira Terui
 March 29, 2021&nbsp;·&nbsp;Akira Terui
 </footer>
   <a class="entry-link" aria-label="post link to Rでシミュレーション1 - for loop" href="https://ecological-stats.netlify.app/2021/03/29/for-loop/"></a>
-</article>
-
-<article class="post-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      回帰モデルの効果量
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>効果量としての標準化偏回帰係数Average predictive comparisonRで実装効果量としての標準化偏回帰係数線形回帰は、生態学の一般的な解析手法になっている。Rで多数の関数が用意されているため解析も容易で、回帰係数の95%信頼区間やp値などでその効果の有意性もカンタンに検討できる。一方、近頃では有意性だけでなく、「効果量（Effect size）」にも注目したほうがいいとの見方が広まっている。この効果量には様々な指標があるけれども、線形回帰の文脈でいえば標準化偏回帰係数がもっとも広く使われている。
-そもそも偏回帰係数の意味とは何かというと、対応する説明変数xが単位量（つまり1.0）だけ増えたときに、応答変数がどれだけ変化するかを示している。しかし、説明変数間で単位*1が違うと（例えばある変数はm単位で計られているのに対し、別の変数は㎝単位で計られている）、偏回帰係数はその単位の違いの影響を直に受けてしまう。そこで、それぞれの説明変数をそのばらつき（標準偏差SD）で割り（標準化）、それら標準化された説明変数に対する偏回帰係数を推定する。標準化された説明変数の単位はそろっているので、推定された標準化偏回帰係数も比較できるものになっているはず、というものだ。
-しかし、これには一つの問題がある。現代の一般的な統計モデルでは、効果量としての標準化偏回帰係数の解釈が「直感的ではない」のである。例としては以下のようなものがある。個体数のカウントデータを線形モデルで表現する場合、誤差構造としてはポアソン分布（あるいは負の二項分布）を用いることが多い。ポアソン分布の平均パラメータは負の値をとることができないので、Rではデフォルトで対数リンク関数が実装されている。この時、ポアソンモデルの偏回帰係数のなにがどう「直感的」でないのか、下の例を見ながら考えてみる。
-まず、下記のスクリプトで簡単な仮想データを作る。
-# simulated data set.seed(111)n_sample &lt;- 100x1 &lt;- rnorm(n_sample, mean = 10, sd = 1)x2 &lt;- rnorm(n_sample, mean = 10, sd = 3)X &lt;- model.matrix(~ x1 &#43; x2)b &lt;- c(0.1, 0.2, 0.2) # true parametersy &lt;- rpois(n_sample, exp(X %*% b)) # simulated yポアソン分布を仮定したGLMを当てはめる。
-\[\begin{equation}y_i \sim Pois(\lambda_i)\\ ln \lambda_i = \alpha &#43; \beta_1 x_{1,i} &#43; \beta_2 x_{2,i}\end{equation}\]# model fit; unstandardizedm &lt;- glm(y ~ x1 &#43; x2, family = poisson)coef(m)## (Intercept) x1 x2 ## 0....</p>
-  </section>
-  <footer class="entry-footer">
-
-March 28, 2021&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to 回帰モデルの効果量" href="https://ecological-stats.netlify.app/2021/03/28/average-predictive-comparison/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

@@ -6,7 +6,17 @@
     <description>Recent content in academic on ECOSTATS</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Fri, 02 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/categories/academic/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 06 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/categories/academic/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Concerns on Carraro &amp; Altermatt 2022</title>
+      <link>https://ecological-stats.netlify.app/2022/11/06/concerns-on-carraro-altermatt-2022/</link>
+      <pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://ecological-stats.netlify.app/2022/11/06/concerns-on-carraro-altermatt-2022/</guid>
+      <description>I never thought I would write a letter to published research to express deep concerns; this is certainly not something I want to do. Yet, there is no option but to write this post because otherwise, the recent paper by Carraro and Altermatt (2022)1 is a “threat” for me (and for not good reasons). I posted full details as a preprint here (including the re-analysis of their data).
+As a stream ecologist, I’m interested in how a stream network structure dictates ecological dynamics - so the assessment of stream network structure is a critical component in my research.</description>
+    </item>
+    
     <item>
       <title>Extract your publication list from google scholar in R</title>
       <link>https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/</link>
