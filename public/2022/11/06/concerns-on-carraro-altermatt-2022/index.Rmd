@@ -23,7 +23,7 @@ $$
 
 ![Image from Wikipedia Commons (CC BY-SA 4.0)](https://upload.wikimedia.org/wikipedia/commons/d/df/Britain_Fractal_Coastline.gif){width="50%"}
 
-When Mandelbrot measured the length of the coastline as multiples of the ruler length $x$ (i.e., $N(x)x$, where $N(x)$ is the number of rulers needed given the length $x$), the function $f(x)$ diverged to reach infinity as $x \rightarrow 0$, because he found finer, but similar zig-zag patterns over and over as he uses a shorter ruler (see the figure below). This observation is realized as a power-law scaling of length $y$:
+When Mandelbrot measured the length of the coastline as multiples of the ruler length $x$ (i.e., $N(x)x$, where $N(x)$ is the number of rulers needed given the length $x$), the function $f(x)$ diverged to reach infinity as $x \rightarrow 0$, because he found finer, but similar zig-zag patterns over and over as he uses a shorter ruler (see the figure below; this is just for a graphical example). This observation is realized as a power-law scaling of length $y$:
 
 $$
 y = f(x) = cx^{-z}
@@ -36,7 +36,7 @@ pacman::p_load(tidyverse,
                patchwork)
 
 x <- exp(seq(log(0.1), log(500), length = 100))
-y <- x^-0.25
+y <- (10^3.5)*x^-0.25
 
 df0 <- tibble(x = x,
               y = y)
