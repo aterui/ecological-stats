@@ -9,19 +9,21 @@ tags:
   - miscellaneous
 ---
 
-I never thought I would write a letter to published research to express deep concerns; this is certainly not something I want to do. Yet, there is no option but to write this post because otherwise, [the recent paper by Carraro and Altermatt](https://www.nature.com/articles/s43247-022-00454-1) (2022) is a "threat" for me (and for not good reasons). I posted full details as a preprint here (including the re-analysis of their data).
+I never thought I would write a letter to published research to express deep concerns; this is certainly not something I want to do. Yet, there is no option but to write this post because otherwise, [the recent paper by Carraro and Altermatt](https://www.nature.com/articles/s43247-022-00454-1) (2022) is a "threat" to me for no good reasons. I posted full details as a preprint here (including the re-analysis of their data).
 
 As a stream ecologist, I'm interested in how a stream network structure dictates ecological dynamics - so the assessment of stream network structure is a critical component in my research. I use "branching probability" to measure network complexity, i.e., the probability of observing a single joining tributary per unit river distance. In my past studies ([Terui et al. 2018](https://www.pnas.org/doi/10.1073/pnas.1800060115), [2021](https://www.pnas.org/doi/10.1073/pnas.2105574118)), I referred to *branching probability* as a variable reflecting the "scale invariance" of fractal rivers. In contrast, Carraro and Altermatt 2022 concluded in their paper, "***\...we show that an alleged property of such random networks (branching probability) is a scale-dependent quantity that does not reflect any recognized metric of rivers' fractal character...***" I was shocked because if this is true, what I had been saying in my papers was very wrong. However, after careful reading, this conclusion turned out to be due to the author's misuse of the term "scale invariance." The conclusion derived from their analysis must have been the complete opposite, "***branching probability is a scale-invariant feature that reflects the fractal nature of rivers,***" as explained below.
 
 ## Premise
 
-**Scale-invariance** refers to a phenomenon in which a self-similar structure appears (almost) infinitely as you increase the resolution of the measurement. The most famous example of scale invariance is the length of the UK coastline. [Mandelbrot 1967](https://www.science.org/doi/10.1126/science.156.3775.636) used a ruler length $x$ as a scale of observation (= the resolution of the measurement) to measure the length of coast line $y$ and expressed it as a function of scale $x$:
+**Scale-invariance** refers to a phenomenon in which a self-similar structure appears (almost) infinitely as you increase the resolution of the measurement. The most famous example of scale invariance is the length of the UK coastline. [Mandelbrot 1967](https://www.science.org/doi/10.1126/science.156.3775.636) used a ruler length $x$ as a scale of observation (= the resolution of the measurement; see red-line segments in the image below) to measure the length of coastline $y$ and expressed it as a function of scale $x$:
 
 $$
 y = f(x)
 $$
 
-When Mandelbrot measured the length of the coastline as multiples of the ruler length $x$ (i.e., $N(x)x$, where $N(x)$ is the number of rulers needed given the length $x$), the function $f(x)$ diverged to reach infinity as $x \rightarrow 0$, because he found finer, but similar zig-zag patterns over and over as he uses a shorter ruler. This observation is realized as a power-law scaling of length $y$:
+![Image from Wikipedia Commons (CC BY-SA 4.0)](https://upload.wikimedia.org/wikipedia/commons/d/df/Britain_Fractal_Coastline.gif){width="50%"}
+
+When Mandelbrot measured the length of the coastline as multiples of the ruler length $x$ (i.e., $N(x)x$, where $N(x)$ is the number of rulers needed given the length $x$), the function $f(x)$ diverged to reach infinity as $x \rightarrow 0$, because he found finer, but similar zig-zag patterns over and over as he uses a shorter ruler (see the figure below). This observation is realized as a power-law scaling of length $y$:
 
 $$
 y = f(x) = cx^{-z}
@@ -29,33 +31,64 @@ $$
 
 where $c$ is the scaling constant and $z$ the scaling exponent.
 
-```{r uk, echo = FALSE}
-url_gif <- "https://upload.wikimedia.org/wikipedia/commons/d/df/Britain_Fractal_Coastline.gif"
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4}
+pacman::p_load(tidyverse,
+               patchwork)
+
+x <- exp(seq(log(0.1), log(500), length = 100))
+y <- x^-0.25
+
+df0 <- tibble(x = x,
+              y = y)
+
+g1 <- df0 %>% 
+  ggplot(aes(x = x,
+             y = y)) +
+  geom_point(alpha = 0.1) +
+  geom_line() +
+  labs(y = "Coastline length y",
+       x = "Ruler length x") +
+  theme_bw()
+  
+g2 <- g1 +
+  scale_x_continuous(trans = "log10") +
+  scale_y_continuous(trans = "log10") +
+  theme_bw()
+
+g1 + ggtitle("Ordinary scale") + g2 + ggtitle("Log-log scale")
 ```
 
-![Length of UK coastline measured as multiples of a ruler with unit length $x$. As $x$ approaches zero, the coastline length diverges to reach infinity. Image from Wikipedia Commons (CC BY-SA 4.0)](`r url_gif`){width="50%"}
-
-In this equation, the observed variable $y$ reaches infinity as $x \rightarrow 0$, reflecting the fractal nature of the coastline. In a power-law, the multiplication of scale $x$ will also results in a simple multiplication of the observation $y$. For example:
+In this equation, the observed variable $y$ reaches infinity as $x \rightarrow 0$, reflecting the fractal nature of the coastline. In a power law, the shrinkage/extension of scale $x$ will result in a simple multiplication of the observation $y$. For example:
 
 $$
 y'=f(2x)=c(2x)^{-z} = 2^{-z}cx^{-z} = 2^{-z}f(x) = 2^{-z}y
 $$
 
-Since $y'$ is a simple multiplication of the original object $y$ ($y$ is the part of $y'$), this proves that the structural property is retained across observation scale $x$. Therefore, **the** **observed object** $y$ **expressed as a function of scale** $x$ **is said to be scale invariant when it follows a power-law.** "Scaling" and "the lack of characteristic scale" are the properties associated with scale-invariance.
+Since $y'$ is a simple multiplication of the original object $y$ ($y$ is the part of $y'$), this proves that the structural property is retained across observation scale $x$. Therefore, **the** **observed object** $y$ **expressed as a function of scale** $x$ ($y$ equals $f(x)$) **is said to be scale invariant when it follows a power-law**[^1]**.** "Scaling" and "the lack of characteristic scale" are the properties associated with scale-invariance.
+
+[^1]: Formally, a function $f(x)$ is said to be scale invariant if it suffices the following equation: $f(\lambda x) = \lambda^z f(x)$. A power law is one example of satisfying this equation.
+
+where $\lambda$ is an arbitrary constant and $z$ is the scaling exponent. A power law is an example of satisfying this equation.
 
 | Object type      | Property                                           | Example used in Madelbrot 1967    |
-|------------------|----------------------------------------------------|-----------------------------------|
+|------------------|--------------------------------|----------------------|
 | Scale invariant  | scaling, the lack of characteristic scale          | the length of a coast line        |
 | Scale dependence | non-scaling, the existence of characteristic scale | the perimeter of a perfect circle |
 
-: Key terminology that is often confused
+: Key terminology
+
+These terms are clearly explained in the textbook by Rodriquez-Iturbe & Rinaldo 2001:
+
+> *Self-similarity is a concept associated with fractal geometry that refers to invariance...The smaller structures are identical to the large-scale ones when they undergo an expansion in their scale. This similarity of parts to the whole is called self-similarity, and it is described by the lack of any characteristic scale, a property called scaling.* (p.99, Rodriquez-Iturbe & Rinaldo 2001)
 
 ## What Carraro & Altermatt found
 
 In Carraro & Altermatt 2022, they reported that the branching probability follows a power law of observation scale $A_T$ using virtual networks called Optimal Channel Networks (Equation (1) in the original article). In addition, they also observed the power-law scaling of branching probability in real rivers (see the log-log plot in Figure 3 in the original article).
 
-Nevertheless, they concluded "***an alleged property of such random networks (branching probability) is a scale-dependent quantity that does not reflect any recognized metric of rivers' fractal character...***" This is **the complete opposite** as it has been defined in the literature of scale invariance. They also used other key terms in a completely opposite way -- for example, the term "scaling" is used as if it describes a property of scale-dependent object. If the use of these key terms is approved, it invalidates the entire body of literature in scale invariance since the 1960s because what we have been calling "scale-invariant" becomes "scale-dependent"...!
+Nevertheless, they concluded "***an alleged property of such random networks (branching probability) is a scale-dependent quantity that does not reflect any recognized metric of rivers' fractal character...***" This is the complete opposite as it has been defined in the literature of scale invariance (and "alleged"...!!!? This is simply a misuse of the term made by the authors!). Instead, the correct conclusion should be "***branching probability is a scale-invariant feature that reflects the fractal nature of rivers.***"
+
+They also used other key terms in a completely opposite way -- for example, the term "scaling" is used as if it describes a property of a scale-dependent object. If the use of these key terms is approved, it invalidates the entire body of literature in scale invariance since the 1960s because what we have been calling "scale-invariant" becomes "scale-dependent"...!
 
 ## Practical problem
 
-The fundamental problem in Carraro & Altermatt (the misunderstanding of what we call scale invariant...) is actually very common -- honestly, I fell into the same pitfall when I started studying about scale invariance. Hence, I am very worried about the potential educational consequences of this paper -- this paper has been published in one of the prestigious journals. To me (and to mathematicians), this misuse is analogous to swapping between the terms "competition" and "mutualism." Thus, this problem is very deep...however, many of the potential readers (ecologists) seems unfamiliar with the concept of scale invariance and it will be super easy to get tricked. I wish this misuse will not facilitate the misunderstanding of the term scale invariance, which is mathematically and uniquely defined.
+The fundamental problem in Carraro & Altermatt (the misunderstanding of what we call scale invariant...) is actually very common -- honestly, I fell into the same pitfall when I started studying scale invariance. Hence, I am very worried about the potential educational consequences of this paper -- this paper has been published in one of the prestigious journals. This misuse is analogous to swapping the terms "competition" and "mutualism." Thus, this problem is very deep...however, many of the potential readers (ecologists) seem unfamiliar with the definition of scale invariance and it will be super easy to get tricked. I wish this misuse will not facilitate the misunderstanding of the term scale invariance, which is mathematically and uniquely defined.
