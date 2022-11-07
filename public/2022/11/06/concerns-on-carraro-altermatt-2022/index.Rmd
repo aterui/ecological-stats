@@ -21,7 +21,7 @@ $$
 y = f(x)
 $$
 
-When Mandelbrot measured the length of the coastline as multiples of the ruler length $x$ (i.e., $y = N(x)x$, where $N(x)$ is the number of rulers needed given the length $x$), the function $f(x)$ diverged to reach infinity, because he found finer, but similar zig-zag patterns over and over as he uses a shorter ruler. This observation is realized as a power-law scaling of length $y$:
+When Mandelbrot measured the length of the coastline as multiples of the ruler length $x$ (i.e., $N(x)x$, where $N(x)$ is the number of rulers needed given the length $x$), the function $f(x)$ diverged to reach infinity as $x \rightarrow 0$, because he found finer, but similar zig-zag patterns over and over as he uses a shorter ruler. This observation is realized as a power-law scaling of length $y$:
 
 $$
 y = f(x) = cx^{-z}
