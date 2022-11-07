@@ -35,7 +35,7 @@ where $c$ is the scaling constant and $z$ the scaling exponent.
 url_gif <- "https://upload.wikimedia.org/wikipedia/commons/d/df/Britain_Fractal_Coastline.gif"
 ```
 
-![The length of UK coastline measured as multiple of a ruler with unit length x. As x approaches zero, the coastline length diverges to reach infinity. Image from Wikipedia Commons (CC BY-SA 4.0)](%60r%20url_gif%60){width="50%"}
+![The length of UK coastline measured as multiple of a ruler with unit length x. As x approaches zero, the coastline length diverges to reach infinity. Image from Wikipedia Commons (CC BY-SA 4.0)](`r url_gif`){width="50%"}
 
 In this equation, the observed variable $y$ reaches infinity as $x \rightarrow 0$, reflecting the fractal nature of the coastline. In a power-law, the multiplication of scale $x$ will also results in a simple multiplication of the observation $y$. For example:
 
