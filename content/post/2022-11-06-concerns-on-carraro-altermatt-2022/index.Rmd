@@ -66,9 +66,7 @@ $$
 
 Since $y'$ is a simple multiplication of the original object $y$ ($y$ is the part of $y'$), this proves that the structural property is retained across observation scale $x$. Therefore, **the** **observed object** $y$ **expressed as a function of scale** $x$ ($y$ equals $f(x)$) **is said to be scale invariant when it follows a power-law**[^1]**.** "Scaling" and "the lack of characteristic scale" are the properties associated with scale-invariance.
 
-[^1]: Formally, a function $f(x)$ is said to be scale invariant if it suffices the following equation: $f(\lambda x) = \lambda^z f(x)$. A power law is one example of satisfying this equation.
-
-where $\lambda$ is an arbitrary constant and $z$ is the scaling exponent. A power law is an example of satisfying this equation.
+[^1]: Formally, a function $f(x)$ is said to be scale invariant if it suffices the following equation: $f(\lambda x) = \lambda^z f(x)$, where $\lambda$ is an arbitrary constant and $z$ is the scaling exponent. A power law is an example of satisfying this equation.. A power law is one example of satisfying this equation.
 
 | Object type      | Property                                           | Example used in Madelbrot 1967    |
 |------------------|--------------------------------|----------------------|
