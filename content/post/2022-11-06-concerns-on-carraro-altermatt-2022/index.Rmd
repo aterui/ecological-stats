@@ -83,9 +83,9 @@ Since $y'$ is a simple multiplication of the original object $y$ ($y$ is the par
 
 In Carraro & Altermatt 2022, they reported that the branching probability follows a power law of observation scale $A_T$ using virtual networks called Optimal Channel Networks (Equation (1) in the original article). In addition, they also observed the power-law scaling of branching probability in real rivers (see the log-log plot in Figure 3 in the original article).
 
-Nevertheless, they concluded "***an alleged property of such random networks (branching probability) is a scale-dependent quantity that does not reflect any recognized metric of rivers' fractal character...***" This is the complete opposite as it has been defined in the literature of scale invariance (and "alleged"...!!!? This is simply a misuse of the term made by the authors!). Instead, the correct conclusion should be "***branching probability is a scale-invariant feature that reflects the fractal nature of rivers.***"
+Nevertheless, they concluded "***an alleged property of such random networks (branching probability) is a scale-dependent quantity that does not reflect any recognized metric of rivers' fractal character...***" This is the complete opposite as it has been defined in the literature of scale invariance (and "alleged"...!!!? This is simply a misuse of the term made by the authors!). Instead, the correct conclusion should be "***branching probability is a scale-invariant feature that reflects the fractal nature of rivers.***" They also used other key terms in a completely opposite way -- for example, the term "scaling" is used as if it describes a property of a scale-dependent object.
 
-They also used other key terms in a completely opposite way -- for example, the term "scaling" is used as if it describes a property of a scale-dependent object. If the use of these key terms is approved, it invalidates the entire body of literature in scale invariance since the 1960s because what we have been calling "scale-invariant" becomes "scale-dependent"...!
+If the misuse of these key terms is approved, it invalidates the entire body of literature in scale invariance since the 1960s because what we have been calling "scale-invariant" becomes "scale-dependent"...! (regardless of the author's intention...)
 
 ## Practical problem
 
