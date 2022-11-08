@@ -1,24 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>foreach on ECOSTATS</title>
-    <link>https://ecological-stats.netlify.app/tags/foreach/</link>
-    <description>Recent content in foreach on ECOSTATS</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja</language>
-    <lastBuildDate>Sun, 30 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/tags/foreach/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Rでシミュレーション3 - foreach</title>
-      <link>https://ecological-stats.netlify.app/2021/05/30/foreach/</link>
-      <pubDate>Sun, 30 May 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://ecological-stats.netlify.app/2021/05/30/foreach/</guid>
-      <description>パラメータセットを用意するforeachの導入Plotを描く前回はfunctionを使ってシミュレーションモデルを関数化する方法を書いた。今日はこの関数を使い、様々なパラメータの下でシミュレーションを効率的に走らせるコードを書いてみたい。
-パラメータセットを用意する以前作った個体群動態のシミュレーションモデルを、ここの例題として再度利用する：
-\[ln~n_{t+1} = ln~\lambda + ln~n_t + \epsilon_t\\\epsilon_t \sim N(0,\sigma_{\epsilon}^2)\]
-前年の個体数\(n_{t}\)に集団増加率\(\lambda\)が掛け算され、翌年の個体数\(n_{t+1}\)が決まるが、そこにはランダムな環境変動の影響（\(\epsilon_t\)）もある、というものであった（上の式では対数スケールのため足し算になっている）。これをコードとして書き下し、関数化したものが以下：
-sim_geomodel &amp;lt;- function(n_step,lambda,sd_eps,n1 = 10) {log_n &amp;lt;- NULLlog_n[1] &amp;lt;- log(n1)eps &amp;lt;- rnorm(n = n_step, mean = 0, sd = sd_eps)for(t in 1:(n_step - 1)) {log_n[t + 1] &amp;lt;- log(lambda) + log_n[t] + eps[t]}n &amp;lt;- exp(log_n)df_dynamics &amp;lt;- dplyr::tibble(n_step = 1:n_step,n = n)return(df_dynamics)}この関数sim_geomodelを使い、パラメータの値を変えた時に、50年後の個体数の予測値がどう変わるのか調べてみよう。パラメータを変えながらパターンを予測することで、どのパラメータが集団動態にどんな影響を及ぼすのかを調べることができる。今回の場合、パラメータは二つあるので（lambda, sd_eps）、これらのパラメータセットを作るところから始める。パラメータセットを作るには、パラメータ値のすべての組み合わせを考える必要がある。この場合、expand.</description>
-    </item>
-    
-  </channel>
-</rss>

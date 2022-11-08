@@ -1,26 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>GIS on ECOSTATS</title>
-    <link>https://ecological-stats.netlify.app/categories/gis/</link>
-    <description>Recent content in GIS on ECOSTATS</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja</language>
-    <lastBuildDate>Sat, 30 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://ecological-stats.netlify.app/categories/gis/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>RでGIS：ベクター</title>
-      <link>https://ecological-stats.netlify.app/2022/07/30/r-gis-sf/</link>
-      <pubDate>Sat, 30 Jul 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://ecological-stats.netlify.app/2022/07/30/r-gis-sf/</guid>
-      <description>RでGISGIS用のRパッケージsfによるベクター処理データを読み込むフィールド編集レイヤー間の紐づけまとめRでGISGISというとArcGISもしくはQGISを想定しがちだけど、個人的にはこれらGUIに依拠したSoftware（マウスでカチカチする系）は好みではないし、おすすめしない。というのも、何度もマウスでクリックしながら作業を進めるので、以下のリスクがある。
-作業行程の再現性を担保しにくい
-エラーがあった場合、すべての行程を繰り返す必要がある
-うっかりミスしやすい
-これらの理由から、私はGISもスクリプトベースで作業行程を記録すべきと思う。スクリプトベースのGISというとPostGISが標準だったと思うが、最近ではこれらの関数群はほぼすべてRで使えるようになっているし、工夫すれば計算速度もArcGISと遜色ない。しかし、スクリプトベースのGISに関する資料は英語によるものがほとんどのため、アクセスしにくいといえばそうかもしれない。そこで、RのGIS処理について、いくつかの記事にわけて紹介したいと思う。なお、このブログで書かれていることの大半はTaro Mienoさん(University of Nebraska Lincoln)のオンライン資料で勉強させていただいた。とても事細かな説明があるので、この記事を読んで興味がわいた方はぜひこちらで勉強するといいと思う。
-GIS用のRパッケージどのようなタイプのレイヤー（ベクター、ラスター）を扱うかによって、必要となるパッケージは変わる。基本的な作業はsf, raster, terraあたりで済むが、多少込み入った作業には他の補助的なパッケージも必要になる。以下の表に簡単にまとめる。
-パッケージ名レイヤタイプ備考sfベクターベクター処理の場合はsf一択。大体これで足りる（Website）。rmapshaperベクターフィーチャーが重いときに頂点を削って計算を高速化する。（Website）rasterラスターラスター処理のデファクトスタンダードだったが、C++ベースのterraに移行中（Website）。terraラスターラスター処理の新しいデファクトスタンダードになりつつある（Website）。starsベクター、ラスター時空間情報のついたラスター処理に特化。ラスター｜ベクター変換の際にも重宝する（Website）。exactextractrベクター、ラスターフィーチャーごとにラスターデータを集計するときに使う（Website）。tmapNAGISレイヤーの描画（Website）sfによるベクター処理データを読み込むベクター処理の鉄板であるsfを使ってみる。sfについてくるデータセットを使う。拡張子を見てもらうとわかるが、呼び出されるファイルはシェイプファイル（.</description>
-    </item>
-    
-  </channel>
-</rss>
