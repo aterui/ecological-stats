@@ -15,15 +15,11 @@ As a stream ecologist, I'm interested in how a stream network structure dictates
 
 ## Premise
 
-**Scale-invariance** refers to a phenomenon in which a self-similar structure appears (almost) infinitely as you increase the resolution of the measurement. The most famous example of scale invariance is the length of the UK coastline. [Mandelbrot 1967](https://www.science.org/doi/10.1126/science.156.3775.636) used a ruler length $x$ as a scale of observation (= the resolution of the measurement; see red-line segments in the image below) to measure the length of coastline $y$ and expressed it as a function of scale $x$:
-
-$$
-y = f(x)
-$$
+**Scale-invariance** refers to a phenomenon in which a self-similar structure appears (almost) infinitely as you increase the resolution of the measurement. The most famous example of scale invariance is the length of the UK coastline. [Mandelbrot 1967](https://www.science.org/doi/10.1126/science.156.3775.636) used a ruler length $x$ as a scale of observation (= the resolution of the measurement; see red-line segments in the image below) to measure the length of coastline $y$ and expressed it as a function of scale $x$, $y = f(x)$.
 
 ![Image from Wikipedia Commons (CC BY-SA 4.0)](https://upload.wikimedia.org/wikipedia/commons/d/df/Britain_Fractal_Coastline.gif){width="50%"}
 
-When Mandelbrot measured the total length of the coastline as multiples of the ruler length $x$ (i.e., $N(x)x$, where $N(x)$ is the number of rulers needed given the length $x$), the function $f(x)$ diverged to reach infinity as $x \rightarrow 0$, because he found finer, but similar zig-zag patterns over and over as he uses a shorter ruler (see the figure below; this is just for a graphical example). This observation is realized as a power-law scaling of length $y$:
+When Mandelbrot measured the total length of the coastline as multiples of the ruler length $x$ (i.e., $N(x)x$, where $N(x)$ is the number of rulers needed given the length $x$), the length (function $f(x)$) diverged to reach infinity as $x \rightarrow 0$, because he found finer, but similar zig-zag patterns over and over as he uses a shorter ruler (see the figure below; this is just for a graphical example). This observation is realized as a power-law scaling of length $y$:
 
 $$
 y = f(x) = cx^{-z}
@@ -73,7 +69,7 @@ Since $y'$ is a simple multiplication of the original object $y$ ($y$ is the par
     > *Self-similarity is a concept associated with fractal geometry that refers to invariance...The smaller structures are identical to the large-scale ones when they undergo an expansion in their scale. This similarity of parts to the whole is called self-similarity, and it is described by the lack of any characteristic scale, a property called scaling.* (p.99, Rodriquez-Iturbe & Rinaldo 2001)
 
 | Object type      | Property                                           | Example used in Madelbrot 1967    |
-|------------------|----------------------------------------------------|-----------------------------------|
+|------------------|--------------------------------|----------------------|
 | Scale invariant  | scaling, the lack of characteristic scale          | the length of a coast line        |
 | Scale dependence | non-scaling, the existence of characteristic scale | the perimeter of a perfect circle |
 

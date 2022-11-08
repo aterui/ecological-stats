@@ -15,15 +15,12 @@ tags:
 <p>As a stream ecologist, I’m interested in how a stream network structure dictates ecological dynamics - so the assessment of stream network structure is a critical component in my research. I use “branching probability” to measure network complexity, i.e., the probability of observing a single joining tributary per unit river distance. In my past studies (<a href="https://www.pnas.org/doi/10.1073/pnas.1800060115">Terui et al. 2018</a>, <a href="https://www.pnas.org/doi/10.1073/pnas.2105574118">2021</a>), I referred to <em>branching probability</em> as a variable reflecting the “scale invariance” of fractal rivers. In contrast, Carraro and Altermatt 2022 concluded in their paper, “<strong><em>...we show that an alleged property of such random networks (branching probability) is a scale-dependent quantity that does not reflect any recognized metric of rivers’ fractal character…</em></strong>” I was shocked because if this is true, what I had been saying in my papers was very wrong. However, after careful reading, this conclusion turned out to be due to the author’s misuse of the term “scale invariance.” The conclusion derived from their analysis must have been the complete opposite, “<strong><em>branching probability is a scale-invariant feature that reflects the fractal nature of rivers,</em></strong>” as explained below.</p>
 <div id="premise" class="section level2">
 <h2>Premise</h2>
-<p><strong>Scale-invariance</strong> refers to a phenomenon in which a self-similar structure appears (almost) infinitely as you increase the resolution of the measurement. The most famous example of scale invariance is the length of the UK coastline. <a href="https://www.science.org/doi/10.1126/science.156.3775.636">Mandelbrot 1967</a> used a ruler length <span class="math inline">\(x\)</span> as a scale of observation (= the resolution of the measurement; see red-line segments in the image below) to measure the length of coastline <span class="math inline">\(y\)</span> and expressed it as a function of scale <span class="math inline">\(x\)</span>:</p>
-<p><span class="math display">\[
-y = f(x)
-\]</span></p>
+<p><strong>Scale-invariance</strong> refers to a phenomenon in which a self-similar structure appears (almost) infinitely as you increase the resolution of the measurement. The most famous example of scale invariance is the length of the UK coastline. <a href="https://www.science.org/doi/10.1126/science.156.3775.636">Mandelbrot 1967</a> used a ruler length <span class="math inline">\(x\)</span> as a scale of observation (= the resolution of the measurement; see red-line segments in the image below) to measure the length of coastline <span class="math inline">\(y\)</span> and expressed it as a function of scale <span class="math inline">\(x\)</span>, <span class="math inline">\(y = f(x)\)</span>.</p>
 <div class="figure">
 <img src="https://upload.wikimedia.org/wikipedia/commons/d/df/Britain_Fractal_Coastline.gif" style="width:50.0%" alt="" />
 <p class="caption">Image from Wikipedia Commons (CC BY-SA 4.0)</p>
 </div>
-<p>When Mandelbrot measured the total length of the coastline as multiples of the ruler length <span class="math inline">\(x\)</span> (i.e., <span class="math inline">\(N(x)x\)</span>, where <span class="math inline">\(N(x)\)</span> is the number of rulers needed given the length <span class="math inline">\(x\)</span>), the function <span class="math inline">\(f(x)\)</span> diverged to reach infinity as <span class="math inline">\(x \rightarrow 0\)</span>, because he found finer, but similar zig-zag patterns over and over as he uses a shorter ruler (see the figure below; this is just for a graphical example). This observation is realized as a power-law scaling of length <span class="math inline">\(y\)</span>:</p>
+<p>When Mandelbrot measured the total length of the coastline as multiples of the ruler length <span class="math inline">\(x\)</span> (i.e., <span class="math inline">\(N(x)x\)</span>, where <span class="math inline">\(N(x)\)</span> is the number of rulers needed given the length <span class="math inline">\(x\)</span>), the length (function <span class="math inline">\(f(x)\)</span>) diverged to reach infinity as <span class="math inline">\(x \rightarrow 0\)</span>, because he found finer, but similar zig-zag patterns over and over as he uses a shorter ruler (see the figure below; this is just for a graphical example). This observation is realized as a power-law scaling of length <span class="math inline">\(y\)</span>:</p>
 <p><span class="math display">\[
 y = f(x) = cx^{-z}
 \]</span></p>
@@ -37,9 +34,9 @@ y&#39;=f(2x)=c(2x)^{-z} = 2^{-z}cx^{-z} = 2^{-z}f(x) = 2^{-z}y
 <table>
 <caption>Key terminology</caption>
 <colgroup>
-<col width="17%" />
-<col width="49%" />
-<col width="33%" />
+<col width="25%" />
+<col width="44%" />
+<col width="30%" />
 </colgroup>
 <thead>
 <tr class="header">
