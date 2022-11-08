@@ -1,0 +1,191 @@
+---
+title: RでGIS：ベクター
+author: ''
+date: '2022-07-30'
+output:
+  blogdown::html_page:
+    toc: true
+slug: r-gis-sf
+categories:
+  - R
+  - GIS
+tags:
+  - sf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+
+library(tidyverse)
+```
+
+# RでGIS
+
+GISというとArcGISもしくはQGISを想定しがちだけど、個人的にはこれらGUIに依拠したSoftware（マウスでカチカチする系）は好みではないし、おすすめしない。というのも、何度もマウスでクリックしながら作業を進めるので、以下のリスクがある。
+
+1.  作業行程の再現性を担保しにくい
+
+2.  エラーがあった場合、すべての行程を繰り返す必要がある
+
+3.  うっかりミスしやすい
+
+これらの理由から、私はGISもスクリプトベースで作業行程を記録すべきと思う。スクリプトベースのGISというとPostGISが標準だったと思うが、最近ではこれらの関数群はほぼすべてRで使えるようになっているし、工夫すれば計算速度もArcGISと遜色ない。しかし、スクリプトベースのGISに関する資料は英語によるものがほとんどのため、アクセスしにくいといえばそうかもしれない。そこで、RのGIS処理について、いくつかの記事にわけて紹介したいと思う。なお、このブログで書かれていることの大半は[Taro Mienoさん(University of Nebraska Lincoln)のオンライン資料](https://tmieno2.github.io/R-as-GIS-for-Economists/)で勉強させていただいた。とても事細かな説明があるので、この記事を読んで興味がわいた方はぜひこちらで勉強するといいと思う。
+
+# GIS用のRパッケージ
+
+どのようなタイプのレイヤー（ベクター、ラスター）を扱うかによって、必要となるパッケージは変わる。基本的な作業は`sf`, `raster`, `terra`あたりで済むが、多少込み入った作業には他の補助的なパッケージも必要になる。以下の表に簡単にまとめる。
+
+| パッケージ名    | レイヤタイプ       | 備考                                                                                                                                              |
+|-----------------|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| `sf`            | ベクター           | ベクター処理の場合はsf一択。大体これで足りる（[Website](https://r-spatial.github.io/sf/)）。                                                      |
+| `rmapshaper`    | ベクター           | フィーチャーが重いときに頂点を削って計算を高速化する。（[Website](https://cran.r-project.org/web/packages/rmapshaper/vignettes/rmapshaper.html)） |
+| `raster`        | ラスター           | ラスター処理のデファクトスタンダードだったが、C++ベースの`terra`に移行中（[Website](https://rspatial.org/raster/spatial/8-rastermanip.html)）。   |
+| `terra`         | ラスター           | ラスター処理の新しいデファクトスタンダードになりつつある（[Website](https://rspatial.org/terra/pkg/index.html)）。                                |
+| `stars`         | ベクター、ラスター | 時空間情報のついたラスター処理に特化。ラスター｜ベクター変換の際にも重宝する（[Website](https://r-spatial.github.io/stars/)）。                   |
+| `exactextractr` | ベクター、ラスター | フィーチャーごとにラスターデータを集計するときに使う（[Website](https://isciences.gitlab.io/exactextractr/)）。                                   |
+| `tmap`          | NA                 | GISレイヤーの描画（[Website](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html)）                                       |
+
+# `sf`によるベクター処理
+
+## データを読み込む
+
+ベクター処理の鉄板である`sf`を使ってみる。`sf`についてくるデータセットを使う。拡張子を見てもらうとわかるが、呼び出されるファイルはシェイプファイル（`.shp`）。
+
+```{r}
+
+library(sf)
+
+fname <- system.file("shape/nc.shp", package="sf")
+
+print(fname)
+```
+
+このファイルパスを`st_read()`で読み込む。ここでは例を示すためにsf内のデータセットを呼び出しているが、`read_csv()`のような感じでシェイプファイルを読める（詳しくは[こちら](https://tmieno2.github.io/R-as-GIS-for-Economists/vector-basics.html?q=st_read#reading-a-shapefile)）。プリントしてみると、何やらデータフレームのようなものが吐き出されるが、これはGISでいう属性テーブルに対応している。フィーチャーについて、座標系、Geometry type、CoordinateなどGIS作業になくてはならない情報もついている。
+
+```{r}
+
+sf_nc <- st_read(fname)
+
+print(sf_nc)
+```
+
+これだけみてもよくわらからないので、図示する。`tmap`パッケージの関数群を使えば、`ggplot`のように地図をRで書ける。どうやらこれはアメリカ、ノースカロライナ州のCounty（行政区のようなもの）のポリゴンのようだ。
+
+```{r}
+library(tmap)
+
+tmap_mode("view")
+
+tm_shape(sf_nc) +
+  tm_polygons()
+```
+
+## フィールド編集
+
+`sf`を使う最大のメリットの一つは、レイヤーをそのままR上で編集できることだろう。しかも`tidyverse`との相性が最高で、だいたいの`dplyr`の関数はそのまま使える。ここでは練習のため、もともと入っていた列情報を一旦削除し、逐一情報を追加する。
+
+```{r}
+
+# remove all columns except geometry
+sf_nc0 <- sf_nc %>% 
+  dplyr::select(NULL)
+
+print(sf_nc0)
+```
+
+まず、投影変換して投影座標系に直し、それぞれのポリゴンの面積を計算する。その後、面積順にID番号を与えてみよう。投影変換は`st_transform()` 、面積は`st_area()` で計算できる（そのほかにも長さ`st_length()`、重心`st_centroid()`、バッファー`st_buffer()`なども計算できる。関数一覧は[ここ](https://r-spatial.github.io/sf/reference/index.html)）。アウトプットを見ると、座標系が変換され、新しい列も追加されていることがわかる。
+
+```{r}
+sf_nc1 <- sf_nc0 %>% 
+  st_transform(crs = 32617) %>% # EPSG: 32617 = WGS84/UTM Zone 17
+  mutate(area = st_area(.)) %>% # calculate area
+  arrange(desc(area)) %>% # arrange by area; decreasing order
+  mutate(area_rank = row_number()) # assign row numbers as it appears
+
+print(sf_nc1)
+```
+
+このままだと`area` の列がわかりにくいので、単位をkm$^2$に変換する。
+
+```{r}
+sf_nc1 <- sf_nc1 %>% 
+  mutate(area = units::set_units(area, "km^2"))
+
+print(sf_nc1)
+```
+
+この情報を`ggplot`にそのまま引き渡し、図示もできる。
+
+```{r}
+sf_nc1 %>% 
+  mutate(area = as.numeric(area)) %>% # remove unit [km^2]
+  ggplot(aes(x = area)) + 
+  geom_histogram()
+```
+
+あるいは`filter()`に引き渡して、特定の特徴をもつポリゴンだけを抽出することも可能。
+
+```{r}
+sf_nc1 %>% 
+  dplyr::filter(area > units::set_units(1000, "km^2")) %>% # select polygons with > 1000 km^2
+  tm_shape() +
+  tm_polygons() # show map
+```
+
+## レイヤー間の紐づけ
+
+どのポイントがどのポリゴンに属しているのか、という情報を抽出したい場合も多い。この場合、`st_join()`が有効。先のポリゴンレイヤーの範囲内に、ランダムなポイントデータを生成する。
+
+```{r}
+
+# generate random points ----
+sf_point <- tibble() %>% 
+  bind_rows(c(st_bbox(sf_nc1))) %>% # extract the boundary box (bbox) with "st_bbox()" 
+  summarize(Y = runif(100, ymin, ymax),
+            X = runif(100, xmin, xmax)) %>% # random points within the bbox
+  mutate(point_id = row_number()) %>% 
+  st_as_sf(coords = c("X", "Y")) %>% # define as sf object
+  st_set_crs(st_crs(sf_nc1)) # define CRS
+  
+# show map ----
+tmap_mode("view")
+
+tm_shape(shp = sf_nc1) +  
+  tm_polygons() +
+tm_shape(shp = sf_point) +
+  tm_dots(col = "black")
+```
+
+ポイントをポリゴンと紐づける。`x` で指定されるレイヤーに、`y`のレイヤーの情報を紐づける。紐づけの条件はいろいろ変えれるが、デフォルトでは両者のフィーチャが重なっている場合に紐づけされる。この例では、ポリゴンの中に含まれたポイントには情報が付加されたが、ポリゴン外にあるものについては`NA`が充てられている。
+
+```{r}
+
+sf_point_join <- st_join(x = sf_point, y = sf_nc1)
+
+print(sf_point_join)
+```
+
+`area`の列が`NA`になっているポイントを取り除き、再度図示する。途中、`drop_na()`を使うと`sf`オブジェクトが`tibble`に強制変換されるようなので、再度`st_as_sf()`を使って`sf`に戻している。
+
+```{r}
+
+# filter points ----
+sf_point_filter <- sf_point_join %>% 
+  drop_na(area) %>% # forced to be a "tibble"
+  st_as_sf() # back convert to sf
+
+# view map ----
+tmap_mode("view")
+
+tm_shape(sf_nc1) +
+  tm_polygons() +
+tm_shape(sf_point_filter) +
+  tm_dots(col = "red")
+
+```
+
+# まとめ
+
+`sf`の使い方についてごく初歩的な部分に触れたが、本当にいろんなことができるので、ぜひ`sf`パッケージや他のページを参照してみてほしい。
