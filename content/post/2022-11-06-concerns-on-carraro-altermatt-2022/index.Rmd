@@ -25,7 +25,7 @@ $$
 y = f(x) = cx^{-z}
 $$
 
-where $c$ is the scaling constant and $z$ the scaling exponent. In this equation, the observed variable $y$ reaches infinity as $x \rightarrow 0$, reflecting the fractal nature of the coastline. In contrast, scale dependent objects do not show this "scaling." For example, if we consider a perfect squire ($500$ km on a side), the perimeter ($500 \times 4 = 2000$ km) remains constant regardless ruler length $x$. This is a property called "non-scaling" (see the gray lines in the figure below).
+where $c$ is the scaling constant and $z$ the scaling exponent. In this equation, the observed variable $y$ reaches infinity as $x \rightarrow 0$, reflecting the fractal nature of the coastline. In contrast, scale dependent objects do not show this "scaling." For example, if we consider a perfect square ($500$ km on a side), the perimeter ($500 \times 4 = 2000$ km) remains constant regardless ruler length $x$. This is a property called "non-scaling" (see the gray lines in the figure below).
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4}
 pacman::p_load(tidyverse,
@@ -66,7 +66,7 @@ $$
 y'=f(2x)=c(2x)^{-z} = 2^{-z}cx^{-z} = 2^{-z}f(x) = 2^{-z}y
 $$
 
-Since $y'$ is a simple multiplication of the original object $y$ ($y$ is the part of $y'$), this proves that the structural property is retained across observation scale $x$. Therefore, **the** **observed object** $y$ **expressed as a function of scale** $x$ ($y$ equals $f(x)$) **is said to be scale invariant when it follows a power-law**[^1]**.** "Scaling" and "the lack of characteristic scale" are the properties associated with scale-invariance[^2].
+Since $y'$ is a simple multiplication of the original object $y$ ($y$ is the part of $y'$), this proves that the structural property is retained across observation scale $x$. Therefore, **the** **observed object** $y$ **expressed as a function of scale** $x$ ($y$ equals $f(x)$) **is said to be scale invariant when it follows a power-law**[^1]**.** Often confused, but "scaling" and "the lack of characteristic scale" are the properties associated with scale-invariance[^2].
 
 [^1]: Formally, a function $f(x)$ is said to be scale invariant if it suffices the following equation: $f(\lambda x) = \lambda^z f(x)$, where $\lambda$ is an arbitrary constant and $z$ is the scaling exponent. A power law is one example of satisfying this equation.
 
