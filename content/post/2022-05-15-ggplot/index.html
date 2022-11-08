@@ -1,0 +1,269 @@
+---
+title: 出版できる図表をggplotで
+author: ''
+date: '2022-05-15'
+output:
+  blogdown::html_page:
+    toc: true
+slug: ggplot
+categories:
+  - R
+  - academic
+tags:
+  - ggplot
+  - tidyverse
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#応答変数y軸の異なる図を並べる" id="toc-応答変数y軸の異なる図を並べる">応答変数（Y軸）の異なる図を並べる</a></li>
+<li><a href="#軸のスケールをパネルごとに変える" id="toc-軸のスケールをパネルごとに変える">軸のスケールをパネルごとに変える</a></li>
+<li><a href="#変数変換" id="toc-変数変換">変数変換</a></li>
+<li><a href="#特殊文字" id="toc-特殊文字">特殊文字</a>
+<ul>
+<li><a href="#軸名" id="toc-軸名">軸名</a></li>
+<li><a href="#軸の値" id="toc-軸の値">軸の値</a></li>
+<li><a href="#パネルストライプ" id="toc-パネルストライプ">パネルストライプ</a></li>
+</ul></li>
+</ul>
+</div>
+
+<p>見栄えのいい図表を作ることはとても好きで、不必要なほどにこだわってしまうこともある。しかし、「査読コメントに対応するために、図表を作り直すこと」は大嫌いであった*。これには理由がある。学生のころはＲの図表作成能力が低かったため、Rで図表のベースをつくったら、細かい調整をパワポやイラストレーターでしていたのだ。この作業は馬鹿にならない時間がかかるのだが、ちょっとした解析の修正や、リバイスの度にやり直しになる。</p>
+<p>この作業による時間のロスが無駄だと感じたため、<strong>そのまま出版できる図表をコードを走らせるだけで作れるよう</strong>せっせと豆知識をためてきた。最近では<code>Rmarkdown</code>と合わせれば、MicrosoftのOfficeに頼らずともすべての作業がRで完結する。ここでは、<code>ggplot</code>関連で案外わかるまで時間のかかったものに焦点をあててまとめる。もっといい書き方もあるかもしれないので、そのときはこっそり教えてほしい。今回は種数と面積の関係を模した以下のダミーデータを使って例を示す。</p>
+<pre class="r"><code># dummy data
+x &lt;- runif(100, 0.1, 1000) # hypothetical area
+m &lt;- model.matrix(~log(x)) # model matrix
+y &lt;- rpois(length(x), exp(m %*% c(log(5), 0.5))) # hypothetical richness
+
+df0 &lt;- tibble(area = x,
+              gamma = y,
+              group = rep(letters[1:4], each = 25)) %&gt;% 
+  mutate(alpha = rbeta(length(y), 5, 5) * gamma,
+         beta = gamma / alpha) %&gt;% 
+  pivot_longer(cols = c(alpha, beta, gamma),
+               names_to = &quot;metric&quot;,
+               values_to = &quot;diversity&quot;)
+
+print(df0)</code></pre>
+<pre><code>## # A tibble: 300 × 4
+##     area group metric diversity
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;
+##  1  976. a     alpha      87.6 
+##  2  976. a     beta        1.77
+##  3  976. a     gamma     155   
+##  4  938. a     alpha     112.  
+##  5  938. a     beta        1.43
+##  6  938. a     gamma     160   
+##  7  345. a     alpha      51.1 
+##  8  345. a     beta        1.74
+##  9  345. a     gamma      89   
+## 10  604. a     alpha      59.8 
+## # … with 290 more rows</code></pre>
+<div id="応答変数y軸の異なる図を並べる" class="section level2">
+<h2>応答変数（Y軸）の異なる図を並べる</h2>
+<p>応答変数の異なる図を一つにまとめたいことも多い。今回のダミーデータの例で言えば、複数の多様性の尺度を並べて示したほうが分かりやすいかもしれない。<code>facet_</code> 系の関数を使うことになるが、デフォルトではストライプは上（<code>facet_wrap</code>）や右（<code>facet_grid</code>）に出てきてしまう。</p>
+<pre class="r"><code># wrap
+df0 %&gt;% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  facet_wrap(facets = ~metric,
+             nrow = 3,
+             ncol = 1)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code># grid
+df0 %&gt;% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  labs(x = expression(&quot;Area (&quot;*m^2*&quot;)&quot;),
+       y = &quot;Diversity&quot;) +
+  facet_grid(rows = vars(metric), 
+             cols = vars(group))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<p><code>strip.position</code>（<code>facet_wrap()</code>）もしくは<code>switch</code>（<code>facet_grid()</code>）の引数でこの問題に対処できる。ただし、これだけではストライプが軸の値とプロットの間に出てきてしまうので、<code>theme(strip.placement = "outside")</code> として位置を調整する必要がある。</p>
+<pre class="r"><code># wrap
+df0 %&gt;% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  facet_wrap(facets = ~metric,
+             nrow = 3,
+             ncol = 1,
+             strip.position = &quot;left&quot;) +
+  theme(strip.placement = &quot;outside&quot;, # place label outside
+        strip.background = element_blank()) # blanck background color for stripe</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code># grid
+df0 %&gt;% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  facet_grid(rows = vars(metric), 
+             cols = vars(group),
+             switch = &quot;y&quot;) +
+  theme(strip.placement = &quot;outside&quot;, # place label outside
+        strip.background = element_blank()) # blank background color for stripe</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+</div>
+<div id="軸のスケールをパネルごとに変える" class="section level2">
+<h2>軸のスケールをパネルごとに変える</h2>
+<p><code>facet_wrap()</code>や<code>facet_grid()</code>を使うと、すべてのパネルの軸スケールが統一されてしまう。この問題には<code>scales</code>で調整できる。両軸とも調整する場合は<code>"free"</code>、どちらかのみの場合は<code>"x_free"</code>もしくは<code>"y_free"</code>とする。<code>facet_wrap()</code> はすべてのパネルが別個に調整されるが、<code>facet_grid()</code> の場合は各行・各列内ではスケールが固定される違いがある。</p>
+<pre class="r"><code># wrap
+df0 %&gt;% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  facet_wrap(facets = ~metric,
+             nrow = 3,
+             ncol = 1,
+             strip.position = &quot;left&quot;,
+             scales = &quot;free&quot;) +
+  theme(strip.placement = &quot;outside&quot;, # place label outside
+        strip.background = element_blank()) # blanck background color for stripe</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code># grid
+df0 %&gt;% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  labs(x = expression(&quot;Area (&quot;*m^2*&quot;)&quot;),
+       y = NULL) +
+  facet_grid(rows = vars(metric), 
+             cols = vars(group),
+             switch = &quot;y&quot;,
+             scales = &quot;free&quot;) +
+  theme(strip.placement = &quot;outside&quot;, # place label outside
+        strip.background = element_blank()) # blank background color for stripe</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
+</div>
+<div id="変数変換" class="section level2">
+<h2>変数変換</h2>
+<p>軸を対数スケールなどで表示した場合は、<code>scale_x_continuous()</code>(もしくは<code>scale_y_continuous()</code>)の<code>trans</code>で指定できる。</p>
+<pre class="r"><code># grid
+df0 %&gt;% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  facet_grid(rows = vars(metric), 
+             cols = vars(group),
+             switch = &quot;y&quot;,
+             scales = &quot;free&quot;) +
+  scale_x_continuous(trans = &quot;log10&quot;) + # log10 transformation
+  scale_y_continuous(trans = &quot;log10&quot;) + # log10 transformation
+  theme(strip.placement = &quot;outside&quot;, # place label outside
+        strip.background = element_blank()) # blank background color for stripe</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="特殊文字" class="section level2">
+<h2>特殊文字</h2>
+<p>特殊文字は<code>expression()</code>を使うことで対応できるが、挙動が実にわかりにくい。通常ラベルを書こうとおもったら、character stringとして<code>"Label A"</code>と書くが、例えば上付き文字を書こうとして<code>expression("Label^A")</code>としてもうまくゆかない。上付き文字のような特殊文字は<code>""</code>の外側に置き（つまり<code>expression("Label"^A)</code>）、さらに通常文字を続けるためには<code>*</code>（スペースなし）もしくは<code>~</code>（スペースあり）でつないでやらなければならない。こう書いてもわかりにくいと思うので、下に対応表をおいておく。また、このラベリングの挙動は<code>facet_</code>関数を使うともっとこんがらがる。以下、いくつかパターンに分けて説明する。</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Code</th>
+<th align="left">Output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">expression(alpha)</td>
+<td align="left"><span class="math inline">\(\alpha\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">expression(alpha~“diversity”)</td>
+<td align="left"><span class="math inline">\(\alpha\)</span> diversity</td>
+</tr>
+<tr class="odd">
+<td align="left">expression(alpha*“diversity”)</td>
+<td align="left"><span class="math inline">\(\alpha\)</span>diversity</td>
+</tr>
+<tr class="even">
+<td align="left">expression(a^{sup})</td>
+<td align="left"><span class="math inline">\(a^{sup}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">expression(a[sub])</td>
+<td align="left"><span class="math inline">\(a_{sub}\)</span></td>
+</tr>
+</tbody>
+</table>
+<div id="軸名" class="section level3">
+<h3>軸名</h3>
+<p>軸名は一番シンプルに対応できる。<code>ggplot</code>では<code>labs()</code>を使うことで軸名や凡例の名前を柔軟に指定できるので、ここに<code>expression()</code>を使いながら軸名を指定してやればよい。</p>
+<pre class="r"><code>df0 %&gt;% 
+  filter(metric == &quot;gamma&quot;) %&gt;% 
+  ggplot(aes(y = diversity,
+             x = area)) +
+  geom_point(alpha = 0.4) +
+  scale_x_continuous(trans = &quot;log10&quot;) +
+  scale_y_continuous(trans = &quot;log10&quot;) +
+  labs(x = expression(&quot;Area (&quot;*m^2*&quot;)&quot;),
+       y = expression(gamma~&quot;diversity&quot;))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="軸の値" class="section level3">
+<h3>軸の値</h3>
+<p>軸の値に特殊文字を使う場合、もう少し工夫が必要になる。下の例では、x軸の値にギリシャ文字が表れるが、それぞれに対応する<code>expression()</code>形式を<code>scale_x_discrete(labels = c("somthing" = expression(something)))</code>の中で指定している。データフレームのもとの値（<code>alpha</code>、<code>beta</code>、<code>gamma</code>）を参照しながら（左辺）、対応する値の名前を指定（右辺）できる。</p>
+<pre class="r"><code>df0 %&gt;% 
+  ggplot(aes(x = metric,
+             y = diversity)) +
+  geom_boxplot(alpha = 0.3,
+               fill = &quot;salmon&quot;) +
+  scale_x_discrete(labels = c(&quot;alpha&quot; = expression(alpha~&quot;diversity&quot;),
+                              &quot;beta&quot; = expression(beta~&quot;diversity&quot;),
+                              &quot;gamma&quot; = expression(gamma~&quot;diversity&quot;))) +
+  labs(y = expression(gamma~&quot;diversity&quot;),
+       x = NULL)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="パネルストライプ" class="section level3">
+<h3>パネルストライプ</h3>
+<p><code>facet_wrap</code>、 <code>facet_grid</code> を使うときは仕様が異なり、ストライプのラベルは<code>expression()</code>で対応できない。通常の文字であれば、<code>as_labeller()</code>を使うことでデータフレーム内の値を参照しながら対応するラベルを指定できる。</p>
+<pre class="r"><code>df0 %&gt;% 
+  filter(metric == &quot;gamma&quot;) %&gt;% 
+  ggplot(aes(x = area,
+             y = diversity)) +
+  geom_point() +
+  facet_wrap(facets = ~group,
+             labeller = as_labeller(c(`a` = &quot;group theta&quot;,
+                                      `b` = &quot;group delta&quot;,
+                                      `c` = &quot;group phi&quot;,
+                                      `d` = &quot;group kappa&quot;)))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>しかし、ここに<code>expression()</code>をかませるとうまくいかない。</p>
+<pre class="r"><code>df0 %&gt;% 
+  filter(metric == &quot;gamma&quot;) %&gt;% 
+  ggplot(aes(x = area,
+             y = diversity)) +
+  geom_point() +
+  facet_wrap(facets = ~group,
+             labeller = as_labeller(c(`a` = expression(&quot;group&quot;*theta),
+                                      `b` = &quot;group delta&quot;,
+                                      `c` = &quot;group phi&quot;,
+                                      `d` = &quot;group kappa&quot;)))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>スマートな解決策を見つけられていないが、次善策としてデータフレームの入力値そのものを変え（<code>case_when()</code>）、<code>labeller = label_parsed</code>とすれば対応できる。入力値を変えるときは、<code>expression()</code>の書き方にならえばよい。下の例ではわざわざラベルを因子型に置き換えているが、これはパネルの表れる順番を調整するために行っている（<code>levels = label</code>）。</p>
+<pre class="r"><code>label &lt;- c(&quot;group~delta&quot;,
+           &quot;group^{kappa}&quot;,
+           &quot;group[phi]&quot;,
+           &quot;group~theta&quot;)
+
+df0 %&gt;% 
+  filter(metric == &quot;gamma&quot;) %&gt;% 
+  mutate(group_label = case_when(group == &quot;a&quot; ~ label[1], # replace &quot;a&quot; with &quot;label[i]&quot;
+                                 group == &quot;b&quot; ~ label[2], # ditto
+                                 group == &quot;c&quot; ~ label[3],
+                                 group == &quot;d&quot; ~ label[4]),
+         group_label = factor(group_label, levels = label)) %&gt;% # reorder
+  ggplot(aes(x = area,
+             y = diversity)) +
+  geom_point() +
+  facet_wrap(facets = ~group_label,
+             labeller = label_parsed) +
+  labs(x = expression(&quot;Area (&quot;*cm^2*&quot;)&quot;),
+       y = expression(gamma~&quot;diversity&quot;))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+</div>
