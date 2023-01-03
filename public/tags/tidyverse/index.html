@@ -1,284 +1,0 @@
-<!DOCTYPE html>
-<html lang="en" dir="auto">
-
-<head><meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
-<title>tidyverse | ECOSTATS</title>
-
-<meta name="keywords" content="" />
-<meta name="description" content="">
-<meta name="author" content="Akira Terui">
-<link rel="canonical" href="https://ecological-stats.netlify.app/tags/tidyverse/" />
-<link href="/assets/css/stylesheet.min.d08f6c302eba3eaecd589684c093cecdfe7dfb8745a207401bd0583d3bb31837.css" integrity="sha256-0I9sMC66Pq7NWJaEwJPOzf59&#43;4dFogdAG9BYPTuzGDc=" rel="preload stylesheet"
-    as="style">
-
-<link rel="icon" href="https://ecological-stats.netlify.app/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://ecological-stats.netlify.app/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://ecological-stats.netlify.app/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://ecological-stats.netlify.app/apple-touch-icon.png">
-<link rel="mask-icon" href="https://ecological-stats.netlify.app/safari-pinned-tab.svg">
-<meta name="theme-color" content="#2e2e33">
-<meta name="msapplication-TileColor" content="#2e2e33">
-<meta name="generator" content="Hugo 0.81.0" />
-<link rel="alternate" type="application/rss&#43;xml" href="https://ecological-stats.netlify.app/tags/tidyverse/index.xml">
-
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-175522371-2', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<meta property="og:title" content="tidyverse" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://ecological-stats.netlify.app/tags/tidyverse/" />
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="tidyverse"/>
-<meta name="twitter:description" content=""/>
-
-
-
-</head>
-
-<body class="list" id="top">
-<script>
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.body.classList.add('dark');
-    } else if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
-    }
-
-</script>
-<noscript>
-    <style type="text/css">
-        #theme-toggle,
-        .top-link {
-            display: none;
-        }
-
-    </style>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --theme: #1d1e20;
-                --entry: #2e2e33;
-                --primary: rgba(255, 255, 255, 0.84);
-                --secondary: rgba(255, 255, 255, 0.56);
-                --tertiary: rgba(255, 255, 255, 0.16);
-                --content: rgba(255, 255, 255, 0.74);
-                --hljs-bg: #2e2e33;
-                --code-bg: #37383e;
-                --border: #333;
-            }
-
-            .list {
-                background: var(--theme);
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-track {
-                background: 0 0;
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-thumb {
-                border-color: var(--theme);
-            }
-        }
-    </style>
-
-</noscript>
-<header class="header">
-    <nav class="nav">
-        <div class="logo">
-            <a href="https://ecological-stats.netlify.app" accesskey="h" title="ECOSTATS (Alt + H)">ECOSTATS</a>
-            <span class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
-                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                </button>
-                
-                
-            </span>
-        </div>
-        <ul id="menu" onscroll="menu_on_scroll()">
-            <li>
-                <a href="https://ecological-stats.netlify.app/archives/" title="archive">
-                    <span>archive</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://ecological-stats.netlify.app/categories/" title="categories">
-                    <span>categories</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://ecological-stats.netlify.app/tags/" title="tags">
-                    <span>tags</span>
-                </a>
-            </li></ul>
-    </nav>
-    
-    <script data-ad-client="ca-pub-8263637323017170" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8263637323017170"
-     crossorigin="anonymous"></script>
-    
-</header>
-
-    <main class="main"> 
-<header class="page-header">
-
-  <h1>tidyverse</h1>
-</header>
-
-
-
-
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      出版できる図表をggplotで
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>応答変数（Y軸）の異なる図を並べる軸のスケールをパネルごとに変える変数変換特殊文字軸名軸の値パネルストライプ見栄えのいい図表を作ることはとても好きで、不必要なほどにこだわってしまうこともある。しかし、「査読コメントに対応するために、図表を作り直すこと」は大嫌いであった*。これには理由がある。学生のころはＲの図表作成能力が低かったため、Rで図表のベースをつくったら、細かい調整をパワポやイラストレーターでしていたのだ。この作業は馬鹿にならない時間がかかるのだが、ちょっとした解析の修正や、リバイスの度にやり直しになる。
-この作業による時間のロスが無駄だと感じたため、そのまま出版できる図表をコードを走らせるだけで作れるようせっせと豆知識をためてきた。最近ではRmarkdownと合わせれば、MicrosoftのOfficeに頼らずともすべての作業がRで完結する。ここでは、ggplot関連で案外わかるまで時間のかかったものに焦点をあててまとめる。もっといい書き方もあるかもしれないので、そのときはこっそり教えてほしい。今回は種数と面積の関係を模した以下のダミーデータを使って例を示す。
-# dummy datax &lt;- runif(100, 0.1, 1000) # hypothetical aream &lt;- model.matrix(~log(x)) # model matrixy &lt;- rpois(length(x), exp(m %*% c(log(5), 0.5))) # hypothetical richnessdf0 &lt;- tibble(area = x,gamma = y,group = rep(letters[1:4], each = 25)) %&gt;% mutate(alpha = rbeta(length(y), 5, 5) * gamma,beta = gamma / alpha) %&gt;% pivot_longer(cols = c(alpha, beta, gamma),names_to = &#34;metric&#34;,values_to = &#34;diversity&#34;)print(df0)## # A tibble: 300 × 4## area group metric diversity## &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt;## 1 526....</p>
-  </section>
-  <footer class="entry-footer">
-
-May 15, 2022&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to 出版できる図表をggplotで" href="https://ecological-stats.netlify.app/2022/05/15/ggplot/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      Rの使えるパッケージ/ショートカット
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>Packagetidyversepatchworksf/raster/stars/exactextractrwhiteboxShortcutCode block label (Ctrl &#43; Shift &#43; R)Multi-line (un)comment (Ctrl &#43; Shift &#43; C)Pipe (Ctrl &#43; Shift &#43; M)Packagetidyverseデータ整理や図表作成に有用なさまざまなパッケージをまとめたもの。もはやこのパッケージなしにはRを使えない。とくにdplyr およびggplot2 に含まれる関数群にはお世話になりっぱなしである。このあたりの関数の使い方はWeb上にあふれているので割愛。dplyrであればHeavyWatalさんのWebsiteが分かりやすい。ggplot2に関してはFrom data to Vizがビジュアルから入れるのでとっつきやすい。
-patchworkggplot2とセットで使うとことを想定したパッケージ（patchwork）。データフレームをグループごとにプロットする場合、facet_wrapやfacet_gridなどの関数を使うことが多いと思う。これらは非常に有用な関数なのだが、すべてのパネルで同じ構造（xとyが一緒など）をとる必要がある。しかし、論文の図を作る時、フォーマットの異なる図を横に並べて一つの図としてまとめたいことも多いと思う（例えば散布図と箱ひげ図を並べる、など）。そんなときに役立つのがpatchworkである。このパッケージを使うと、複数のggplotオブジェクトを好きなように配置できる。irisを使って例を下に示す。
-pacman::p_load(tidyverse,patchwork)# scatter plotg1 &lt;- iris %&gt;% ggplot(aes(x = Sepal.Width,y = Sepal.Length,color = Species)) &#43;geom_point(alpha = 0.3) &#43;theme_bw()# box plotg2 &lt;- iris %&gt;%ggplot(aes(x = Species,y = Sepal....</p>
-  </section>
-  <footer class="entry-footer">
-
-April 9, 2022&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to Rの使えるパッケージ/ショートカット" href="https://ecological-stats.netlify.app/2022/04/09/r-package-shortcut/"></a>
-</article>
-
-    </main><footer class="footer">
-    <span>&copy; 2023 <a href="https://ecological-stats.netlify.app">ECOSTATS</a></span>
-    <span>&middot;</span>
-    <span>Powered by <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span>
-    <span>&middot;</span>
-    <span>Theme <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a></span>
-</footer>
-<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
-    <button class="top-link" id="top-link" type="button" accesskey="g">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
-            <path d="M12 6H0l6-6z" />
-        </svg>
-    </button>
-</a>
-
-
-
-<script>
-    window.onload = function () {
-        if (localStorage.getItem("menu-scroll-position")) {
-            document.getElementById('menu').scrollLeft = localStorage.getItem("menu-scroll-position");
-        }
-    }
-
-    function menu_on_scroll() {
-        localStorage.setItem("menu-scroll-position", document.getElementById('menu').scrollLeft);
-    }
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            var id = this.getAttribute("href").substr(1);
-            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
-                    behavior: "smooth"
-                });
-            } else {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
-            }
-            if (id === "top") {
-                history.replaceState(null, null, " ");
-            } else {
-                history.pushState(null, null, `#${id}`);
-            }
-        });
-    });
-
-</script>
-<script>
-    var mybutton = document.getElementById("top-link");
-    window.onscroll = function () {
-        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
-            mybutton.style.visibility = "visible";
-            mybutton.style.opacity = "1";
-        } else {
-            mybutton.style.visibility = "hidden";
-            mybutton.style.opacity = "0";
-        }
-    };
-
-</script>
-<script>
-    document.getElementById("theme-toggle").addEventListener("click", () => {
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
-            localStorage.setItem("pref-theme", 'light');
-        } else {
-            document.body.classList.add('dark');
-            localStorage.setItem("pref-theme", 'dark');
-        }
-    })
-
-</script>
-
-
-
-<script type="text/javascript"
-  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-
-</body>
-
-</html>

@@ -1,410 +1,0 @@
-<!DOCTYPE html>
-<html lang="en" dir="auto">
-
-<head><meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
-<title>R | ECOSTATS</title>
-
-<meta name="keywords" content="" />
-<meta name="description" content="">
-<meta name="author" content="Akira Terui">
-<link rel="canonical" href="https://ecological-stats.netlify.app/categories/r/" />
-<link href="/assets/css/stylesheet.min.d08f6c302eba3eaecd589684c093cecdfe7dfb8745a207401bd0583d3bb31837.css" integrity="sha256-0I9sMC66Pq7NWJaEwJPOzf59&#43;4dFogdAG9BYPTuzGDc=" rel="preload stylesheet"
-    as="style">
-
-<link rel="icon" href="https://ecological-stats.netlify.app/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://ecological-stats.netlify.app/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://ecological-stats.netlify.app/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://ecological-stats.netlify.app/apple-touch-icon.png">
-<link rel="mask-icon" href="https://ecological-stats.netlify.app/safari-pinned-tab.svg">
-<meta name="theme-color" content="#2e2e33">
-<meta name="msapplication-TileColor" content="#2e2e33">
-<meta name="generator" content="Hugo 0.81.0" />
-<link rel="alternate" type="application/rss&#43;xml" href="https://ecological-stats.netlify.app/categories/r/index.xml">
-
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-175522371-2', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<meta property="og:title" content="R" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://ecological-stats.netlify.app/categories/r/" />
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="R"/>
-<meta name="twitter:description" content=""/>
-
-
-
-</head>
-
-<body class="list" id="top">
-<script>
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.body.classList.add('dark');
-    } else if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
-    }
-
-</script>
-<noscript>
-    <style type="text/css">
-        #theme-toggle,
-        .top-link {
-            display: none;
-        }
-
-    </style>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --theme: #1d1e20;
-                --entry: #2e2e33;
-                --primary: rgba(255, 255, 255, 0.84);
-                --secondary: rgba(255, 255, 255, 0.56);
-                --tertiary: rgba(255, 255, 255, 0.16);
-                --content: rgba(255, 255, 255, 0.74);
-                --hljs-bg: #2e2e33;
-                --code-bg: #37383e;
-                --border: #333;
-            }
-
-            .list {
-                background: var(--theme);
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-track {
-                background: 0 0;
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-thumb {
-                border-color: var(--theme);
-            }
-        }
-    </style>
-
-</noscript>
-<header class="header">
-    <nav class="nav">
-        <div class="logo">
-            <a href="https://ecological-stats.netlify.app" accesskey="h" title="ECOSTATS (Alt + H)">ECOSTATS</a>
-            <span class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
-                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                </button>
-                
-                
-            </span>
-        </div>
-        <ul id="menu" onscroll="menu_on_scroll()">
-            <li>
-                <a href="https://ecological-stats.netlify.app/archives/" title="archive">
-                    <span>archive</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://ecological-stats.netlify.app/categories/" title="categories">
-                    <span>categories</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://ecological-stats.netlify.app/tags/" title="tags">
-                    <span>tags</span>
-                </a>
-            </li></ul>
-    </nav>
-    
-    <script data-ad-client="ca-pub-8263637323017170" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8263637323017170"
-     crossorigin="anonymous"></script>
-    
-</header>
-
-    <main class="main"> 
-<header class="page-header">
-
-  <h1>R</h1>
-</header>
-
-
-
-
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      Extract your publication list from google scholar in R
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>Publication listCoauthor listI have been spending hours to list my pubs for my CV or co-authors for a grant proposal. But now, we can automate this process with R package scholar (see R documentation for general guidance). With some stringr and dplyr functions, it’s pretty easy to export a table of pubs/coauthors via Rmarkdown (if you are unfamiliar with Rmarkdown, see Rmarkdown cookbook). A procedure would be:...</p>
-  </section>
-  <footer class="entry-footer">
-
-September 2, 2022&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to Extract your publication list from google scholar in R" href="https://ecological-stats.netlify.app/2022/09/02/extract-your-publication-list-from-google-scholar-in-r/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      RでGIS：ベクター
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>RでGISGIS用のRパッケージsfによるベクター処理データを読み込むフィールド編集レイヤー間の紐づけまとめRでGISGISというとArcGISもしくはQGISを想定しがちだけど、個人的にはこれらGUIに依拠したSoftware（マウスでカチカチする系）は好みではないし、おすすめしない。というのも、何度もマウスでクリックしながら作業を進めるので、以下のリスクがある。
-作業行程の再現性を担保しにくい
-エラーがあった場合、すべての行程を繰り返す必要がある
-うっかりミスしやすい
-これらの理由から、私はGISもスクリプトベースで作業行程を記録すべきと思う。スクリプトベースのGISというとPostGISが標準だったと思うが、最近ではこれらの関数群はほぼすべてRで使えるようになっているし、工夫すれば計算速度もArcGISと遜色ない。しかし、スクリプトベースのGISに関する資料は英語によるものがほとんどのため、アクセスしにくいといえばそうかもしれない。そこで、RのGIS処理について、いくつかの記事にわけて紹介したいと思う。なお、このブログで書かれていることの大半はTaro Mienoさん(University of Nebraska Lincoln)のオンライン資料で勉強させていただいた。とても事細かな説明があるので、この記事を読んで興味がわいた方はぜひこちらで勉強するといいと思う。
-GIS用のRパッケージどのようなタイプのレイヤー（ベクター、ラスター）を扱うかによって、必要となるパッケージは変わる。基本的な作業はsf, raster, terraあたりで済むが、多少込み入った作業には他の補助的なパッケージも必要になる。以下の表に簡単にまとめる。
-パッケージ名レイヤタイプ備考sfベクターベクター処理の場合はsf一択。大体これで足りる（Website）。rmapshaperベクターフィーチャーが重いときに頂点を削って計算を高速化する。（Website）rasterラスターラスター処理のデファクトスタンダードだったが、C&#43;&#43;ベースのterraに移行中（Website）。terraラスターラスター処理の新しいデファクトスタンダードになりつつある（Website）。starsベクター、ラスター時空間情報のついたラスター処理に特化。ラスター｜ベクター変換の際にも重宝する（Website）。exactextractrベクター、ラスターフィーチャーごとにラスターデータを集計するときに使う（Website）。tmapNAGISレイヤーの描画（Website）sfによるベクター処理データを読み込むベクター処理の鉄板であるsfを使ってみる。sfについてくるデータセットを使う。拡張子を見てもらうとわかるが、呼び出されるファイルはシェイプファイル（....</p>
-  </section>
-  <footer class="entry-footer">
-
-July 30, 2022&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to RでGIS：ベクター" href="https://ecological-stats.netlify.app/2022/07/30/r-gis-sf/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      出版できる図表をggplotで
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>応答変数（Y軸）の異なる図を並べる軸のスケールをパネルごとに変える変数変換特殊文字軸名軸の値パネルストライプ見栄えのいい図表を作ることはとても好きで、不必要なほどにこだわってしまうこともある。しかし、「査読コメントに対応するために、図表を作り直すこと」は大嫌いであった*。これには理由がある。学生のころはＲの図表作成能力が低かったため、Rで図表のベースをつくったら、細かい調整をパワポやイラストレーターでしていたのだ。この作業は馬鹿にならない時間がかかるのだが、ちょっとした解析の修正や、リバイスの度にやり直しになる。
-この作業による時間のロスが無駄だと感じたため、そのまま出版できる図表をコードを走らせるだけで作れるようせっせと豆知識をためてきた。最近ではRmarkdownと合わせれば、MicrosoftのOfficeに頼らずともすべての作業がRで完結する。ここでは、ggplot関連で案外わかるまで時間のかかったものに焦点をあててまとめる。もっといい書き方もあるかもしれないので、そのときはこっそり教えてほしい。今回は種数と面積の関係を模した以下のダミーデータを使って例を示す。
-# dummy datax &lt;- runif(100, 0.1, 1000) # hypothetical aream &lt;- model.matrix(~log(x)) # model matrixy &lt;- rpois(length(x), exp(m %*% c(log(5), 0.5))) # hypothetical richnessdf0 &lt;- tibble(area = x,gamma = y,group = rep(letters[1:4], each = 25)) %&gt;% mutate(alpha = rbeta(length(y), 5, 5) * gamma,beta = gamma / alpha) %&gt;% pivot_longer(cols = c(alpha, beta, gamma),names_to = &#34;metric&#34;,values_to = &#34;diversity&#34;)print(df0)## # A tibble: 300 × 4## area group metric diversity## &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt;## 1 526....</p>
-  </section>
-  <footer class="entry-footer">
-
-May 15, 2022&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to 出版できる図表をggplotで" href="https://ecological-stats.netlify.app/2022/05/15/ggplot/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      Rの使えるパッケージ/ショートカット
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>Packagetidyversepatchworksf/raster/stars/exactextractrwhiteboxShortcutCode block label (Ctrl &#43; Shift &#43; R)Multi-line (un)comment (Ctrl &#43; Shift &#43; C)Pipe (Ctrl &#43; Shift &#43; M)Packagetidyverseデータ整理や図表作成に有用なさまざまなパッケージをまとめたもの。もはやこのパッケージなしにはRを使えない。とくにdplyr およびggplot2 に含まれる関数群にはお世話になりっぱなしである。このあたりの関数の使い方はWeb上にあふれているので割愛。dplyrであればHeavyWatalさんのWebsiteが分かりやすい。ggplot2に関してはFrom data to Vizがビジュアルから入れるのでとっつきやすい。
-patchworkggplot2とセットで使うとことを想定したパッケージ（patchwork）。データフレームをグループごとにプロットする場合、facet_wrapやfacet_gridなどの関数を使うことが多いと思う。これらは非常に有用な関数なのだが、すべてのパネルで同じ構造（xとyが一緒など）をとる必要がある。しかし、論文の図を作る時、フォーマットの異なる図を横に並べて一つの図としてまとめたいことも多いと思う（例えば散布図と箱ひげ図を並べる、など）。そんなときに役立つのがpatchworkである。このパッケージを使うと、複数のggplotオブジェクトを好きなように配置できる。irisを使って例を下に示す。
-pacman::p_load(tidyverse,patchwork)# scatter plotg1 &lt;- iris %&gt;% ggplot(aes(x = Sepal.Width,y = Sepal.Length,color = Species)) &#43;geom_point(alpha = 0.3) &#43;theme_bw()# box plotg2 &lt;- iris %&gt;%ggplot(aes(x = Species,y = Sepal....</p>
-  </section>
-  <footer class="entry-footer">
-
-April 9, 2022&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to Rの使えるパッケージ/ショートカット" href="https://ecological-stats.netlify.app/2022/04/09/r-package-shortcut/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      Rでシミュレーション3 - foreach
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>パラメータセットを用意するforeachの導入Plotを描く前回はfunctionを使ってシミュレーションモデルを関数化する方法を書いた。今日はこの関数を使い、様々なパラメータの下でシミュレーションを効率的に走らせるコードを書いてみたい。
-パラメータセットを用意する以前作った個体群動態のシミュレーションモデルを、ここの例題として再度利用する：
-\[ln~n_{t&#43;1} = ln~\lambda &#43; ln~n_t &#43; \epsilon_t\\\epsilon_t \sim N(0,\sigma_{\epsilon}^2)\]
-前年の個体数\(n_{t}\)に集団増加率\(\lambda\)が掛け算され、翌年の個体数\(n_{t&#43;1}\)が決まるが、そこにはランダムな環境変動の影響（\(\epsilon_t\)）もある、というものであった（上の式では対数スケールのため足し算になっている）。これをコードとして書き下し、関数化したものが以下：
-sim_geomodel &lt;- function(n_step,lambda,sd_eps,n1 = 10) {log_n &lt;- NULLlog_n[1] &lt;- log(n1)eps &lt;- rnorm(n = n_step, mean = 0, sd = sd_eps)for(t in 1:(n_step - 1)) {log_n[t &#43; 1] &lt;- log(lambda) &#43; log_n[t] &#43; eps[t]}n &lt;- exp(log_n)df_dynamics &lt;- dplyr::tibble(n_step = 1:n_step,n = n)return(df_dynamics)}この関数sim_geomodelを使い、パラメータの値を変えた時に、50年後の個体数の予測値がどう変わるのか調べてみよう。パラメータを変えながらパターンを予測することで、どのパラメータが集団動態にどんな影響を及ぼすのかを調べることができる。今回の場合、パラメータは二つあるので（lambda, sd_eps）、これらのパラメータセットを作るところから始める。パラメータセットを作るには、パラメータ値のすべての組み合わせを考える必要がある。この場合、expand....</p>
-  </section>
-  <footer class="entry-footer">
-
-May 30, 2021&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to Rでシミュレーション3 - foreach" href="https://ecological-stats.netlify.app/2021/05/30/foreach/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      Rでシミュレーション2 - function
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>functionの導入シミュレーションを関数化前回はfor構文を使った至極簡単なシミュレーションモデルを作ってみた。しかし、中には「こんなめんどくさいスクリプトを毎回書くのか。。。？」などと思われた方もいると思う。そんなことはないので安心してほしい。一つのまとまった作業を関数化することで、スクリプトの量をかなり減らすことができる。
-functionの導入function関数を使うことで一度書いたモデルを使いまわすことができる。最初からシミュレーションモデルを関数化すると説明が煩雑になってしまうので、まずは変動係数CVを推定する関数mycv なるものを作ってみよう。まずは正規分布に従う乱数をrnormを使って生成する。
-# 100 random values following a normal distributionset.seed(123) # for reproducibilityy &lt;- rnorm(n = 100, mean = 50, sd = 25)# show the first 10 elementsprint(y[1:10])## [1] 35.98811 44.24556 88.96771 51.76271 53.23219 92.87662 61.52291 18.37347## [9] 32.82868 38.85845変動係数は以下のスクリプトで推定できる。
-cv &lt;- sd(y) / mean(y)print(cv)## [1] 0.4366692しかし、なんだか毎回二つの関数sd とmean を組み合わせて変動係数を計算するのは面倒くさい。なので、これらの作業を一挙にやってくれる関数をつくってみよう。
-mycv &lt;- function(x) {cv &lt;- sd(x) / mean(x)return(cv)}x という引数に基づいて、SDを平均で割るという作業を自動的にやってくれる関数mycv を定義している。function() のカッコの中に引数として使いたい変数をいれておく。そうすると、そこに使ってほしい値をぶち込むと、関数内で定義された作業を自動的に行ってくれる。return のところでは、何を計算結果（返り値）として返してほしいかを指定している。早速mycv を使ってみる。以下では、x = y とし、関数内のx にy を「代入」している。...</p>
-  </section>
-  <footer class="entry-footer">
-
-April 11, 2021&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to Rでシミュレーション2 - function" href="https://ecological-stats.netlify.app/2021/04/11/function/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      Rでシミュレーション1 - for loop
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>なぜシミュレーション？for loop集団動態モデルランダムネスを加えるモデルの拡張なぜシミュレーション？生態学に慣れ始めてきたころ、いわゆる「理論研究」と言われる類の論文も読み始めるようになった。最初は難解で何をしているのかわからなかったが、分かってくるととても力強いアプローチだなぁと感じるようになり、自分で作ってみたいと思うようになった。というのも、私はフィールドを中心に研究をしていたけれども、野外のデータはあまりにも雑多で、その解釈に困ることが多かったからだ。例えば、ある魚と別の魚が餌をめぐる競争関係に興味があり、「この二種は競争関係にあるので、一方の個体数が多い場所では、もう一方の個体数は少なくなる」という仮説を立てたとしよう。野外で両種の個体数の間に負の相関が認められたとしても、「おお仮説通りのパターンだ、競争に違いない！」と単純に喜ぶことはできない。同じパターンを生み出す仕組みがあまりにもたくさんあるからだ（両者の好きな環境が全く異なるだけかもしれない）。
-こうした理由から、自分がフィールドで集めたデータをもとに論文を書くとき、（特にDiscussionで）もどかしい思いをする。思いっきり「これだ！」と断言したいのに、あれやこれやと言い訳しなければならないからだ。実験で検証可能な仮説ならば、実験するに越したことはない。しかし、見たい現象が生態系スケールとかになってくると、実験などほぼ不可能だ。できたとしても億単位の研究費が必要になる。
-そんなとき、シミュレーションが役に立つ。ある仕組みをこちらで勝手に想定し、そこから導かれるパターンがどんなものかを見るのがシミュレーションだ（生態学の数理モデルが全般的にそうですが）。つまり、観察されたパターンから仕組みを推論する統計モデリングの全く逆のことをするといってもいい（Figure 1）。興味のある仕組み以外を排除あるいはコントロールできるので、その仕組みがどんな時にどんなパターンを生み出すのか知ることができる。
-Figure 1: Conceptual diagram for the roles of theoretical and statistical models. Theoretical models (generally) predict patterns under certain mechanisms (and assumptions) while statistical models infer mechanisms behind observed patternsと、ここまでは論文を読んでいれば納得できるのだが、いかんせんどうやってスクリプトを書けばいいのかわからない…というのが学生のころの悩みだった。統計解析のリソースはオンラインにかなり落ちているので自分でいくらでも勉強できたが、シミュレーションモデルは本当にスクリプトのリソースが少ない。あったとしても、これからやろうとしている人向けには書かれていない。それが今回の（たぶんシリーズ的に）書こうと思っているポストのモチベーション。
-for loopこまごましたことはあるのだが、まずはfor構文をつかって簡単なシミュレーションモデルを作ってしまおう。for構文とはなんぞや、という人もいるかもしれないので、ここで簡単に説明しておく。端的にいうと、コンピュータに「同じ作業を繰り返せ」と指令するコマンド。for(i in 1:3) { XXX }という形で書くのだが、これはiがイテレータと呼ばれるもので、繰り返しのユニットに対応するものだ。このスクリプトで言えば、「XXXという作業を1から3まで回してほしい」と指令している。これだとわかりにくいので、下の例をみてみよう。
-# create a vector with 11, 12, 13y &lt;- NULLx &lt;- 11:13for(i in 1:3) {y[i] &lt;- x[i] * 2}ここではyとxというオブジェクトを作り、xのほうに11から13の値を代入している。やりたいことは、xの値をそれぞれ2倍することである。for構文の中身は次のように展開できる（下付き文字がイテレータに対応している）。...</p>
-  </section>
-  <footer class="entry-footer">
-
-March 29, 2021&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to Rでシミュレーション1 - for loop" href="https://ecological-stats.netlify.app/2021/03/29/for-loop/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      回帰モデルの効果量
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>効果量としての標準化偏回帰係数Average predictive comparisonRで実装効果量としての標準化偏回帰係数線形回帰は、生態学の一般的な解析手法になっている。Rで多数の関数が用意されているため解析も容易で、回帰係数の95%信頼区間やp値などでその効果の有意性もカンタンに検討できる。一方、近頃では有意性だけでなく、「効果量（Effect size）」にも注目したほうがいいとの見方が広まっている。この効果量には様々な指標があるけれども、線形回帰の文脈でいえば標準化偏回帰係数がもっとも広く使われている。
-そもそも偏回帰係数の意味とは何かというと、対応する説明変数xが単位量（つまり1.0）だけ増えたときに、応答変数がどれだけ変化するかを示している。しかし、説明変数間で単位*1が違うと（例えばある変数はm単位で計られているのに対し、別の変数は㎝単位で計られている）、偏回帰係数はその単位の違いの影響を直に受けてしまう。そこで、それぞれの説明変数をそのばらつき（標準偏差SD）で割り（標準化）、それら標準化された説明変数に対する偏回帰係数を推定する。標準化された説明変数の単位はそろっているので、推定された標準化偏回帰係数も比較できるものになっているはず、というものだ。
-しかし、これには一つの問題がある。現代の一般的な統計モデルでは、効果量としての標準化偏回帰係数の解釈が「直感的ではない」のである。例としては以下のようなものがある。個体数のカウントデータを線形モデルで表現する場合、誤差構造としてはポアソン分布（あるいは負の二項分布）を用いることが多い。ポアソン分布の平均パラメータは負の値をとることができないので、Rではデフォルトで対数リンク関数が実装されている。この時、ポアソンモデルの偏回帰係数のなにがどう「直感的」でないのか、下の例を見ながら考えてみる。
-まず、下記のスクリプトで簡単な仮想データを作る。
-# simulated data set.seed(111)n_sample &lt;- 100x1 &lt;- rnorm(n_sample, mean = 10, sd = 1)x2 &lt;- rnorm(n_sample, mean = 10, sd = 3)X &lt;- model.matrix(~ x1 &#43; x2)b &lt;- c(0.1, 0.2, 0.2) # true parametersy &lt;- rpois(n_sample, exp(X %*% b)) # simulated yポアソン分布を仮定したGLMを当てはめる。
-\[\begin{equation}y_i \sim Pois(\lambda_i)\\ ln \lambda_i = \alpha &#43; \beta_1 x_{1,i} &#43; \beta_2 x_{2,i}\end{equation}\]# model fit; unstandardizedm &lt;- glm(y ~ x1 &#43; x2, family = poisson)coef(m)## (Intercept) x1 x2 ## 0....</p>
-  </section>
-  <footer class="entry-footer">
-
-March 28, 2021&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to 回帰モデルの効果量" href="https://ecological-stats.netlify.app/2021/03/28/average-predictive-comparison/"></a>
-</article>
-
-    </main><footer class="footer">
-    <span>&copy; 2023 <a href="https://ecological-stats.netlify.app">ECOSTATS</a></span>
-    <span>&middot;</span>
-    <span>Powered by <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span>
-    <span>&middot;</span>
-    <span>Theme <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a></span>
-</footer>
-<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
-    <button class="top-link" id="top-link" type="button" accesskey="g">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
-            <path d="M12 6H0l6-6z" />
-        </svg>
-    </button>
-</a>
-
-
-
-<script>
-    window.onload = function () {
-        if (localStorage.getItem("menu-scroll-position")) {
-            document.getElementById('menu').scrollLeft = localStorage.getItem("menu-scroll-position");
-        }
-    }
-
-    function menu_on_scroll() {
-        localStorage.setItem("menu-scroll-position", document.getElementById('menu').scrollLeft);
-    }
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            var id = this.getAttribute("href").substr(1);
-            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
-                    behavior: "smooth"
-                });
-            } else {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
-            }
-            if (id === "top") {
-                history.replaceState(null, null, " ");
-            } else {
-                history.pushState(null, null, `#${id}`);
-            }
-        });
-    });
-
-</script>
-<script>
-    var mybutton = document.getElementById("top-link");
-    window.onscroll = function () {
-        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
-            mybutton.style.visibility = "visible";
-            mybutton.style.opacity = "1";
-        } else {
-            mybutton.style.visibility = "hidden";
-            mybutton.style.opacity = "0";
-        }
-    };
-
-</script>
-<script>
-    document.getElementById("theme-toggle").addEventListener("click", () => {
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
-            localStorage.setItem("pref-theme", 'light');
-        } else {
-            document.body.classList.add('dark');
-            localStorage.setItem("pref-theme", 'dark');
-        }
-    })
-
-</script>
-
-
-
-<script type="text/javascript"
-  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-
-</body>
-
-</html>
