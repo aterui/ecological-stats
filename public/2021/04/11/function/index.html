@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Rでシミュレーション2 - function | ECOSTATS</title>
+
+<meta name="keywords" content="function, simulation" />
+<meta name="description" content="functionの導入シミュレーションを関数化前回はfor構文を使った至極簡単なシミュレーションモデルを作ってみた。しかし、中には「こんなめんどくさいスクリプトを毎回書くのか。。。？」などと思われた方もいると思う。そんなことはないので安心してほしい。一つのまとまった作業を関数化することで、スクリプトの量をかなり減らすことができる。
+functionの導入function関数を使うことで一度書いたモデルを使いまわすことができる。最初からシミュレーションモデルを関数化すると説明が煩雑になってしまうので、まずは変動係数CVを推定する関数mycv なるものを作ってみよう。まずは正規分布に従う乱数をrnormを使って生成する。
+# 100 random values following a normal distributionset.seed(123) # for reproducibilityy &lt;- rnorm(n = 100, mean = 50, sd = 25)# show the first 10 elementsprint(y[1:10])## [1] 35.98811 44.24556 88.96771 51.76271 53.23219 92.87662 61.52291 18.37347## [9] 32.82868 38.85845変動係数は以下のスクリプトで推定できる。
+cv &lt;- sd(y) / mean(y)print(cv)## [1] 0.4366692しかし、なんだか毎回二つの関数sd とmean を組み合わせて変動係数を計算するのは面倒くさい。なので、これらの作業を一挙にやってくれる関数をつくってみよう。
+mycv &lt;- function(x) {cv &lt;- sd(x) / mean(x)return(cv)}x という引数に基づいて、SDを平均で割るという作業を自動的にやってくれる関数mycv を定義している。function() のカッコの中に引数として使いたい変数をいれておく。そうすると、そこに使ってほしい値をぶち込むと、関数内で定義された作業を自動的に行ってくれる。return のところでは、何を計算結果（返り値）として返してほしいかを指定している。早速mycv を使ってみる。以下では、x = y とし、関数内のx にy を「代入」している。">
+<meta name="author" content="Akira Terui">
+<link rel="canonical" href="https://ecological-stats.netlify.app/2021/04/11/function/" />
+<link href="/assets/css/stylesheet.min.d08f6c302eba3eaecd589684c093cecdfe7dfb8745a207401bd0583d3bb31837.css" integrity="sha256-0I9sMC66Pq7NWJaEwJPOzf59&#43;4dFogdAG9BYPTuzGDc=" rel="preload stylesheet"
+    as="style">
+
+<link rel="icon" href="https://ecological-stats.netlify.app/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ecological-stats.netlify.app/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ecological-stats.netlify.app/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ecological-stats.netlify.app/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ecological-stats.netlify.app/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.81.0" />
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-175522371-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<meta property="og:title" content="Rでシミュレーション2 - function" />
+<meta property="og:description" content="functionの導入シミュレーションを関数化前回はfor構文を使った至極簡単なシミュレーションモデルを作ってみた。しかし、中には「こんなめんどくさいスクリプトを毎回書くのか。。。？」などと思われた方もいると思う。そんなことはないので安心してほしい。一つのまとまった作業を関数化することで、スクリプトの量をかなり減らすことができる。
+functionの導入function関数を使うことで一度書いたモデルを使いまわすことができる。最初からシミュレーションモデルを関数化すると説明が煩雑になってしまうので、まずは変動係数CVを推定する関数mycv なるものを作ってみよう。まずは正規分布に従う乱数をrnormを使って生成する。
+# 100 random values following a normal distributionset.seed(123) # for reproducibilityy &lt;- rnorm(n = 100, mean = 50, sd = 25)# show the first 10 elementsprint(y[1:10])## [1] 35.98811 44.24556 88.96771 51.76271 53.23219 92.87662 61.52291 18.37347## [9] 32.82868 38.85845変動係数は以下のスクリプトで推定できる。
+cv &lt;- sd(y) / mean(y)print(cv)## [1] 0.4366692しかし、なんだか毎回二つの関数sd とmean を組み合わせて変動係数を計算するのは面倒くさい。なので、これらの作業を一挙にやってくれる関数をつくってみよう。
+mycv &lt;- function(x) {cv &lt;- sd(x) / mean(x)return(cv)}x という引数に基づいて、SDを平均で割るという作業を自動的にやってくれる関数mycv を定義している。function() のカッコの中に引数として使いたい変数をいれておく。そうすると、そこに使ってほしい値をぶち込むと、関数内で定義された作業を自動的に行ってくれる。return のところでは、何を計算結果（返り値）として返してほしいかを指定している。早速mycv を使ってみる。以下では、x = y とし、関数内のx にy を「代入」している。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ecological-stats.netlify.app/2021/04/11/function/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-04-11T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-04-11T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Rでシミュレーション2 - function"/>
+<meta name="twitter:description" content="functionの導入シミュレーションを関数化前回はfor構文を使った至極簡単なシミュレーションモデルを作ってみた。しかし、中には「こんなめんどくさいスクリプトを毎回書くのか。。。？」などと思われた方もいると思う。そんなことはないので安心してほしい。一つのまとまった作業を関数化することで、スクリプトの量をかなり減らすことができる。
+functionの導入function関数を使うことで一度書いたモデルを使いまわすことができる。最初からシミュレーションモデルを関数化すると説明が煩雑になってしまうので、まずは変動係数CVを推定する関数mycv なるものを作ってみよう。まずは正規分布に従う乱数をrnormを使って生成する。
+# 100 random values following a normal distributionset.seed(123) # for reproducibilityy &lt;- rnorm(n = 100, mean = 50, sd = 25)# show the first 10 elementsprint(y[1:10])## [1] 35.98811 44.24556 88.96771 51.76271 53.23219 92.87662 61.52291 18.37347## [9] 32.82868 38.85845変動係数は以下のスクリプトで推定できる。
+cv &lt;- sd(y) / mean(y)print(cv)## [1] 0.4366692しかし、なんだか毎回二つの関数sd とmean を組み合わせて変動係数を計算するのは面倒くさい。なので、これらの作業を一挙にやってくれる関数をつくってみよう。
+mycv &lt;- function(x) {cv &lt;- sd(x) / mean(x)return(cv)}x という引数に基づいて、SDを平均で割るという作業を自動的にやってくれる関数mycv を定義している。function() のカッコの中に引数として使いたい変数をいれておく。そうすると、そこに使ってほしい値をぶち込むと、関数内で定義された作業を自動的に行ってくれる。return のところでは、何を計算結果（返り値）として返してほしいかを指定している。早速mycv を使ってみる。以下では、x = y とし、関数内のx にy を「代入」している。"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Posts",
+      "item": "https://ecological-stats.netlify.app/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Rでシミュレーション2 - function",
+      "item": "https://ecological-stats.netlify.app/2021/04/11/function/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Rでシミュレーション2 - function",
+  "name": "Rでシミュレーション2 - function",
+  "description": "functionの導入\rシミュレーションを関数化\r\r\r前回はfor構文を使った至極簡単なシミュレーションモデルを作ってみた。しかし、中には「こんなめんどくさいスクリプトを毎回書くのか。。。？」などと思われた方もいると思う。そんなことはないので安心してほしい。一つのまとまった作業を関数化することで、スクリプトの量をかなり減らすことができる。\nfunctionの導入\rfunction関数を使うことで一度書いたモデルを使いまわすことができる。最初からシミュレーションモデルを関数化すると説明が煩雑になってしまうので、まずは変動係数CVを推定する関数mycv なるものを作ってみよう。まずは正規分布に従う乱数をrnormを使って生成する。\n# 100 random values following a normal distribution\rset.seed(123) # for reproducibility\ry \u0026lt;- rnorm(n = 100, mean = 50, sd = 25)\r# show the first 10 elements\rprint(y[1:10])\r## [1] 35.98811 44.24556 88.96771 51.76271 53.23219 92.87662 61.52291 18.37347\r## [9] 32.82868 38.85845\r変動係数は以下のスクリプトで推定できる。\ncv \u0026lt;- sd(y) / mean(y)\rprint(cv)\r## [1] 0.4366692\rしかし、なんだか毎回二つの関数sd とmean を組み合わせて変動係数を計算するのは面倒くさい。なので、これらの作業を一挙にやってくれる関数をつくってみよう。\nmycv \u0026lt;- function(x) {\rcv \u0026lt;- sd(x) / mean(x)\rreturn(cv)\r}\rx という引数に基づいて、SDを平均で割るという作業を自動的にやってくれる関数mycv を定義している。function() のカッコの中に引数として使いたい変数をいれておく。そうすると、そこに使ってほしい値をぶち込むと、関数内で定義された作業を自動的に行ってくれる。return のところでは、何を計算結果（返り値）として返してほしいかを指定している。早速mycv を使ってみる。以下では、x = y とし、関数内のx にy を「代入」している。",
+  "keywords": [
+    "function", "simulation"
+  ],
+  "articleBody": "\r\rfunctionの導入\rシミュレーションを関数化\r\r\r前回はfor構文を使った至極簡単なシミュレーションモデルを作ってみた。しかし、中には「こんなめんどくさいスクリプトを毎回書くのか。。。？」などと思われた方もいると思う。そんなことはないので安心してほしい。一つのまとまった作業を関数化することで、スクリプトの量をかなり減らすことができる。\nfunctionの導入\rfunction関数を使うことで一度書いたモデルを使いまわすことができる。最初からシミュレーションモデルを関数化すると説明が煩雑になってしまうので、まずは変動係数CVを推定する関数mycv なるものを作ってみよう。まずは正規分布に従う乱数をrnormを使って生成する。\n# 100 random values following a normal distribution\rset.seed(123) # for reproducibility\ry \r## [1] 35.98811 44.24556 88.96771 51.76271 53.23219 92.87662 61.52291 18.37347\r## [9] 32.82868 38.85845\r変動係数は以下のスクリプトで推定できる。\ncv \r## [1] 0.4366692\rしかし、なんだか毎回二つの関数sd とmean を組み合わせて変動係数を計算するのは面倒くさい。なので、これらの作業を一挙にやってくれる関数をつくってみよう。\nmycv \rx という引数に基づいて、SDを平均で割るという作業を自動的にやってくれる関数mycv を定義している。function() のカッコの中に引数として使いたい変数をいれておく。そうすると、そこに使ってほしい値をぶち込むと、関数内で定義された作業を自動的に行ってくれる。return のところでは、何を計算結果（返り値）として返してほしいかを指定している。早速mycv を使ってみる。以下では、x = y とし、関数内のx にy を「代入」している。\nmycv(x = y)\r## [1] 0.4366692\rこの関数はとてもシンプルな計算をまとめているが、もっと複雑な内容を関数化することも可能だ。例えば、CVだけでなく、平均とSDも返す関数にしたいならば：\nmycv \r複数の返り値を持たせてやるときに気を付けなければならないのは、return() の中身をリスト化しなければならないことだ。そうしないと、関数自体は定義できても、その関数を使う際にエラーがでてしまう。複数の返り値がある場合、それぞれの要素に$でアクセスできる。\nestimate \r## $mu\r## [1] 52.26015\r## ## $sigma\r## [1] 22.8204\r## ## $cv\r## [1] 0.4366692\restimate$cv\r## [1] 0.4366692\restimate$mu\r## [1] 52.26015\restimate$sigma\r## [1] 22.8204\r関数化することはできたが、この簡単な関数にも実は落とし穴がある。次のデータをこの関数にいれてみよう。\nz \r上のデータでは、先ほどと同じように100個の正規分布に従う乱数を使っているが、そのうちの10個がNAに置き換えられている。このデータをmycvに渡すと返り値がすべてNAになってしまう。\nmycv(x = z)\r## $mu\r## [1] NA\r## ## $sigma\r## [1] NA\r## ## $cv\r## [1] NA\rこれはもともとmean()とsd()がNA入りのデータに対応していないからである（na.rm = TRUEとすれば取り除いてくれるが）。NAがある場合には、事前にNAを入力データから消去する処理を加えた関数にしてみよう。\nmycv \rif()は、カッコ内の条件式がTRUEである場合にのみ、{}内の作業を実行するよう指定する関数である。この場合、any(is.na(x))とすることで、xに一つでもNAがある場合にはそれを取り除く作業を行うよう指定している。この際に、NAが取り除かれたことを明示的に解析者に示すために、message(\"NA detected in the data; removed before the estimation\")というメッセージを表示するように指定している。もう一度zを代入してみる。\n# z contains NAs in the data\rmycv(x = z)\r## NA detected in the data; removed before the estimation\r## $mu\r## [1] 46.06076\r## ## $sigma\r## [1] 23.8327\r## ## $cv\r## [1] 0.5174186\rNAが取り除かれたことを示すメッセージとともに、残されたデータから推定された平均、SD、CVが返されている。データにNAがない場合、このメッセージは表示されない。\n# y does not contain NAs in the data\rmycv(x = y)\r## $mu\r## [1] 52.26015\r## ## $sigma\r## [1] 22.8204\r## ## $cv\r## [1] 0.4366692\r\rシミュレーションを関数化\rではfuncionを使って、前回つくったシミュレーションモデルを関数化してみる。\nsim_geomodel \rモデルスクリプトをfunction内に移しただけだが、大きく異なる点がある。n1、lambda、n_step、およびsd_epsを関数の引数（使用者が任意のインプットを指定できる）として定義することで、様々なシナリオのもとでシミュレートしやすくなっている。ここではn1 = 10としているが、「この引数はデフォルトで10という値を与える」という意味になる（この関数の使用者が何も値を指定しなければ、勝手にn1 = 10として計算を進める）。それ以外の引数は、明示的に値を与えなければならない。また、アウトプットはTime stepと個体数を対応させたtibble形式にしてある。こうすることで後の図示がずっと楽になる。早速この関数を使ってみる。\nre \r## # A tibble: 20 × 2\r## n_step n\r##  \r## 1 1 10 ## 2 2 11.0\r## 3 3 11.1\r## 4 4 11.6\r## 5 5 10.6\r## 6 6 12.1\r## 7 7 12.7\r## 8 8 14.4\r## 9 9 15.4\r## 10 10 18.9\r## 11 11 21.1\r## 12 12 30.5\r## 13 13 34.5\r## 14 14 37.8\r## 15 15 37.7\r## 16 16 42.3\r## 17 17 42.2\r## 18 18 49.1\r## 19 19 48.6\r## 20 20 55.9\rplot(n ~ n_step,\rdata = re,\rxlab = \"Time step\",\rylab = \"Number of individuals\",\rtype = \"o\")\rこのモデルでは、年によって集団増加率がランダムに変動するような仮定がおいてある（計算のたびに個体数の変化の仕方は変わる）。そのため、同じ作業を繰り返し、結果がどれくらいばらつくのかを見みたい。この作業が関数化されているとぐっと楽になる。for構文を使ってやってみよう。せっかくなので、アウトプットはtidyverseで扱いやすいようtidy形式にする。\nlibrary(tidyverse)\r# create output dataframe\rdf_dynamics % mutate(n_rep = i)\r# combine replication subsets\rdf_dynamics \r## # A tibble: 250 × 3\r## n_step n n_rep\r##   \r## 1 1 10 1\r## 2 2 9.40 1\r## 3 3 11.7 1\r## 4 4 13.7 1\r## 5 5 13.5 1\r## 6 6 14.6 1\r## 7 7 14.6 1\r## 8 8 15.1 1\r## 9 9 17.4 1\r## 10 10 20.9 1\r## # … with 240 more rows\r50ステップのシミュレーションを5回繰り返したので、それをレプリケーションごとに図示してみる。\ng \r集団の増加の仕方は、繰り返すごとに大きく異なることが見て取れる。これらの値の平均と標準誤差を計算する。対数をとってから平均をとることで、幾何平均とそのばらつきをみることにしよう。\n# summarize df_dynamics\rdf_summary % group_by(n_step) %% summarize(log_mean_n = mean(log(n)), # mean of log-transformed n\rlog_sd_n = sd(log(n))) %% # sd of log-transformed n\rmutate(log_upper = log_mean_n + log_sd_n,\rlog_lower = log_mean_n - log_sd_n) %% mutate(mean_n = exp(log_mean_n),\rupper = exp(log_upper),\rlower = exp(log_lower))\rprint(df_summary)\r## # A tibble: 50 × 8\r## n_step log_mean_n log_sd_n log_upper log_lower mean_n upper lower\r##        \r## 1 1 2.30 0 2.30 2.30 10 10 10 ## 2 2 2.38 0.125 2.50 2.25 10.8 12.2 9.50\r## 3 3 2.52 0.120 2.64 2.40 12.4 14.0 11.0 ## 4 4 2.60 0.0885 2.69 2.51 13.4 14.7 12.3 ## 5 5 2.63 0.0597 2.69 2.57 13.8 14.7 13.0 ## 6 6 2.72 0.108 2.83 2.61 15.1 16.9 13.6 ## 7 7 2.78 0.118 2.90 2.67 16.2 18.2 14.4 ## 8 8 2.81 0.137 2.95 2.68 16.7 19.1 14.5 ## 9 9 2.89 0.182 3.07 2.71 18.0 21.5 15.0 ## 10 10 3.02 0.231 3.25 2.79 20.4 25.7 16.2 ## # … with 40 more rows\r繰り返し間の幾何平均とそのばらつきを合わせて図示する。\nggplot(df_summary) +\rgeom_line(aes(x = n_step, y = mean_n)) + # line for mean n\rgeom_ribbon(aes(x= n_step, ymin = lower, ymax = upper),\ralpha = 0.2) # sd around the mean\r実際のシミュレーションでは100-1000回ほど繰り返し、その平均や中央値を「あるシナリオのもとで期待されるパターン」として解釈する。\r今回の場合、個体群増加率lambda = 1.1、初期個体数n1 = 10、そして環境変動の大きさsd_eps = 0.1の組み合わせが「シナリオ」に対応する。これらの値を変えたら集団増加のパターンはどうなるだろうか？そのためにはこれらの値を変えながら、パターンの変化をみることになる。例えばlambdaについては1.1と1.5を、sd_epsは0.1と1.0を考えるとしよう（n1はその効果に興味がないので10に固定したとする）。そうすると、この二変数の組み合わせは2 x 2で4通り、それぞれシミュレーションを1000回繰り返すとしたら1000 x 4で4000回シミュレーションを回すことになる。このあたりの作業を自動化しないとやっていられないので、次はその方法を書こうと思う。\n\r",
+  "wordCount" : "885",
+  "inLanguage": "en",
+  "datePublished": "2021-04-11T00:00:00Z",
+  "dateModified": "2021-04-11T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Akira Terui"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ecological-stats.netlify.app/2021/04/11/function/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "ECOSTATS",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ecological-stats.netlify.app/favicon.ico"
+    }
+  }
+}
+</script>
+
+
+
+
+
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: #1d1e20;
+                --entry: #2e2e33;
+                --primary: rgba(255, 255, 255, 0.84);
+                --secondary: rgba(255, 255, 255, 0.56);
+                --tertiary: rgba(255, 255, 255, 0.16);
+                --content: rgba(255, 255, 255, 0.74);
+                --hljs-bg: #2e2e33;
+                --code-bg: #37383e;
+                --border: #333;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+    </style>
+
+</noscript>
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ecological-stats.netlify.app" accesskey="h" title="ECOSTATS (Alt + H)">ECOSTATS</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                
+                
+            </span>
+        </div>
+        <ul id="menu" onscroll="menu_on_scroll()">
+            <li>
+                <a href="https://ecological-stats.netlify.app/archives/" title="archive">
+                    <span>archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ecological-stats.netlify.app/categories/" title="categories">
+                    <span>categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ecological-stats.netlify.app/tags/" title="tags">
+                    <span>tags</span>
+                </a>
+            </li></ul>
+    </nav>
+    
+    <script data-ad-client="ca-pub-8263637323017170" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8263637323017170"
+     crossorigin="anonymous"></script>
+    
+</header>
+
+    <main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+
+    <h1 class="post-title">
+      Rでシミュレーション2 - function
+    </h1>
+    <div class="post-meta">
+
+April 11, 2021&nbsp;·&nbsp;Akira Terui
+
+
+</div>
+  </header> 
+
+  <div class="post-content">
+
+
+<div id="TOC">
+<ul>
+<li><a href="#functionの導入" id="toc-functionの導入"><code>function</code>の導入</a></li>
+<li><a href="#シミュレーションを関数化" id="toc-シミュレーションを関数化">シミュレーションを関数化</a></li>
+</ul>
+</div>
+
+<p><a href="/2021/03/29/for-loop/">前回</a>は<code>for</code>構文を使った至極簡単なシミュレーションモデルを作ってみた。しかし、中には「こんなめんどくさいスクリプトを毎回書くのか。。。？」などと思われた方もいると思う。<strong>そんなことはないので安心してほしい。</strong>一つのまとまった作業を関数化することで、スクリプトの量をかなり減らすことができる。</p>
+<div id="functionの導入" class="section level2">
+<h2><code>function</code>の導入</h2>
+<p><code>function</code>関数を使うことで一度書いたモデルを使いまわすことができる。最初からシミュレーションモデルを関数化すると説明が煩雑になってしまうので、まずは変動係数CVを推定する関数<code>mycv</code> なるものを作ってみよう。まずは正規分布に従う乱数を<code>rnorm</code>を使って生成する。</p>
+<pre class="r"><code># 100 random values following a normal distribution
+set.seed(123) # for reproducibility
+y &lt;- rnorm(n = 100, mean = 50, sd = 25)
+
+# show the first 10 elements
+print(y[1:10])</code></pre>
+<pre><code>##  [1] 35.98811 44.24556 88.96771 51.76271 53.23219 92.87662 61.52291 18.37347
+##  [9] 32.82868 38.85845</code></pre>
+<p>変動係数は以下のスクリプトで推定できる。</p>
+<pre class="r"><code>cv &lt;- sd(y) / mean(y)
+print(cv)</code></pre>
+<pre><code>## [1] 0.4366692</code></pre>
+<p>しかし、なんだか毎回二つの関数<code>sd</code> と<code>mean</code> を組み合わせて変動係数を計算するのは面倒くさい。なので、これらの作業を一挙にやってくれる関数をつくってみよう。</p>
+<pre class="r"><code>mycv &lt;- function(x) {
+  cv &lt;- sd(x) / mean(x)
+  return(cv)
+}</code></pre>
+<p><code>x</code> という引数に基づいて、SDを平均で割るという作業を自動的にやってくれる関数<code>mycv</code> を定義している。<code>function()</code> のカッコの中に引数として使いたい変数をいれておく。そうすると、そこに使ってほしい値をぶち込むと、関数内で定義された作業を自動的に行ってくれる。<code>return</code> のところでは、何を計算結果（返り値）として返してほしいかを指定している。早速<code>mycv</code> を使ってみる。以下では、<code>x = y</code> とし、関数内の<code>x</code> に<code>y</code> を「代入」している。</p>
+<pre class="r"><code>mycv(x = y)</code></pre>
+<pre><code>## [1] 0.4366692</code></pre>
+<p>この関数はとてもシンプルな計算をまとめているが、もっと複雑な内容を関数化することも可能だ。例えば、CVだけでなく、平均とSDも返す関数にしたいならば：</p>
+<pre class="r"><code>mycv &lt;- function(x) {
+  
+  mu &lt;- mean(x)
+  sigma &lt;- sd(x)
+  cv &lt;- sd(x) / mean(x)
+  
+  return(list(mu = mu,
+              sigma = sigma,
+              cv = cv)
+         )
+}</code></pre>
+<p>複数の返り値を持たせてやるときに気を付けなければならないのは、<code>return()</code> の中身をリスト化しなければならないことだ。そうしないと、関数自体は定義できても、その関数を使う際にエラーがでてしまう。複数の返り値がある場合、それぞれの要素に<code>$</code>でアクセスできる。</p>
+<pre class="r"><code>estimate &lt;- mycv(x = y)
+
+estimate</code></pre>
+<pre><code>## $mu
+## [1] 52.26015
+## 
+## $sigma
+## [1] 22.8204
+## 
+## $cv
+## [1] 0.4366692</code></pre>
+<pre class="r"><code>estimate$cv</code></pre>
+<pre><code>## [1] 0.4366692</code></pre>
+<pre class="r"><code>estimate$mu</code></pre>
+<pre><code>## [1] 52.26015</code></pre>
+<pre class="r"><code>estimate$sigma</code></pre>
+<pre><code>## [1] 22.8204</code></pre>
+<p>関数化することはできたが、この簡単な関数にも実は落とし穴がある。次のデータをこの関数にいれてみよう。</p>
+<pre class="r"><code>z &lt;- rnorm(100, mean = 50, sd = 25)
+z[sample(1:100, size = 10)] &lt;- NA </code></pre>
+<p>上のデータでは、先ほどと同じように100個の正規分布に従う乱数を使っているが、そのうちの10個が<code>NA</code>に置き換えられている。このデータを<code>mycv</code>に渡すと返り値がすべて<code>NA</code>になってしまう。</p>
+<pre class="r"><code>mycv(x = z)</code></pre>
+<pre><code>## $mu
+## [1] NA
+## 
+## $sigma
+## [1] NA
+## 
+## $cv
+## [1] NA</code></pre>
+<p>これはもともと<code>mean()</code>と<code>sd()</code>が<code>NA</code>入りのデータに対応していないからである（<code>na.rm = TRUE</code>とすれば取り除いてくれるが）。<code>NA</code>がある場合には、事前に<code>NA</code>を入力データから消去する処理を加えた関数にしてみよう。</p>
+<pre class="r"><code>mycv &lt;- function(x) {
+  
+  # remove NAs if any
+  if(any(is.na(x))) {
+    x &lt;- na.omit(x)
+    message(&quot;NA detected in the data; removed before the estimation&quot;)
+  }
+  
+  mu &lt;- mean(x)
+  sigma &lt;- sd(x)
+  cv &lt;- sd(x) / mean(x)
+  
+  return(list(mu = mu,
+              sigma = sigma,
+              cv = cv)
+         )
+}</code></pre>
+<p><code>if()</code>は、カッコ内の条件式が<code>TRUE</code>である場合にのみ、<code>{}</code>内の作業を実行するよう指定する関数である。この場合、<code>any(is.na(x))</code>とすることで、<code>x</code>に一つでも<code>NA</code>がある場合にはそれを取り除く作業を行うよう指定している。この際に、<code>NA</code>が取り除かれたことを明示的に解析者に示すために、<code>message("NA detected in the data; removed before the estimation")</code>というメッセージを表示するように指定している。もう一度<code>z</code>を代入してみる。</p>
+<pre class="r"><code># z contains NAs in the data
+mycv(x = z)</code></pre>
+<pre><code>## NA detected in the data; removed before the estimation</code></pre>
+<pre><code>## $mu
+## [1] 46.06076
+## 
+## $sigma
+## [1] 23.8327
+## 
+## $cv
+## [1] 0.5174186</code></pre>
+<p><code>NA</code>が取り除かれたことを示すメッセージとともに、残されたデータから推定された平均、SD、CVが返されている。データに<code>NA</code>がない場合、このメッセージは表示されない。</p>
+<pre class="r"><code># y does not contain NAs in the data
+mycv(x = y)</code></pre>
+<pre><code>## $mu
+## [1] 52.26015
+## 
+## $sigma
+## [1] 22.8204
+## 
+## $cv
+## [1] 0.4366692</code></pre>
+</div>
+<div id="シミュレーションを関数化" class="section level2">
+<h2>シミュレーションを関数化</h2>
+<p>では<code>funcion</code>を使って、<a href="/2021/03/29/for-loop/">前回</a>つくったシミュレーションモデルを関数化してみる。</p>
+<pre class="r"><code>sim_geomodel &lt;- function(n_step,
+                         lambda,
+                         sd_eps,
+                         n1 = 10) {
+  
+  log_n &lt;- NULL
+  log_n[1] &lt;- log(n1)
+  eps &lt;- rnorm(n = n_step, mean = 0, sd = sd_eps)
+  
+  for(t in 1:(n_step - 1)) {
+    log_n[t + 1] &lt;- log(lambda) + log_n[t] + eps[t]
+  }
+  
+  n &lt;- exp(log_n)
+  
+  df_dynamics &lt;- dplyr::tibble(n_step = 1:n_step,
+                               n = n)
+  
+  return(df_dynamics)
+}</code></pre>
+<p>モデルスクリプトを<code>function</code>内に移しただけだが、大きく異なる点がある。<code>n1</code>、<code>lambda</code>、<code>n_step</code>、および<code>sd_eps</code>を関数の引数（使用者が任意のインプットを指定できる）として定義することで、様々なシナリオのもとでシミュレートしやすくなっている。ここでは<code>n1 = 10</code>としているが、「この引数はデフォルトで<code>10</code>という値を与える」という意味になる（この関数の使用者が何も値を指定しなければ、勝手に<code>n1 = 10</code>として計算を進める）。それ以外の引数は、明示的に値を与えなければならない。また、アウトプットはTime stepと個体数を対応させた<code>tibble</code>形式にしてある。こうすることで後の図示がずっと楽になる。早速この関数を使ってみる。</p>
+<pre class="r"><code>re &lt;- sim_geomodel(n_step = 20,
+                   lambda = 1.1,
+                   sd_eps = 0.1)
+
+print(re)</code></pre>
+<pre><code>## # A tibble: 20 × 2
+##    n_step     n
+##     &lt;int&gt; &lt;dbl&gt;
+##  1      1  10  
+##  2      2  11.0
+##  3      3  11.1
+##  4      4  11.6
+##  5      5  10.6
+##  6      6  12.1
+##  7      7  12.7
+##  8      8  14.4
+##  9      9  15.4
+## 10     10  18.9
+## 11     11  21.1
+## 12     12  30.5
+## 13     13  34.5
+## 14     14  37.8
+## 15     15  37.7
+## 16     16  42.3
+## 17     17  42.2
+## 18     18  49.1
+## 19     19  48.6
+## 20     20  55.9</code></pre>
+<pre class="r"><code>plot(n ~ n_step,
+     data = re,
+     xlab = &quot;Time step&quot;,
+     ylab = &quot;Number of individuals&quot;,
+     type = &quot;o&quot;)</code></pre>
+<p><img src="https://ecological-stats.netlify.app/2021/04/11/function/index_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>このモデルでは、年によって集団増加率がランダムに変動するような仮定がおいてある（計算のたびに個体数の変化の仕方は変わる）。そのため、同じ作業を繰り返し、結果がどれくらいばらつくのかを見みたい。この作業が関数化されているとぐっと楽になる。<code>for</code>構文を使ってやってみよう。せっかくなので、アウトプットは<a href="https://r4ds.had.co.nz/">tidyverse</a>で扱いやすいようtidy形式にする。</p>
+<pre class="r"><code>library(tidyverse)
+
+# create output dataframe
+df_dynamics &lt;- tibble()
+
+# define n_step
+n_step &lt;- 50
+
+for(i in 1:5) {
+  
+  df_subset &lt;- sim_geomodel(n_step = n_step,
+                            lambda = 1.1,
+                            sd_eps = 0.1)
+  
+  # add replicate number column
+  df_subset &lt;- df_subset %&gt;% 
+    mutate(n_rep = i)
+  
+  # combine replication subsets
+  df_dynamics &lt;- bind_rows(df_dynamics, df_subset)
+  
+}
+
+print(df_dynamics)</code></pre>
+<pre><code>## # A tibble: 250 × 3
+##    n_step     n n_rep
+##     &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+##  1      1 10        1
+##  2      2  9.40     1
+##  3      3 11.7      1
+##  4      4 13.7      1
+##  5      5 13.5      1
+##  6      6 14.6      1
+##  7      7 14.6      1
+##  8      8 15.1      1
+##  9      9 17.4      1
+## 10     10 20.9      1
+## # … with 240 more rows</code></pre>
+<p>50ステップのシミュレーションを5回繰り返したので、それをレプリケーションごとに図示してみる。</p>
+<pre class="r"><code>g &lt;- ggplot(df_dynamics) +
+  geom_line(aes(x = n_step, y = n, color = factor(n_rep))) +
+  geom_point(aes(x = n_step, y = n, color = factor(n_rep)), alpha = 0.2) +
+  ylab(&quot;Number of individuals&quot;) +
+  xlab(&quot;Time step&quot;)
+  
+print(g)</code></pre>
+<p><img src="https://ecological-stats.netlify.app/2021/04/11/function/index_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>集団の増加の仕方は、繰り返すごとに大きく異なることが見て取れる。これらの値の平均と標準誤差を計算する。対数をとってから平均をとることで、幾何平均とそのばらつきをみることにしよう。</p>
+<pre class="r"><code># summarize df_dynamics
+df_summary &lt;- df_dynamics %&gt;% 
+  group_by(n_step) %&gt;% 
+  summarize(log_mean_n = mean(log(n)), # mean of log-transformed n
+            log_sd_n = sd(log(n))) %&gt;%  # sd of log-transformed n
+  mutate(log_upper = log_mean_n + log_sd_n,
+         log_lower = log_mean_n - log_sd_n) %&gt;% 
+  mutate(mean_n = exp(log_mean_n),
+         upper = exp(log_upper),
+         lower = exp(log_lower))
+  
+print(df_summary)</code></pre>
+<pre><code>## # A tibble: 50 × 8
+##    n_step log_mean_n log_sd_n log_upper log_lower mean_n upper lower
+##     &lt;int&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1      1       2.30   0           2.30      2.30   10    10   10   
+##  2      2       2.38   0.125       2.50      2.25   10.8  12.2  9.50
+##  3      3       2.52   0.120       2.64      2.40   12.4  14.0 11.0 
+##  4      4       2.60   0.0885      2.69      2.51   13.4  14.7 12.3 
+##  5      5       2.63   0.0597      2.69      2.57   13.8  14.7 13.0 
+##  6      6       2.72   0.108       2.83      2.61   15.1  16.9 13.6 
+##  7      7       2.78   0.118       2.90      2.67   16.2  18.2 14.4 
+##  8      8       2.81   0.137       2.95      2.68   16.7  19.1 14.5 
+##  9      9       2.89   0.182       3.07      2.71   18.0  21.5 15.0 
+## 10     10       3.02   0.231       3.25      2.79   20.4  25.7 16.2 
+## # … with 40 more rows</code></pre>
+<p>繰り返し間の幾何平均とそのばらつきを合わせて図示する。</p>
+<pre class="r"><code>ggplot(df_summary) +
+  geom_line(aes(x = n_step, y = mean_n)) + # line for mean n
+  geom_ribbon(aes(x= n_step, ymin = lower, ymax = upper),
+              alpha = 0.2) # sd around the mean</code></pre>
+<p><img src="https://ecological-stats.netlify.app/2021/04/11/function/index_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>実際のシミュレーションでは100-1000回ほど繰り返し、その平均や中央値を「あるシナリオのもとで期待されるパターン」として解釈する。
+今回の場合、個体群増加率<code>lambda = 1.1</code>、初期個体数<code>n1 = 10</code>、そして環境変動の大きさ<code>sd_eps = 0.1</code>の組み合わせが「シナリオ」に対応する。これらの値を変えたら集団増加のパターンはどうなるだろうか？そのためにはこれらの値を変えながら、パターンの変化をみることになる。例えば<code>lambda</code>については1.1と1.5を、<code>sd_eps</code>は0.1と1.0を考えるとしよう（<code>n1</code>はその効果に興味がないので10に固定したとする）。そうすると、この二変数の組み合わせは2 x 2で4通り、それぞれシミュレーションを1000回繰り返すとしたら1000 x 4で4000回シミュレーションを回すことになる。このあたりの作業を自動化しないとやっていられないので、次はその方法を書こうと思う。</p>
+</div>
+
+</div>
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ecological-stats.netlify.app/tags/function/">function</a></li>
+      <li><a href="https://ecological-stats.netlify.app/tags/simulation/">simulation</a></li>
+    </ul>
+    <nav class="paginav">
+      <a class="prev" href="https://ecological-stats.netlify.app/2021/05/30/foreach/">
+        <span class="title">« Prev Page</span>
+        <br>
+        <span>Rでシミュレーション3 - foreach</span>
+      </a>
+      <a class="next" href="https://ecological-stats.netlify.app/2021/03/29/for-loop/">
+        <span class="title">Next Page »</span>
+        <br>
+        <span>Rでシミュレーション1 - for loop</span>
+      </a>
+    </nav>
+
+
+
+
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Rでシミュレーション2 - function on twitter"
+        href="https://twitter.com/intent/tweet/?text=R%e3%81%a7%e3%82%b7%e3%83%9f%e3%83%a5%e3%83%ac%e3%83%bc%e3%82%b7%e3%83%a7%e3%83%b32%20-%20function&amp;url=https%3a%2f%2fecological-stats.netlify.app%2f2021%2f04%2f11%2ffunction%2f&amp;hashtags=function%2csimulation">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Rでシミュレーション2 - function on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fecological-stats.netlify.app%2f2021%2f04%2f11%2ffunction%2f&amp;title=R%e3%81%a7%e3%82%b7%e3%83%9f%e3%83%a5%e3%83%ac%e3%83%bc%e3%82%b7%e3%83%a7%e3%83%b32%20-%20function&amp;summary=R%e3%81%a7%e3%82%b7%e3%83%9f%e3%83%a5%e3%83%ac%e3%83%bc%e3%82%b7%e3%83%a7%e3%83%b32%20-%20function&amp;source=https%3a%2f%2fecological-stats.netlify.app%2f2021%2f04%2f11%2ffunction%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Rでシミュレーション2 - function on reddit"
+        href="https://reddit.com/submit?url=https%3a%2f%2fecological-stats.netlify.app%2f2021%2f04%2f11%2ffunction%2f&title=R%e3%81%a7%e3%82%b7%e3%83%9f%e3%83%a5%e3%83%ac%e3%83%bc%e3%82%b7%e3%83%a7%e3%83%b32%20-%20function">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Rでシミュレーション2 - function on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fecological-stats.netlify.app%2f2021%2f04%2f11%2ffunction%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Rでシミュレーション2 - function on whatsapp"
+        href="https://api.whatsapp.com/send?text=R%e3%81%a7%e3%82%b7%e3%83%9f%e3%83%a5%e3%83%ac%e3%83%bc%e3%82%b7%e3%83%a7%e3%83%b32%20-%20function%20-%20https%3a%2f%2fecological-stats.netlify.app%2f2021%2f04%2f11%2ffunction%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Rでシミュレーション2 - function on telegram"
+        href="https://telegram.me/share/url?text=R%e3%81%a7%e3%82%b7%e3%83%9f%e3%83%a5%e3%83%ac%e3%83%bc%e3%82%b7%e3%83%a7%e3%83%b32%20-%20function&amp;url=https%3a%2f%2fecological-stats.netlify.app%2f2021%2f04%2f11%2ffunction%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28">
+            <path
+                d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+  </footer>
+</article>
+    </main><footer class="footer">
+    <span>&copy; 2023 <a href="https://ecological-stats.netlify.app">ECOSTATS</a></span>
+    <span>&middot;</span>
+    <span>Powered by <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span>
+    <span>&middot;</span>
+    <span>Theme <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a></span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+
+
+<script defer src="/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js" integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5&#43;kdJvBz5iKbt6B5PJI="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<script>
+    window.onload = function () {
+        if (localStorage.getItem("menu-scroll-position")) {
+            document.getElementById('menu').scrollLeft = localStorage.getItem("menu-scroll-position");
+        }
+    }
+
+    function menu_on_scroll() {
+        localStorage.setItem("menu-scroll-position", document.getElementById('menu').scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+
+
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+</body>
+
+</html>
