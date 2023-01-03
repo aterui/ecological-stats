@@ -5,12 +5,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>tidyverse | ECOSTATS</title>
+<title>fishery | ECOSTATS</title>
 
 <meta name="keywords" content="" />
 <meta name="description" content="">
 <meta name="author" content="Akira Terui">
-<link rel="canonical" href="https://ecological-stats.netlify.app/tags/tidyverse/" />
+<link rel="canonical" href="https://ecological-stats.netlify.app/tags/fishery/" />
 <link href="/assets/css/stylesheet.min.d08f6c302eba3eaecd589684c093cecdfe7dfb8745a207401bd0583d3bb31837.css" integrity="sha256-0I9sMC66Pq7NWJaEwJPOzf59&#43;4dFogdAG9BYPTuzGDc=" rel="preload stylesheet"
     as="style">
 
@@ -22,7 +22,7 @@
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
 <meta name="generator" content="Hugo 0.81.0" />
-<link rel="alternate" type="application/rss&#43;xml" href="https://ecological-stats.netlify.app/tags/tidyverse/index.xml">
+<link rel="alternate" type="application/rss&#43;xml" href="https://ecological-stats.netlify.app/tags/fishery/index.xml">
 
 
 
@@ -36,13 +36,13 @@ if (!doNotTrack) {
 }
 </script>
 <script async src='https://www.google-analytics.com/analytics.js'></script>
-<meta property="og:title" content="tidyverse" />
+<meta property="og:title" content="fishery" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://ecological-stats.netlify.app/tags/tidyverse/" />
+<meta property="og:url" content="https://ecological-stats.netlify.app/tags/fishery/" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="tidyverse"/>
+<meta name="twitter:title" content="fishery"/>
 <meta name="twitter:description" content=""/>
 
 
@@ -154,7 +154,7 @@ if (!doNotTrack) {
     <main class="main"> 
 <header class="page-header">
 
-  <h1>tidyverse</h1>
+  <h1>fishery</h1>
 </header>
 
 
@@ -165,38 +165,28 @@ if (!doNotTrack) {
 
   <header class="entry-header">
     <h2>
-      出版できる図表をggplotで
+      放流に意味はあるのか？
     </h2>
   </header>
   <section class="entry-content">
-    <p>応答変数（Y軸）の異なる図を並べる軸のスケールをパネルごとに変える変数変換特殊文字軸名軸の値パネルストライプ見栄えのいい図表を作ることはとても好きで、不必要なほどにこだわってしまうこともある。しかし、「査読コメントに対応するために、図表を作り直すこと」は大嫌いであった*。これには理由がある。学生のころはＲの図表作成能力が低かったため、Rで図表のベースをつくったら、細かい調整をパワポやイラストレーターでしていたのだ。この作業は馬鹿にならない時間がかかるのだが、ちょっとした解析の修正や、リバイスの度にやり直しになる。
-この作業による時間のロスが無駄だと感じたため、そのまま出版できる図表をコードを走らせるだけで作れるようせっせと豆知識をためてきた。最近ではRmarkdownと合わせれば、MicrosoftのOfficeに頼らずともすべての作業がRで完結する。ここでは、ggplot関連で案外わかるまで時間のかかったものに焦点をあててまとめる。もっといい書き方もあるかもしれないので、そのときはこっそり教えてほしい。今回は種数と面積の関係を模した以下のダミーデータを使って例を示す。
-# dummy datax &lt;- runif(100, 0.1, 1000) # hypothetical aream &lt;- model.matrix(~log(x)) # model matrixy &lt;- rpois(length(x), exp(m %*% c(log(5), 0.5))) # hypothetical richnessdf0 &lt;- tibble(area = x,gamma = y,group = rep(letters[1:4], each = 25)) %&gt;% mutate(alpha = rbeta(length(y), 5, 5) * gamma,beta = gamma / alpha) %&gt;% pivot_longer(cols = c(alpha, beta, gamma),names_to = &#34;metric&#34;,values_to = &#34;diversity&#34;)print(df0)## # A tibble: 300 × 4## area group metric diversity## &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt;## 1 85....</p>
+    <p>野外で何かしら生物を増やそうとしたとき、もっとも安直な方法は「放流」だろう。人が卵から孵化させ、あるところまで育てて外に放す。「元気に暮らしてね」などの言葉とともに、放流イベントとして子供に放流させるケースも多い。
+しかし、本当に放流に意味はあるのか？
+これまでの研究を見る限り、ほとんどのケースで放流に意味はない。むしろ、ほぼ確実に弊害がある。
+放流の規模そもそも放流はどの程度の規模で行われているのだろうか？放流にも様々なものがあるが、ここでは「野生集団の増加を目的として、人の手によって（在来の）生物を野外に放す行為」とし、特に天然資源として価値が高い生物を対象としたものに絞る。
+天然資源を対象とした場合、想像を絶する数を野外に放している。その顕著な例はやはりサケ類だろう（一般に食卓にならぶサケは「シロサケ」）。Kitada 2020にまとめられている統計を見ると、その放流数は1980年代にピークを迎え、日本全国で15 – 20億尾/年ものシロサケ稚魚が放流されている。地域ごとにみると、西北海道だけで4億尾強/年のシロサケが放流されている。アラスカのPrince William Soundにおけるカラフトマスの放流事業が6億尾強/年なので（Amoroso et al. 2017）、まさに世界最大規模といって相違ない。ほかの日本のサケ類（カラフトマス、サクラマス）をみても、日本全国で1000万尾–1.5億尾が放されており、とんでもない数であることがわかる。もちろん、これらの生産コストはタダではない。1尾あたり1円だったとしても年間数十億の税金がその生産につぎ込まれていることになる1。
+こうした大規模放流は水産資源に限ったものではない。スペインのある地域では、Game birdとして価値の高いRed-legged partridgeという鳥が200万羽/年の規模で放されている（Negro et al 2001）。送粉者として重要なマルハナバチの仲間も、\(&gt;10000\) コロニー/年が導入されている地域もある（Ings et al. 2005）。
+放流の効果これだけ放しているんだから、もちろん増えているんだろう、と多くの人は思うかもしれない。しかし、実際はそうではない。放流効果を検証した研究は必ずしも多いわけではないが2、知見の蓄積している魚類をみると、実は増えないケースがほとんどである。それどころか、減る場合も多い。Araki and Schimit 2010では、水産生物の野生集団に対する放流の効果を調べた41の研究をまとめている（メタ解析3）。このうち、野生集団の明瞭な増加をもたらしたケースはたったの3例にとどまっている（Chan et al. 2003, Berejikian et al. 2009, Agnalt 2008）。なぜか。
+生態系は無限に個体を受け入れられるわけではない。
+どんな生態系にも「収容力」がある。この収容力を超えた数を放したところで、食べ物の枯渇、生活場の不足などの理由（種内の資源をめぐる競争）から、個体の死亡率は高まる。結果、野外集団の一部を放流個体で「置き換える」だけになってしまい、集団としては増えない（あるいは採算に合わない微増）4。実際に、放流個体による野生個体の置き換えは、魚類で観察されている。国内の事例はSahashi et al. 2015［サクラマス］やKitada et al. 2019［マダイ］、海外ではAmoroso et al. 2017やHilborn and Eggers 2000などが詳しい。ただし、ここで「増えない」といっているのは放流直後の放流＋野生集団の話であり、次世代への繁殖を通じた効果を見ているわけではない。繁殖を通じた効果の場合は、余計ひどくなる。極端な種内競争が起こるため、繁殖まで生き残る個体が少なくなり、結果として次世代の集団縮小が起こる（Satake &amp; Araki 2012）5。これは一般的な数理モデルによる予測だが、その後の研究で、サクラマスでは放流数の増加とともに長期的な集団サイズ（21年の平均密度）が小さくなる傾向が観察されている（Terui et al. in review）。
+寄生虫や病気の蔓延に寄与する。
+私の知るもっとも有名な例は、カナダのBritish Columbia近海におけるカラフトマスの例である。この例では、カラフトマスにとって極めて厄介な寄生者（sea lice）が養殖池で爆増し、放流個体から野生個体への大規模感染が起こった。その結果、この地域の野生集団のいくつかが絶滅に瀕した（Krkosek et al. 2007）。この研究では、その地域の養殖池に由来する寄生者の蔓延が問題だが、他地域から放流個体を持ち込む場合にも同様のことが起きうる。例えば、アユの冷水病がすぐに思いつく。琵琶湖水系由来のアユは全国に流通、放流されているが、これにともない冷水病が全国に拡散したと考えられている（Wikipedia）。ただ、この言説については学術文献に基づく一次情報を見つけられなかったので、あくまで可能性のひとつとしてみておくべきだろう。
+放流個体は野外での生き残りが悪い。...</p>
   </section>
   <footer class="entry-footer">
 
-May 15, 2022&nbsp;·&nbsp;Akira Terui
+December 29, 2022&nbsp;·&nbsp;Akira Terui
 </footer>
-  <a class="entry-link" aria-label="post link to 出版できる図表をggplotで" href="https://ecological-stats.netlify.app/2022/05/15/ggplot/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-
-  <header class="entry-header">
-    <h2>
-      Rの使えるパッケージ/ショートカット
-    </h2>
-  </header>
-  <section class="entry-content">
-    <p>Packagetidyversepatchworksf/raster/stars/exactextractrwhiteboxShortcutCode block label (Ctrl &#43; Shift &#43; R)Multi-line (un)comment (Ctrl &#43; Shift &#43; C)Pipe (Ctrl &#43; Shift &#43; M)Packagetidyverseデータ整理や図表作成に有用なさまざまなパッケージをまとめたもの。もはやこのパッケージなしにはRを使えない。とくにdplyr およびggplot2 に含まれる関数群にはお世話になりっぱなしである。このあたりの関数の使い方はWeb上にあふれているので割愛。dplyrであればHeavyWatalさんのWebsiteが分かりやすい。ggplot2に関してはFrom data to Vizがビジュアルから入れるのでとっつきやすい。
-patchworkggplot2とセットで使うとことを想定したパッケージ（patchwork）。データフレームをグループごとにプロットする場合、facet_wrapやfacet_gridなどの関数を使うことが多いと思う。これらは非常に有用な関数なのだが、すべてのパネルで同じ構造（xとyが一緒など）をとる必要がある。しかし、論文の図を作る時、フォーマットの異なる図を横に並べて一つの図としてまとめたいことも多いと思う（例えば散布図と箱ひげ図を並べる、など）。そんなときに役立つのがpatchworkである。このパッケージを使うと、複数のggplotオブジェクトを好きなように配置できる。irisを使って例を下に示す。
-pacman::p_load(tidyverse,patchwork)# scatter plotg1 &lt;- iris %&gt;% ggplot(aes(x = Sepal.Width,y = Sepal.Length,color = Species)) &#43;geom_point(alpha = 0.3) &#43;theme_bw()# box plotg2 &lt;- iris %&gt;%ggplot(aes(x = Species,y = Sepal....</p>
-  </section>
-  <footer class="entry-footer">
-
-April 9, 2022&nbsp;·&nbsp;Akira Terui
-</footer>
-  <a class="entry-link" aria-label="post link to Rの使えるパッケージ/ショートカット" href="https://ecological-stats.netlify.app/2022/04/09/r-package-shortcut/"></a>
+  <a class="entry-link" aria-label="post link to 放流に意味はあるのか？" href="https://ecological-stats.netlify.app/2022/12/29/intentional-release/"></a>
 </article>
 
     </main><footer class="footer">
