@@ -54,3 +54,5 @@ menu:
 
 permalinks:
     post: /:year/:month/:day/:slug/
+
+ignoreFiles: ["\\.Rmd$", "\\.Rmarkdown$", "_cache$"]
