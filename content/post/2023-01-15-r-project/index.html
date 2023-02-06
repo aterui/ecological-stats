@@ -26,7 +26,7 @@ tags:
 </ul>
 </div>
 
-<p>再現性のあるコーディングはとても重要だが、整理の仕方をまとめたものがほとんどない。個人の好みが大きく出るところだが、自然選択を経て私が到達したレポジトリの作り方をまとめてみようと思う。前提条件としてR Studioを使っていることを想定するが、そうでなくとも基本構造は使える。</p>
+<p>再現性のあるコーディングはとても重要だが、整理の仕方をまとめたものがほとんどない。個人の好みが大きく出るところだが、自然選択を経て私が到達したレポジトリの作り方をまとめてみる。前提条件としてR Studioを使っていることを想定するが、そうでなくとも基本構造は使える。</p>
 <div id="フレームワーク" class="section level2">
 <h2>フレームワーク</h2>
 <p><strong>ローカル（自分のパソコン）</strong>と<strong>オンラインレポジトリ（Github）</strong>を連携する環境を作る。変更履歴を残しながらオンラインレポジトリに保存することで、デバッグ（エラーがないかチェックすること）・再現・シェアしやすくなる。大枠としては以下：</p>
@@ -39,30 +39,30 @@ tags:
 </div>
 <div id="事前準備githubgitの環境構築" class="section level2">
 <h2>事前準備：Github/Gitの環境構築</h2>
-<p><a href="https://happygitwithr.com/index.html">Happy Git and GitHub for the useR</a>がかなり丁寧にまとめてくれているので、こちらをぜひ一読してほしい。以下はとりあえずの環境構築の最低限の手順を説明する。</p>
+<p><a href="https://happygitwithr.com/index.html">Happy Git and GitHub for the useR</a>がかなり丁寧にまとめてくれているので、こちらをぜひ一読してほしい。以下は最低限の環境構築の手順を説明する。</p>
 <ol style="list-style-type: decimal">
-<li><p><a href="https://github.com/">Github</a>でアカウントをつくり、オンラインでのストレージ先を確保する。このアカウント名はレポジトリのリンクに必ず含まれるものになるので、極端に長いものや、大文字を含むものは避けるようにしたい。このアカウントにローカルで作成したレポジトリを追加していく。基本、Github上で直接レポジトリを編集することはなく、ローカルで編集したものをオンラインにプッシュする形で更新していく。</p></li>
-<li><p><a href="https://git-scm.com/">Git</a>をインストールする。こちらはローカルで機能するもので、編集履歴を自動管理するための装置（バージョンコントロールシステム）である。Gitでは、コミットすることで編集履歴を記録してくれる。変更箇所は自動認知してくれるため、この作業が非常に楽になる。基本デフォルトの設定のままインストールすれば問題ないが、念のため<a href="https://happygitwithr.com/install-git.html">こちら</a>を読んでおくといいかもしれない。</p></li>
+<li><p><a href="https://github.com/">Github</a>でアカウントをつくり、オンラインでのストレージ先を確保する。このアカウント名はレポジトリのリンクに必ず含まれるので、極端に長いものや、大文字を含むものは避けたい。このアカウントにローカルで作成したレポジトリを追加する。基本、Github上でレポジトリは編集せず、ローカルで編集したものをオンラインにプッシュする形で更新する。</p></li>
+<li><p><a href="https://git-scm.com/">Git</a>をインストールする。ローカルで機能するもので、編集履歴を自動管理するための装置（バージョンコントロールシステム）である。Gitでは、コミットすることで編集履歴を記録してくれる。変更箇所は自動認知してくれるため、この作業が非常に楽になる。基本デフォルトの設定のままインストールすれば問題ないが、念のため<a href="https://happygitwithr.com/install-git.html">こちら</a>を読んでおくといいかもしれない。</p></li>
 <li><p>Git clientをインストールする。Gitはターミナルから直接操作もできるが、ややとっつきにくい。そこで、操作しやすいGUIを提供してくれる<a href="https://desktop.github.com/">Github Desktop</a>をここでは使うことにする。ほかの選択肢については<a href="https://happygitwithr.com/git-client.html">こちら</a>を参照するとよい。</p></li>
 </ol>
 </div>
 <div id="事前準備projectをつくる" class="section level2">
 <h2>事前準備：Projectをつくる</h2>
-<p>Gitの環境構築が済んだらProjectを作る（メニューバーの<code>File &gt; New Project &gt; New Directory &gt; New Project</code> ）。<strong>このとき、以下のウインドウで</strong><code>Create a git repository</code><strong>にチェックし忘れないようにする。</strong>このProjectに論文一つを書き上げるのに必要の情報をすべて入れる（生データ、コード、論文原稿）。</p>
+<p>Gitの環境構築が済んだらProjectを作る（メニューバーの<code>File &gt; New Project &gt; New Directory &gt; New Project</code> ）。<strong>このとき、以下のウインドウで</strong><code>Create a git repository</code><strong>にチェックし忘れないようにする。</strong>このProjectに論文一つの必要情報をすべて入れる（生データ、コード、論文原稿）。</p>
 <div class="figure">
 <img src="images/image-1647626889.png" alt="" />
 <p class="caption">R Projectの作成画面。“Create a git repository”にチェックし忘れないようにする。なお、Gitがインストールされていないとこのチェックマークは選択不可。</p>
 </div>
 <p>プロジェクトは、初期ファイルとして以下のファイルを含んでいる。</p>
 <ul>
-<li><p><code>project_name.Rproj</code>: プロジェクトのメタデータファイルのようなもの。このプロジェクトを開きたいときはこれを開く。プロジェクトが開かれている場合は、R studio右上に<code>project_name</code>がみえる。開いていない場合は<code>Project: (None)</code>となる。</p></li>
-<li><p><code>.gitignore</code>: Gitで変更履歴を追いたくないファイルを指定するためのファイル。デフォルトでいくつか入っている。 細かい使い方はGoogleに聞くこと。</p></li>
+<li><p><code>project_name.Rproj</code>: プロジェクトのメタデータファイルのようなもの。プロジェクトを開きたいときはこれを開く。プロジェクトが開かれている場合は、R Studio右上に<code>project_name</code>がみえる。開いていない場合は<code>Project: (None)</code>となる。</p></li>
+<li><p><code>.gitignore</code>: Gitで変更履歴を追いたくないファイルを指定するためのファイル。デフォルトでいくつか入っている。 細かい使い方はGoogleに。</p></li>
 </ul>
-<p>プロジェクト管理することのメリットとして、Working directoryがデフォルトでそのプロジェクトフォルダになっているので、いちいち<code>setwd()</code> などでWorking directoryを指定する必要がない。違うプロジェクトに移りたければ<code>File &gt; Open Project</code>で違うプロジェクトを開ける。</p>
+<p>プロジェクト管理することのメリットとして、デフォルトでプロジェクトフォルダがWorking directoryになっているので、いちいち<code>setwd()</code> を使う必要がない。違うプロジェクトに移りたければ<code>File &gt; Open Project</code>で違うプロジェクトを開ける。</p>
 </div>
 <div id="事前準備projectの内部構造" class="section level2">
 <h2>事前準備：Projectの内部構造</h2>
-<p>レポジトリの直下にファイルをどんどん入れていくと、醜いレポジトリになってしまう。そこで、いくつかSub-directoryを設けてファイルを整理する。私のオススメは以下：</p>
+<p>レポジトリの直下にファイルをどんどん入れていくと、醜いレポジトリになってしまう。そこで、いくつかサブフォルダを設けてファイルを整理する。私のオススメは以下：</p>
 <ul>
 <li><p><code>code</code> : Rのスクリプト（<code>.R</code>）を保存するフォルダ。</p></li>
 <li><p><code>data_raw</code>: 生データを保存するフォルダ。根本的な修正でない限り（入力ミスなど）、このフォルダのデータはいじらない。</p></li>
@@ -84,9 +84,9 @@ tags:
 <p>試しに<code>code</code>に<code>.R</code>ファイルを作り、編集してみる。好きなコードを書いて、<code>test.R</code>として保存する。例えば：</p>
 <pre class="r"><code>x &lt;- rnorm(100)
 mean(x)</code></pre>
-<p>ファイルを保存したら、Github Desktopを開く。こんな画面になっていると思う。左上に"Current repository"という書いてあるので、これをクリックする。</p>
+<p>ファイルを保存したら、Github Desktopを開く。こんな画面になっていると思う。左上に”Current repository”という書いてあるので、これをクリックする。</p>
 <p><img src="images/image-1375190743.png" /></p>
-<p>すると、以下のように"Add"というボタンがでてくるので、これをクリック、<code>Add existing repository</code> を選ぶ。作成したR Projectのフォルダを選択する。</p>
+<p>すると、以下のように”Add”というボタンがでてくるので、これをクリック、<code>Add existing repository</code> を選ぶ。作成したR Projectのフォルダを選択する。</p>
 <p><img src="images/image-1862410960.png" /></p>
 <p>プロジェクトの選択が完了すると、フォルダ内にあるファイルがリストされるはず。</p>
 </div>
@@ -103,14 +103,14 @@ median(x) # changed from mean to median</code></pre>
 </div>
 <div id="プッシュする" class="section level2">
 <h2>プッシュする</h2>
-<p>コミットまではあくまで自身のパソコン内での作業になる。これをオンラインのGithubアカウントにプッシュすることで、コードをオンラインバックアップできるだけでなく、必要に応じて公開したり共同研究者とシェアできるようになる（デフォルトでは非公開）。プッシュは以下の画像のオレンジ枠のところをクリックするか、<code>Ctrl + P</code> でできる。</p>
+<p>コミットまではあくまで自身のパソコン内での作業になる。これをオンラインのGithubアカウントにプッシュすることで、コードをオンラインバックアップできるだけでなく、必要に応じて公開したり共同研究者とシェアできる（デフォルトでは非公開）。プッシュは以下の画像のオレンジ枠のところをクリックするか、<code>Ctrl + P</code> でできる。</p>
 <p><img src="images/image-1934050581.png" /></p>
-<p>初めてプッシュする場合は、オンラインにローカルと対応するレポジトリがないので、「新しいレポジトリをオンラインに作りますか？」と聞かれる。これにYesと答え、プッシュ（一回目のみPublishと書いてある）すればオンラインに対応するレポジトリができる（なお、空のSub-directoryは何かファイルをいれるまで無視される）。もし、Gitで変更履歴を追いたくないファイルがあれば（例えば巨大なGISファイルなど；Githubには一つあたり100MB以上のファイルは置けない）、<code>.gitignore</code>にファイル名を入れておけばよい。</p>
+<p>初めてプッシュする場合は、オンラインにローカルと対応するレポジトリがないので、「新しいレポジトリをオンラインに作りますか？」と聞かれる。これにYesと答え、プッシュ（一回目のみPublishと書いてある）すればオンラインに対応するレポジトリができる（なお、空のサブフォルダは何かファイルをいれるまで無視される）。もし、Gitで変更履歴を追いたくないファイルがあれば（例えば巨大なGISファイルなど；Githubには一つあたり100MB以上のファイルは置けない）、<code>.gitignore</code>にファイル名を入れておけばよい。</p>
 </div>
 <div id="まとめ" class="section level2">
 <h2>まとめ</h2>
 <p>今回ここに書いた内容を一通り覚えれば、最低限のことはできるはず。しかし、ほかにもフォーク、プルリクエスト、ブランチ<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>など様々な機能が容易されており、これらを活用すればより快適なGithubライフを送ることができる。こうした基本的な使い方はウェブ上にたんまりとリソースがあるので、ぜひグーグル先生に聞いてみるといい（例えば<a href="https://tech-camp.in/note/technology/4938/">ここ</a>）。私のグループでは、在籍者全員にこの程度はGit/Githubを扱えるようになってもらい、適宜コードにコメントもするようにしている（Githubにはコメント機能もある）。</p>
-<p>最後に、論文を書く際に、コードを一緒に公開しない著者が多い。これは再現性の観点から好ましくないのはもちろんだが、私は<strong>後で自分が何をやったのかわからなくなるのが何より嫌なので、プロジェクトの最初から最後まで履歴を残し、論文と一緒に最終版をPublishする。</strong>つまり、自分の精神衛生維持のためにやっている。</p>
+<p>最後に、論文を書く際に、コードを一緒に公開しない著者が多い。これは再現性の観点から好ましくないのはもちろんだが、私は<strong>後で自分が何をやったのかわからなくなるのが何より嫌なので、プロジェクトの最初から最後まで履歴を残し、論文と一緒に最終版をPublishする。</strong>つまり、自分の精神衛生のためにやっている。</p>
 </div>
 <div class="footnotes footnotes-end-of-document">
 <hr />
