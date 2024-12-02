@@ -1,0 +1,167 @@
+---
+title: RでGIS：ラスター
+author: ''
+date: '2024-12-01'
+slug: r-gis-terra
+output:
+  blogdown::html_page:
+    toc: true
+categories:
+  - GIS
+  - R
+  - academic
+tags:
+  - sf
+  - terra
+  - exactextractr
+---
+
+# RでGIS
+
+先日、RでのGIS作業にむけた簡単なポスト（[RでGIS：ベクター](/2022/06/30/r-gis-sf/)）を書いた（最近だと思っていたが実に二年以上たっている事実に驚愕）。今回はそのフォローアップとして、ラスターデータの取り扱いについても簡単に紹介してみたい。今回は`sf`、`terra`、`exactextractr`、`tmap`の４つを使うので、先にこれらを読み込んでおく。
+
+```{r}
+pacman::p_load(sf, 
+               terra, 
+               exactextractr,
+               tmap,
+               tidyverse)
+```
+
+# `terra`によるラスター処理
+
+Rによるラスターデータの解析は長らく`raster`パッケージが使われてきたようだが（私も初期はこちらを利用）、最近では`terra`が主流になっており、ほかのGIS系パッケージとも互換性が確保されてきた様子（いくつか対応していないものもあるようだが、細かく把握していない）。`terra`のほうが圧倒的に計算速度が速いので、こちらの例を挙げる。
+
+## データの読み込み
+
+データの読み込みには`terra::rast()`を使う。今回、ここで使うラスターファイルは[CHELSA](https://chelsa-climate.org/)の気候データ（赤道付近で1km程度のメッシュ）。`CHELSA_bio1_1981-2010_V.2.1.tif`（1981-2010年の平均気温データ）のアメリカ、ノースカロライナ（NC）周辺を切り出し、`.../static/gis/airtemp_nc.tif`として保存しておいた（[Link](https://github.com/aterui/ecological-stats/tree/main/static/gis/airtemp_nc.tif)からダウンロード可能）。私はこのファイルパスを指定して読み込むが[^1]、使用者は各自の保存先のパスを指定すれば読み込める。
+
+[^1]: Rmarkdownの使用上`here::here()`で絶対パスを使っているが、通常は相対パスでOK。
+
+```{r}
+# read data
+# here::here() is a function that returns an absolute path
+rs_air <- rast(here::here("static/gis/airtemp_nc.tif"))
+
+print(rs_air)
+```
+
+読み込むと、データの概要がプリントされる。
+
+| Name         | Description                                                                                                                            |
+|------------------|------------------------------------------------------|
+| `class`      | Rオブジェクトのクラス。                                                                                                                |
+| `dimensions` | ラスターファイルの要素数を次元（行数、列数、値のレイヤー数）に分けて示したもの。今回の場合、325x1064セルのラスターで、気温データのみ。 |
+| `resolution` | 各セルのサイズ。小さいほど解像度が高い。単位はCRSに依拠。                                                                              |
+| `extent`     | ラスターの上下左右の端の値。                                                                                                           |
+| `cood.ref.`  | Coordinate Reference System （CRS)。今回はWGS 84。                                                                                     |
+| `source`     | 元データのファイル名。                                                                                                                 |
+| `name`       | ラスターの名前。                                                                                                                       |
+| `min value`  | ラスターの値の最小値。                                                                                                                 |
+| `max value`  | ラスターの値の最大値。                                                                                                                 |
+
+このデータを視覚化する。`tmap` パッケージにある関数群が使える。
+
+```{r}
+# visualize using `tmap` package
+tm_shape(rs_air) +
+  tm_raster(title = "Temperature")
+```
+
+すごくおおざっぱにいうと[^2]、Rのラスターデータは行列の各セルに緯度経度情報が紐づけされたものなので、各セルの値を通常の行列データのように呼び出すことができる。
+
+[^2]: もちろん実際はもっと複雑だが、その辺は私の知識の範疇を超える。
+
+```{r}
+# call data entry in cell row 1, column 12
+rs_air[1, 12]
+```
+
+このセルでは、`r round(rs_air[1, 12], 2)`という気温の値が格納されているようだ。
+
+## ベクターレイヤと組み合わせる
+
+この手のラスターデータに施す処理として、ベクターファイルと重ね合わせてデータを集計することがよくある。これらは`sf`、`terra`、`exactextractr`などと組み合わせることで簡単にできる。`exactextractr`は必須というわけではないが、いろいろ便利な機能が備わっているのでおすすめ。
+
+まず、前回の[ポスト](/2022/06/30/r-gis-sf/)でも使用したNCのポリゴンデータを読み込む。これはNCのCountyという呼ばれる行政区のポリゴンをまとめたデータ。このデータは`NAD27` というCRSが使われている。ラスターのCRSにそろえるため、`terra::crs()`でラスターデータのCRSを抽出し、`st_transform()`でポリゴンCRSをラスターCRSに合わせるよう変換する。
+
+```{r}
+# read county shape file for NC (example data in `sf`)
+# sf::st_read() reads a shape file
+# sf::st_transform() transforms CRS (in this case, to WGS 84)
+sf_nc <- system.file("shape/nc.shp", package="sf") %>% 
+  st_read() %>% 
+  st_transform(crs = crs(rs_air)) %>% 
+  dplyr::select(NAME) # remove other than NAME column
+
+print(sf_nc)
+```
+
+このポリゴンデータとラスターデータを重ね合わせて図示してみる。
+
+```{r}
+tm_shape(rs_air) +
+  tm_raster(title = "Temperature") +
+  tm_shape(sf_nc) +
+  tm_polygons(alpha = 0.5) # `alpha` specifies transparency
+```
+
+### `crop()` ：必要な部分のみ切り抜く
+
+ラスターの必要な部分のみを切り抜くには`terra::crop()`が使える。例として、NCの一つのCountyポリゴンでラスターデータを切り抜いてみる。
+
+```{r}
+
+## pick the first element
+poly <- sf_nc[1, ]
+
+## `rs_air` cropped by `poly`
+rs_air_cr <- crop(x = rs_air, y = poly)
+print(rs_air_cr)
+
+## visualize
+tm_shape(rs_air_cr) +
+  tm_raster(title = "Temperature") +
+  tm_shape(poly) +
+  tm_polygons(alpha = 0.5)
+```
+
+### `exact_extract()` ：ポリゴンごとに値を集計
+
+ポリゴンごとにラスター値を集計（平均など）をとりたいこともある。`exactextractr::exact_extract()` が便利で、しかも鬼のように速い。また、ポリゴンが不完全にラスターセルと重なっている場合、重なりの割合をとったうえで重み付き平均を返してくれる。
+
+```{r}
+df_temp <- exact_extract(x = rs_air,
+                         y = sf_nc,
+                         weights = "area",
+                         fun = "weighted_mean",
+                         append_cols = TRUE) %>% 
+  as_tibble() %>% 
+  rename(temperature = weighted_mean)
+
+print(df_temp)
+```
+
+`x`にラスター、`y`にベクター（ポリゴン）を指定する。`fun`の部分を`weighted_mean`にすることで、`weights`で指定した重み情報を元に重み付き平均をとってくれる。今回は、重みを面積（`”area”`）として計算している[^3]。平均以外にもいろんな要約関数が用意されているし、自分で関数を定義することもできる。
+
+[^3]: 注意点として、インプットデータに地理座標系（今回のようなWGS84など）を使っている場合、`weights="area"`としておかないと、変な平均値を計算してしまう。というのも、緯度経度座標系は歪んでいるので、赤道から離れるほど一つのセルの面積が大きくなる。`weights="area"`とすることで、この関数は各セルの面積に対応する値を自動計算し、その値をもとに重み付き平均をとってくれる。投影座標系の場合、`weights`を指定せずに`fun=”mean”`としても同じ結果が返ってくる。このあたりは煩雑なので、座標系の理解を深めたのち、`exact_extract()`関数のHelpを熟読したほうがよい。
+
+ただし、最低限の知識として、緯度経度座標系、投影座標系の知識くらいはないと、まったく意味のないとんちんかんな計算をする可能性があるので、その辺は自学の必要あり（**致命的な計算ミスにつながる可能性極大**）。
+
+この集計結果を、もとのポリゴンデータにくっつけて図示する。
+
+```{r}
+sf_nc <- sf_nc %>% 
+  left_join(df_temp)
+
+print(sf_nc)
+
+## col = "temperature"
+## - polygons colored by the values in "temperature" column
+tm_shape(sf_nc) +
+  tm_polygons(col = "temperature")
+```
+
+# まとめ
+
+これらのパッケージはいろんなことができるので、各パッケージのウェブページや、R GIS系のウェブブックなどで自学できる。こちらの[ページ](https://tmieno2.github.io/R-as-GIS-for-Economists/preface.html)でGISを勉強できるウェブサイトが一覧になっているので、各自のニーズや好みに合わせて使い分けるといいと思われる。

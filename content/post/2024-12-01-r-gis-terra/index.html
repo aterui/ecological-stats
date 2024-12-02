@@ -1,0 +1,266 @@
+---
+title: RでGIS：ラスター
+author: ''
+date: '2024-12-01'
+slug: r-gis-terra
+output:
+  blogdown::html_page:
+    toc: true
+categories:
+  - GIS
+  - R
+  - academic
+tags:
+  - sf
+  - terra
+  - exactextractr
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#rでgis" id="toc-rでgis">RでGIS</a></li>
+<li><a href="#terraによるラスター処理" id="toc-terraによるラスター処理"><code>terra</code>によるラスター処理</a>
+<ul>
+<li><a href="#データの読み込み" id="toc-データの読み込み">データの読み込み</a></li>
+<li><a href="#ベクターレイヤと組み合わせる" id="toc-ベクターレイヤと組み合わせる">ベクターレイヤと組み合わせる</a>
+<ul>
+<li><a href="#crop-必要な部分のみ切り抜く" id="toc-crop-必要な部分のみ切り抜く"><code>crop()</code> ：必要な部分のみ切り抜く</a></li>
+<li><a href="#exact_extract-ポリゴンごとに値を集計" id="toc-exact_extract-ポリゴンごとに値を集計"><code>exact_extract()</code> ：ポリゴンごとに値を集計</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#まとめ" id="toc-まとめ">まとめ</a></li>
+</ul>
+</div>
+
+<div id="rでgis" class="section level1">
+<h1>RでGIS</h1>
+<p>先日、RでのGIS作業にむけた簡単なポスト（<a href="/2022/06/30/r-gis-sf/">RでGIS：ベクター</a>）を書いた（最近だと思っていたが実に二年以上たっている事実に驚愕）。今回はそのフォローアップとして、ラスターデータの取り扱いについても簡単に紹介してみたい。今回は<code>sf</code>、<code>terra</code>、<code>exactextractr</code>、<code>tmap</code>の４つを使うので、先にこれらを読み込んでおく。</p>
+<pre class="r"><code>pacman::p_load(sf, 
+               terra, 
+               exactextractr,
+               tmap,
+               tidyverse)</code></pre>
+</div>
+<div id="terraによるラスター処理" class="section level1">
+<h1><code>terra</code>によるラスター処理</h1>
+<p>Rによるラスターデータの解析は長らく<code>raster</code>パッケージが使われてきたようだが（私も初期はこちらを利用）、最近では<code>terra</code>が主流になっており、ほかのGIS系パッケージとも互換性が確保されてきた様子（いくつか対応していないものもあるようだが、細かく把握していない）。<code>terra</code>のほうが圧倒的に計算速度が速いので、こちらの例を挙げる。</p>
+<div id="データの読み込み" class="section level2">
+<h2>データの読み込み</h2>
+<p>データの読み込みには<code>terra::rast()</code>を使う。今回、ここで使うラスターファイルは<a href="https://chelsa-climate.org/">CHELSA</a>の気候データ（赤道付近で1km程度のメッシュ）。<code>CHELSA_bio1_1981-2010_V.2.1.tif</code>（1981-2010年の平均気温データ）のアメリカ、ノースカロライナ（NC）周辺を切り出し、<code>.../static/gis/airtemp_nc.tif</code>として保存しておいた（<a href="https://github.com/aterui/ecological-stats/tree/main/static/gis/airtemp_nc.tif">Link</a>からダウンロード可能）。私はこのファイルパスを指定して読み込むが<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>、使用者は各自の保存先のパスを指定すれば読み込める。</p>
+<pre class="r"><code># read data
+# here::here() is a function that returns an absolute path
+rs_air &lt;- rast(here::here(&quot;static/gis/airtemp_nc.tif&quot;))
+
+print(rs_air)</code></pre>
+<pre><code>## class       : SpatRaster 
+## dimensions  : 325, 1064, 1  (nrow, ncol, nlyr)
+## resolution  : 0.008333333, 0.008333333  (x, y)
+## extent      : -84.32514, -75.45847, 33.88319, 36.59153  (xmin, xmax, ymin, ymax)
+## coord. ref. : lon/lat WGS 84 (EPSG:4326) 
+## source      : airtemp_nc.tif 
+## name        : CHELSA_bio1_1981-2010_V.2.1 
+## min value   :                        5.15 
+## max value   :                       21.15</code></pre>
+<p>読み込むと、データの概要がプリントされる。</p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>class</code></td>
+<td>Rオブジェクトのクラス。</td>
+</tr>
+<tr class="even">
+<td><code>dimensions</code></td>
+<td>ラスターファイルの要素数を次元（行数、列数、値のレイヤー数）に分けて示したもの。今回の場合、325x1064セルのラスターで、気温データのみ。</td>
+</tr>
+<tr class="odd">
+<td><code>resolution</code></td>
+<td>各セルのサイズ。小さいほど解像度が高い。単位はCRSに依拠。</td>
+</tr>
+<tr class="even">
+<td><code>extent</code></td>
+<td>ラスターの上下左右の端の値。</td>
+</tr>
+<tr class="odd">
+<td><code>cood.ref.</code></td>
+<td>Coordinate Reference System （CRS)。今回はWGS 84。</td>
+</tr>
+<tr class="even">
+<td><code>source</code></td>
+<td>元データのファイル名。</td>
+</tr>
+<tr class="odd">
+<td><code>name</code></td>
+<td>ラスターの名前。</td>
+</tr>
+<tr class="even">
+<td><code>min value</code></td>
+<td>ラスターの値の最小値。</td>
+</tr>
+<tr class="odd">
+<td><code>max value</code></td>
+<td>ラスターの値の最大値。</td>
+</tr>
+</tbody>
+</table>
+<p>このデータを視覚化する。<code>tmap</code> パッケージにある関数群が使える。</p>
+<pre class="r"><code># visualize using `tmap` package
+tm_shape(rs_air) +
+  tm_raster(title = &quot;Temperature&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>すごくおおざっぱにいうと<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>、Rのラスターデータは行列の各セルに緯度経度情報が紐づけされたものなので、各セルの値を通常の行列データのように呼び出すことができる。</p>
+<pre class="r"><code># call data entry in cell row 1, column 12
+rs_air[1, 12]</code></pre>
+<pre><code>##   CHELSA_bio1_1981-2010_V.2.1
+## 1                       13.95</code></pre>
+<p>このセルでは、13.95という気温の値が格納されているようだ。</p>
+</div>
+<div id="ベクターレイヤと組み合わせる" class="section level2">
+<h2>ベクターレイヤと組み合わせる</h2>
+<p>この手のラスターデータに施す処理として、ベクターファイルと重ね合わせてデータを集計することがよくある。これらは<code>sf</code>、<code>terra</code>、<code>exactextractr</code>などと組み合わせることで簡単にできる。<code>exactextractr</code>は必須というわけではないが、いろいろ便利な機能が備わっているのでおすすめ。</p>
+<p>まず、前回の<a href="/2022/06/30/r-gis-sf/">ポスト</a>でも使用したNCのポリゴンデータを読み込む。これはNCのCountyという呼ばれる行政区のポリゴンをまとめたデータ。このデータは<code>NAD27</code> というCRSが使われている。ラスターのCRSにそろえるため、<code>terra::crs()</code>でラスターデータのCRSを抽出し、<code>st_transform()</code>でポリゴンCRSをラスターCRSに合わせるよう変換する。</p>
+<pre class="r"><code># read county shape file for NC (example data in `sf`)
+# sf::st_read() reads a shape file
+# sf::st_transform() transforms CRS (in this case, to WGS 84)
+sf_nc &lt;- system.file(&quot;shape/nc.shp&quot;, package=&quot;sf&quot;) %&gt;% 
+  st_read() %&gt;% 
+  st_transform(crs = crs(rs_air)) %&gt;% 
+  dplyr::select(NAME) # remove other than NAME column</code></pre>
+<pre><code>## Reading layer `nc&#39; from data source 
+##   `C:\Users\akira\OneDrive - UNCG\Documents\R\win-library\4.0\sf\shape\nc.shp&#39; 
+##   using driver `ESRI Shapefile&#39;
+## Simple feature collection with 100 features and 14 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
+## Geodetic CRS:  NAD27</code></pre>
+<pre class="r"><code>print(sf_nc)</code></pre>
+<pre><code>## Simple feature collection with 100 features and 1 field
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -84.32377 ymin: 33.88212 xmax: -75.45662 ymax: 36.58973
+## Geodetic CRS:  WGS 84
+## First 10 features:
+##           NAME                       geometry
+## 1         Ashe MULTIPOLYGON (((-81.47258 3...
+## 2    Alleghany MULTIPOLYGON (((-81.23971 3...
+## 3        Surry MULTIPOLYGON (((-80.45614 3...
+## 4    Currituck MULTIPOLYGON (((-76.00863 3...
+## 5  Northampton MULTIPOLYGON (((-77.21736 3...
+## 6     Hertford MULTIPOLYGON (((-76.74474 3...
+## 7       Camden MULTIPOLYGON (((-76.00863 3...
+## 8        Gates MULTIPOLYGON (((-76.56218 3...
+## 9       Warren MULTIPOLYGON (((-78.30849 3...
+## 10      Stokes MULTIPOLYGON (((-80.02545 3...</code></pre>
+<p>このポリゴンデータとラスターデータを重ね合わせて図示してみる。</p>
+<pre class="r"><code>tm_shape(rs_air) +
+  tm_raster(title = &quot;Temperature&quot;) +
+  tm_shape(sf_nc) +
+  tm_polygons(alpha = 0.5) # `alpha` specifies transparency</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<div id="crop-必要な部分のみ切り抜く" class="section level3">
+<h3><code>crop()</code> ：必要な部分のみ切り抜く</h3>
+<p>ラスターの必要な部分のみを切り抜くには<code>terra::crop()</code>が使える。例として、NCの一つのCountyポリゴンでラスターデータを切り抜いてみる。</p>
+<pre class="r"><code>## pick the first element
+poly &lt;- sf_nc[1, ]
+
+## `rs_air` cropped by `poly`
+rs_air_cr &lt;- crop(x = rs_air, y = poly)
+print(rs_air_cr)</code></pre>
+<pre><code>## class       : SpatRaster 
+## dimensions  : 43, 60, 1  (nrow, ncol, nlyr)
+## resolution  : 0.008333333, 0.008333333  (x, y)
+## extent      : -81.74181, -81.24181, 36.23319, 36.59153  (xmin, xmax, ymin, ymax)
+## coord. ref. : lon/lat WGS 84 (EPSG:4326) 
+## source(s)   : memory
+## varname     : airtemp_nc 
+## name        : CHELSA_bio1_1981-2010_V.2.1 
+## min value   :                        6.95 
+## max value   :                       14.05</code></pre>
+<pre class="r"><code>## visualize
+tm_shape(rs_air_cr) +
+  tm_raster(title = &quot;Temperature&quot;) +
+  tm_shape(poly) +
+  tm_polygons(alpha = 0.5)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="exact_extract-ポリゴンごとに値を集計" class="section level3">
+<h3><code>exact_extract()</code> ：ポリゴンごとに値を集計</h3>
+<p>ポリゴンごとにラスター値を集計（平均など）をとりたいこともある。<code>exactextractr::exact_extract()</code> が便利で、しかも鬼のように速い。また、ポリゴンが不完全にラスターセルと重なっている場合、重なりの割合をとったうえで重み付き平均を返してくれる。</p>
+<pre class="r"><code>df_temp &lt;- exact_extract(x = rs_air,
+                         y = sf_nc,
+                         weights = &quot;area&quot;,
+                         fun = &quot;weighted_mean&quot;,
+                         append_cols = TRUE) %&gt;% 
+  as_tibble() %&gt;% 
+  rename(temperature = weighted_mean)</code></pre>
+<pre><code>##   |                                                                              |                                                                      |   0%  |                                                                              |=                                                                     |   1%  |                                                                              |=                                                                     |   2%  |                                                                              |==                                                                    |   3%  |                                                                              |===                                                                   |   4%  |                                                                              |====                                                                  |   5%  |                                                                              |====                                                                  |   6%  |                                                                              |=====                                                                 |   7%  |                                                                              |======                                                                |   8%  |                                                                              |======                                                                |   9%  |                                                                              |=======                                                               |  10%  |                                                                              |========                                                              |  11%  |                                                                              |========                                                              |  12%  |                                                                              |=========                                                             |  13%  |                                                                              |==========                                                            |  14%  |                                                                              |==========                                                            |  15%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  17%  |                                                                              |=============                                                         |  18%  |                                                                              |=============                                                         |  19%  |                                                                              |==============                                                        |  20%  |                                                                              |===============                                                       |  21%  |                                                                              |===============                                                       |  22%  |                                                                              |================                                                      |  23%  |                                                                              |=================                                                     |  24%  |                                                                              |==================                                                    |  25%  |                                                                              |==================                                                    |  26%  |                                                                              |===================                                                   |  27%  |                                                                              |====================                                                  |  28%  |                                                                              |====================                                                  |  29%  |                                                                              |=====================                                                 |  30%  |                                                                              |======================                                                |  31%  |                                                                              |======================                                                |  32%  |                                                                              |=======================                                               |  33%  |                                                                              |========================                                              |  34%  |                                                                              |========================                                              |  35%  |                                                                              |=========================                                             |  36%  |                                                                              |==========================                                            |  37%  |                                                                              |===========================                                           |  38%  |                                                                              |===========================                                           |  39%  |                                                                              |============================                                          |  40%  |                                                                              |=============================                                         |  41%  |                                                                              |=============================                                         |  42%  |                                                                              |==============================                                        |  43%  |                                                                              |===============================                                       |  44%  |                                                                              |================================                                      |  45%  |                                                                              |================================                                      |  46%  |                                                                              |=================================                                     |  47%  |                                                                              |==================================                                    |  48%  |                                                                              |==================================                                    |  49%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================                                  |  51%  |                                                                              |====================================                                  |  52%  |                                                                              |=====================================                                 |  53%  |                                                                              |======================================                                |  54%  |                                                                              |======================================                                |  55%  |                                                                              |=======================================                               |  56%  |                                                                              |========================================                              |  57%  |                                                                              |=========================================                             |  58%  |                                                                              |=========================================                             |  59%  |                                                                              |==========================================                            |  60%  |                                                                              |===========================================                           |  61%  |                                                                              |===========================================                           |  62%  |                                                                              |============================================                          |  63%  |                                                                              |=============================================                         |  64%  |                                                                              |==============================================                        |  65%  |                                                                              |==============================================                        |  66%  |                                                                              |===============================================                       |  67%  |                                                                              |================================================                      |  68%  |                                                                              |================================================                      |  69%  |                                                                              |=================================================                     |  70%  |                                                                              |==================================================                    |  71%  |                                                                              |==================================================                    |  72%  |                                                                              |===================================================                   |  73%  |                                                                              |====================================================                  |  74%  |                                                                              |====================================================                  |  75%  |                                                                              |=====================================================                 |  76%  |                                                                              |======================================================                |  77%  |                                                                              |=======================================================               |  78%  |                                                                              |=======================================================               |  79%  |                                                                              |========================================================              |  80%  |                                                                              |=========================================================             |  81%  |                                                                              |=========================================================             |  82%  |                                                                              |==========================================================            |  83%  |                                                                              |===========================================================           |  84%  |                                                                              |============================================================          |  85%  |                                                                              |============================================================          |  86%  |                                                                              |=============================================================         |  87%  |                                                                              |==============================================================        |  88%  |                                                                              |==============================================================        |  89%  |                                                                              |===============================================================       |  90%  |                                                                              |================================================================      |  91%  |                                                                              |================================================================      |  92%  |                                                                              |=================================================================     |  93%  |                                                                              |==================================================================    |  94%  |                                                                              |==================================================================    |  95%  |                                                                              |===================================================================   |  96%  |                                                                              |====================================================================  |  97%  |                                                                              |===================================================================== |  98%  |                                                                              |===================================================================== |  99%  |                                                                              |======================================================================| 100%</code></pre>
+<pre class="r"><code>print(df_temp)</code></pre>
+<pre><code>## # A tibble: 100 × 2
+##    NAME        temperature
+##    &lt;chr&gt;             &lt;dbl&gt;
+##  1 Ashe               10.5
+##  2 Alleghany          11.1
+##  3 Surry              13.9
+##  4 Currituck          15.8
+##  5 Northampton        15.8
+##  6 Hertford           15.8
+##  7 Camden             15.8
+##  8 Gates              15.8
+##  9 Warren             15.5
+## 10 Stokes             14.4
+## # ℹ 90 more rows</code></pre>
+<p><code>x</code>にラスター、<code>y</code>にベクター（ポリゴン）を指定する。<code>fun</code>の部分を<code>weighted_mean</code>にすることで、<code>weights</code>で指定した重み情報を元に重み付き平均をとってくれる。今回は、重みを面積（<code>”area”</code>）として計算している<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>。平均以外にもいろんな要約関数が用意されているし、自分で関数を定義することもできる。</p>
+<p>ただし、最低限の知識として、緯度経度座標系、投影座標系の知識くらいはないと、まったく意味のないとんちんかんな計算をする可能性があるので、その辺は自学の必要あり（<strong>致命的な計算ミスにつながる可能性極大</strong>）。</p>
+<p>この集計結果を、もとのポリゴンデータにくっつけて図示する。</p>
+<pre class="r"><code>sf_nc &lt;- sf_nc %&gt;% 
+  left_join(df_temp)</code></pre>
+<pre><code>## Joining with `by = join_by(NAME)`</code></pre>
+<pre class="r"><code>print(sf_nc)</code></pre>
+<pre><code>## Simple feature collection with 100 features and 2 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -84.32377 ymin: 33.88212 xmax: -75.45662 ymax: 36.58973
+## Geodetic CRS:  WGS 84
+## First 10 features:
+##           NAME temperature                       geometry
+## 1         Ashe    10.45288 MULTIPOLYGON (((-81.47258 3...
+## 2    Alleghany    11.12001 MULTIPOLYGON (((-81.23971 3...
+## 3        Surry    13.88488 MULTIPOLYGON (((-80.45614 3...
+## 4    Currituck    15.82795 MULTIPOLYGON (((-76.00863 3...
+## 5  Northampton    15.80508 MULTIPOLYGON (((-77.21736 3...
+## 6     Hertford    15.84248 MULTIPOLYGON (((-76.74474 3...
+## 7       Camden    15.82066 MULTIPOLYGON (((-76.00863 3...
+## 8        Gates    15.76584 MULTIPOLYGON (((-76.56218 3...
+## 9       Warren    15.48028 MULTIPOLYGON (((-78.30849 3...
+## 10      Stokes    14.41932 MULTIPOLYGON (((-80.02545 3...</code></pre>
+<pre class="r"><code>## col = &quot;temperature&quot;
+## - polygons colored by the values in &quot;temperature&quot; column
+tm_shape(sf_nc) +
+  tm_polygons(col = &quot;temperature&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+<div id="まとめ" class="section level1">
+<h1>まとめ</h1>
+<p>これらのパッケージはいろんなことができるので、各パッケージのウェブページや、R GIS系のウェブブックなどで自学できる。こちらの<a href="https://tmieno2.github.io/R-as-GIS-for-Economists/preface.html">ページ</a>でGISを勉強できるウェブサイトが一覧になっているので、各自のニーズや好みに合わせて使い分けるといいと思われる。</p>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>Rmarkdownの使用上<code>here::here()</code>で絶対パスを使っているが、通常は相対パスでOK。<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>もちろん実際はもっと複雑だが、その辺は私の知識の範疇を超える。<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>注意点として、インプットデータに地理座標系（今回のようなWGS84など）を使っている場合、<code>weights="area"</code>としておかないと、変な平均値を計算してしまう。というのも、緯度経度座標系は歪んでいるので、赤道から離れるほど一つのセルの面積が大きくなる。<code>weights="area"</code>とすることで、この関数は各セルの面積に対応する値を自動計算し、その値をもとに重み付き平均をとってくれる。投影座標系の場合、<code>weights</code>を指定せずに<code>fun=”mean”</code>としても同じ結果が返ってくる。このあたりは煩雑なので、座標系の理解を深めたのち、<code>exact_extract()</code>関数のHelpを熟読したほうがよい。<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>

@@ -1,5 +1,5 @@
 ---
-title: Am I wrong? - comment on Carraro & Altermatt 2022
+title: Comment on Carraro & Altermatt 2022
 author: ''
 date: '2022-11-06'
 slug: concerns-on-carraro-altermatt-2022
@@ -93,7 +93,7 @@ Since $y'$ is a simple multiplication of the original object $y$ ($y$ is the par
 
 Carraro & Altermatt 2022 reported that the branching probability follows a power law of observation scale $A_T$ using virtual networks called Optimal Channel Networks (Equation (1) in the original article). In addition, they also observed the power-law scaling of branching probability in real rivers (see the log-log plot in Figure 3 in the original article).
 
-Nevertheless, they concluded "***an alleged property of such random networks (branching probability) is a scale-dependent quantity that does not reflect any recognized metric of rivers' fractal character...***" This is the complete opposite as it has been defined in the literature of scale invariance (and "alleged"...!!? This word killed me...). Instead, the correct conclusion derived from their results must have been "***branching probability is a scale-invariant feature that reflects the fractal nature of rivers.***"[^4] They also used other key terms in a completely opposite way -- for example, the term "scaling" is used as if it describes a property of a scale-dependent object. Shockingly (at least for me), they seriously criticized past research (mainly mine) by expanding their arguments based on this misuse of the term throughout their manuscript (see [here](https://biorxiv.org/cgi/content/short/2022.11.07.515375v1) for full details).
+Nevertheless, they concluded "***an alleged property of such random networks (branching probability) is a scale-dependent quantity that does not reflect any recognized metric of rivers' fractal character...***" This is the complete opposite as it has been defined in the literature of scale invariance (and "alleged"...!!? This word killed me...). Instead, the correct conclusion derived from their results must have been "***branching probability is a scale-invariant feature that reflects the fractal nature of rivers.***"[^4] They also used other key terms in a completely opposite way -- for example, the term "scaling" is used as if it describes a property of a scale-dependent object. Shockingly (at least for me), they seriously criticized past research by expanding their arguments based on this misuse of the term throughout their manuscript (see [here](https://biorxiv.org/cgi/content/short/2022.11.07.515375v1) for full details).
 
 [^4]: Well, branching probability is proven to be scale invariant in [Peckham and Gupta 1999](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/1999WR900154) to begin with...
 
