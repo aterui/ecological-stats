@@ -29,13 +29,13 @@ tags:
 <li><a href="#exact_extract-ポリゴンごとに値を集計" id="toc-exact_extract-ポリゴンごとに値を集計"><code>exact_extract()</code> ：ポリゴンごとに値を集計</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#まとめ" id="toc-まとめ">まとめ</a></li>
+<li><a href="#最後に" id="toc-最後に">最後に</a></li>
 </ul>
 </div>
 
 <div id="rでgis" class="section level1">
 <h1>RでGIS</h1>
-<p>先日、RでのGIS作業にむけた簡単なポスト（<a href="/2022/06/30/r-gis-sf/">RでGIS：ベクター</a>）を書いた（最近だと思っていたが実に二年以上たっている事実に驚愕）。今回はそのフォローアップとして、ラスターデータの取り扱いについても簡単に紹介してみたい。今回は<code>sf</code>、<code>terra</code>、<code>exactextractr</code>、<code>tmap</code>の４つを使うので、先にこれらを読み込んでおく。</p>
+<p>先日、RでのGIS作業にむけた簡単なポスト（<a href="/2022/07/30/r-gis-sf/">RでGIS：ベクター</a>）を書いた（最近だと思っていたが実に二年以上たっている事実に驚愕）。今回はそのフォローアップとして、ラスターデータの取り扱いについても簡単に紹介してみたい。今回は<code>sf</code>、<code>terra</code>、<code>exactextractr</code>、<code>tmap</code>の４つを使うので、先にこれらを読み込んでおく。</p>
 <pre class="r"><code>pacman::p_load(sf, 
                terra, 
                exactextractr,
@@ -65,8 +65,8 @@ print(rs_air)</code></pre>
 <p>読み込むと、データの概要がプリントされる。</p>
 <table>
 <colgroup>
-<col width="25%" />
-<col width="75%" />
+<col width="26%" />
+<col width="73%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -128,7 +128,7 @@ rs_air[1, 12]</code></pre>
 <div id="ベクターレイヤと組み合わせる" class="section level2">
 <h2>ベクターレイヤと組み合わせる</h2>
 <p>この手のラスターデータに施す処理として、ベクターファイルと重ね合わせてデータを集計することがよくある。これらは<code>sf</code>、<code>terra</code>、<code>exactextractr</code>などと組み合わせることで簡単にできる。<code>exactextractr</code>は必須というわけではないが、いろいろ便利な機能が備わっているのでおすすめ。</p>
-<p>まず、前回の<a href="/2022/06/30/r-gis-sf/">ポスト</a>でも使用したNCのポリゴンデータを読み込む。これはNCのCountyという呼ばれる行政区のポリゴンをまとめたデータ。このデータは<code>NAD27</code> というCRSが使われている。ラスターのCRSにそろえるため、<code>terra::crs()</code>でラスターデータのCRSを抽出し、<code>st_transform()</code>でポリゴンCRSをラスターCRSに合わせるよう変換する。</p>
+<p>まず、前回の<a href="/2022/07/30/r-gis-sf/">ポスト</a>でも使用したNCのポリゴンデータを読み込む。これはNCのCountyという呼ばれる行政区のポリゴンをまとめたデータ。このデータは<code>NAD27</code> というCRSが使われている。ラスターのCRSにそろえるため、<code>terra::crs()</code>でラスターデータのCRSを抽出し、<code>st_transform()</code>でポリゴンCRSをラスターCRSに合わせるよう変換する。</p>
 <pre class="r"><code># read county shape file for NC (example data in `sf`)
 # sf::st_read() reads a shape file
 # sf::st_transform() transforms CRS (in this case, to WGS 84)
@@ -252,9 +252,9 @@ tm_shape(sf_nc) +
 </div>
 </div>
 </div>
-<div id="まとめ" class="section level1">
-<h1>まとめ</h1>
-<p>これらのパッケージはいろんなことができるので、各パッケージのウェブページや、R GIS系のウェブブックなどで自学できる。こちらの<a href="https://tmieno2.github.io/R-as-GIS-for-Economists/preface.html">ページ</a>でGISを勉強できるウェブサイトが一覧になっているので、各自のニーズや好みに合わせて使い分けるといいと思われる。</p>
+<div id="最後に" class="section level1">
+<h1>最後に</h1>
+<p>これらのパッケージの使い方は、パッケージのウェブページや、R GIS系のウェブブックなどで自学できる。こちらの<a href="https://tmieno2.github.io/R-as-GIS-for-Economists/preface.html">ページ</a>でRGISを勉強できるウェブサイトが一覧になっているので、各自のニーズや好みに合わせて使い分けるといいと思われる。</p>
 </div>
 <div class="footnotes footnotes-end-of-document">
 <hr />
