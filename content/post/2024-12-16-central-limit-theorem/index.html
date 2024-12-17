@@ -26,10 +26,10 @@ X \sim \text{Poisson}(2)
 <p>試しにRで<code>X</code>を生成してみる（<code>rpois()</code>はポアソン分布に従う乱数を生成）。</p>
 <pre class="r"><code># produce 3 samples of X that follows a Poisson distribution with a mean 2
 (X &lt;- rpois(n = 3, lambda = 2))</code></pre>
-<pre><code>## [1] 0 3 1</code></pre>
-<p>この例では、３サンプル生成してみると、0, 3, 1 となった。ここで、最初の文言に戻ってみよう。</p>
+<pre><code>## [1] 1 2 2</code></pre>
+<p>この例では、３サンプル生成してみると、1, 2, 2 となった。ここで、最初の文言に戻ってみよう。</p>
 <p>「<strong>サンプルサイズ（標本数）が増えれば、どんな確率変数も正規分布で近似できる</strong>」</p>
-<p>この言葉を字面通りに受け取ると、サンプルをどんどん増やしていけば<code>X</code>はいずれ正規分布に近づくように解釈できる。もしそうならば、サンプル数を増やすほど、<code>X</code>の頻度分布はきれいな左右対称の鐘状になるはずだ。試してみよう。</p>
+<p>この言葉を字面通りに受け取ると、サンプルをどんどん増やしていけば<code>X</code>はいずれ正規分布に近づくように解釈できる。もしそうならば、サンプル数を増やすほど、<code>X</code>の頻度分布はきれいな左右対称の鐘状になるはずだ。試してみよう。まずは100サンプル。</p>
 <pre class="r"><code># histogram with 100 samples
 X &lt;- rpois(n = 100, lambda = 2)
 plot(table(X))</code></pre>
@@ -42,7 +42,7 @@ plot(table(X))</code></pre>
 <p>そろそろわかると思うが、<strong><code>X</code>のサンプルサイズを増やしたところで<code>X</code>はポアソン分布のままである</strong>。そう、中心極限定理は、そもそもこんなことは言っていないので当然である。</p>
 <p>実際の答えはこうだ：</p>
 <p>「<strong>ある確率分布に従う確率変数Ｘがある。複数のＸを足し合わせた新たな確率変数Ｙ（</strong><span class="math inline">\(Y = \sum_i X_i\)</span><strong>）を考える</strong><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a><strong>。この時、足し合わせるＸの個数が多ければ、Ｙは漸近的に正規分布に従う</strong> 」</p>
-<p>Rで試してみよう。</p>
+<p>Rで試してみよう。100個の<code>X</code>を足した値を<code>Y</code>として、それを1000個生成する。</p>
 <pre class="r"><code>## Take a sum of 100 poisson samples for 1000 times
 Y &lt;- replicate(1000,
                sum(rpois(100, lambda = 2)))
