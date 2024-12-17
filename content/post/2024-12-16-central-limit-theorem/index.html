@@ -1,0 +1,81 @@
+---
+title: 中心極限定理をめぐる誤解
+author: ''
+date: '2024-12-16'
+slug: central-limit-theorem
+categories:
+  - academic
+  - R
+tags:
+  - stats
+---
+
+
+
+<p>中心極限定理。統計を使う研究に身を置く人であれば、一度は聞いたことがあるであろう。 はて、その意味するところはなんだろうか？</p>
+<p>「<strong>サンプルサイズ（標本数）が増えれば、どんな確率変数も正規分布で近似できる</strong>」</p>
+<p>たぶん、生態学の界隈では、このような理解がまことしやかに蔓延っている（昔私も信じていた）。その結果としてこういった記述をみることがある。</p>
+<p>「応答変数は個体数であるが、サンプル数が多いことから正規分布で近似する」</p>
+<p>結論から言うと、<strong>できません</strong>。さて、どこが間違ってるのだろうか。 わかりやすい説明を試みるが、自信はない。</p>
+<div id="rで試す中心極限定理" class="section level1">
+<h1>Rで試す中心極限定理</h1>
+<p>統計の表現になれのない人のために、表現について少し解説を加えておく。ここでは、正規分布ではない確率分布として、ポアソン分布を例に挙げようと思う。確率変数<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>がある確率分布に従うとき、それはニョロニョロ（Tilde, ～）をつかって表現される。例えば、確率変数Xが平均２のポアソン分布に従う場合、次のように書く：</p>
+<p><span class="math display">\[
+X \sim \text{Poisson}(2)
+\]</span></p>
+<p>試しにRで<code>X</code>を生成してみる（<code>rpois()</code>はポアソン分布に従う乱数を生成）。</p>
+<pre class="r"><code># produce 3 samples of X that follows a Poisson distribution with a mean 2
+(X &lt;- rpois(n = 3, lambda = 2))</code></pre>
+<pre><code>## [1] 0 3 1</code></pre>
+<p>この例では、３サンプル生成してみると、0, 3, 1 となった。ここで、最初の文言に戻ってみよう。</p>
+<p>「<strong>サンプルサイズ（標本数）が増えれば、どんな確率変数も正規分布で近似できる</strong>」</p>
+<p>この言葉を字面通りに受け取ると、サンプルをどんどん増やしていけば<code>X</code>はいずれ正規分布に近づくように解釈できる。もしそうならば、サンプル数を増やすほど、<code>X</code>の頻度分布はきれいな左右対称の鐘状になるはずだ。試してみよう。</p>
+<pre class="r"><code># histogram with 100 samples
+X &lt;- rpois(n = 100, lambda = 2)
+plot(table(X))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>うーん、歪んでいる。１万ならどうだ。</p>
+<pre class="r"><code># histogram with 10000 samples
+X &lt;- rpois(n = 10000, lambda = 2)
+plot(table(X))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>そろそろわかると思うが、<strong><code>X</code>のサンプルサイズを増やしたところで<code>X</code>はポアソン分布のままである</strong>。そう、中心極限定理は、そもそもこんなことは言っていないので当然である。</p>
+<p>実際の答えはこうだ：</p>
+<p>「<strong>ある確率分布に従う確率変数Ｘがある。複数のＸを足し合わせた新たな確率変数Ｙ（</strong><span class="math inline">\(Y = \sum_i X_i\)</span><strong>）を考える</strong><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a><strong>。この時、足し合わせるＸの個数が多ければ、Ｙは漸近的に正規分布に従う</strong> 」</p>
+<p>Rで試してみよう。</p>
+<pre class="r"><code>## Take a sum of 100 poisson samples for 1000 times
+Y &lt;- replicate(1000,
+               sum(rpois(100, lambda = 2)))
+
+plot(table(Y))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>おお、ちゃんと正規分布っぽくなった<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>。和ではなく、平均をとってもよい（そもそも、和と平均は統計的な意味合いは同じ）。こちらも試してみる。</p>
+<pre class="r"><code>## Take a mean of 100 poisson samples for 1000 times
+Y &lt;- replicate(1000,
+               mean(rpois(100, lambda = 2)))
+
+plot(table(Y))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>中心極限定理のすごいところは、確率変数<span class="math inline">\(X\)</span>の確率分布によらず、この定理が成り立つ点にある。例えば、平均2の幾何分布を考えてみる。元の分布は正規分布からほど遠い。</p>
+<pre class="r"><code># geometric distribution with mean of 2 (mean = 1 / prob)
+X &lt;- rgeom(n = 10000, prob = 0.5)
+plot(table(X))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>足し合わせて、<code>Y</code>の分布を見てみる。</p>
+<pre class="r"><code>Y &lt;- replicate(1000,
+               sum(rgeom(100, prob = 0.5)))
+
+plot(table(Y))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><span class="math inline">\(X\)</span>が幾何分布でも、足し合わせた変数<span class="math inline">\(Y\)</span>の分布は正規分布っぽくなった<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>。</p>
+<p>というわけで、<strong>サンプルサイズが多い→正規分布で近似できる</strong>というのは間違い（あるいは語弊がある）。ちゃんと確率変数の特徴に見合った確率分布を選びたいですね。</p>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>測る度にコロコロと値が変わる変数のこと。さいころを振ったら一回目と二回目は違う目が出るかもしれないし、同じ目がでるかもしれない。そういう値を確率変数と呼ぶ。<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>平均でもよい<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>ポアソン分布は再生性をもつので、厳密には平均200のポアソン分布に従う。逆に、これだけ大きな平均をもつポアソン分布はほぼ正規分布のようなもの、ともいえる。<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>厳密には負の二項分布。<a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
