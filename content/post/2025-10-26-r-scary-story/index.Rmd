@@ -116,7 +116,7 @@ sample(1:10, size = 5)
 この挙動から、最初の引数には「くじ」（この場合、1から10までの数字）を作ってやればよい、と理解する。なので、`sample(10, size = 1)`とすれば、かならず10が返ってくるはず、と思っていると痛い目にあう。
 
 ```{r}
-# random one draws from 10...?
+# random one draw from 10...?
 set.seed(123)
 sample(10, size = 1)
 ```
