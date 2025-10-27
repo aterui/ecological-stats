@@ -127,7 +127,7 @@ table(df_sub$Species)</code></pre>
 sample(1:10, size = 5)</code></pre>
 <pre><code>## [1] 9 5 7 1 2</code></pre>
 <p>この挙動から、最初の引数には「くじ」（この場合、1から10までの数字）を作ってやればよい、と理解する。なので、<code>sample(10, size = 1)</code>とすれば、かならず10が返ってくるはず、と思っていると痛い目にあう。</p>
-<pre class="r"><code># random one draws from 10...?
+<pre class="r"><code># random one draw from 10...?
 set.seed(123)
 sample(10, size = 1)</code></pre>
 <pre><code>## [1] 3</code></pre>
