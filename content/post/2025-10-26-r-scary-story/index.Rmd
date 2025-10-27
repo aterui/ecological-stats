@@ -1,0 +1,134 @@
+---
+title: Rの怖い話
+author: ''
+date: '2025-10-26'
+slug: r-scary-story
+output:
+  blogdown::html_page:
+    toc: true
+categories:
+  - academic
+  - R
+tags:
+  - dplyr
+  - lme4
+  - lmer
+  - filter
+---
+
+なんとなく使っていると痛い目にあうRのデフォルト設定。
+
+# モデル選択できないGLMM
+
+GLMMで解析する際、`lme4::lmer()`（あるいは`lme4::glmer()`）を使うことは多い。しかし、**これらの関数はデフォルト設定ではモデル選択**できない。なぜなら、デフォルトで`REML = TRUE`（制限付き最尤法「Restricted Maximum Likelihood」）となっているため。
+
+制限付き最尤法（`REML=TRUE`）はランダム効果の分散推定を不偏にすることを目的とした推定方法のため、固定効果を入れ替えるようなモデル間比較には使えない。推定方法を最尤法（`REML=FALSE`）と明示せずにモデル選択すると、信頼できない結果が返ってくる。ちなみに、**影響は極めて大きい。**
+
+```{r}
+pacman::p_load(tidyverse,
+               lme4,
+               MuMIn)
+
+options(na.action = "na.fail")
+
+## produce dummy data
+set.seed(123)
+sleepstudy_aug <- sleepstudy %>%
+  mutate(
+    Age = rnorm(n(), 
+                mean = 35, 
+                sd = 10),
+    Caffeine = sample(c("Low", "Medium", "High"),
+                      n(),
+                      replace = TRUE),
+    Exercise = rnorm(n(), 
+                     mean = 3, 
+                     sd = 1)
+  )
+
+# REML = TRUE by default; Restricted Maximum Likelihood
+m0 <- lmer(Reaction ~ Days + Age + Caffeine + Exercise + (1 | Subject),
+           data = sleepstudy_aug)
+
+# REML = FALSE; Maximum Likelihood
+m1 <- lmer(Reaction ~ Days + Age + Caffeine + Exercise + (1 | Subject),
+           data = sleepstudy_aug,
+           REML = FALSE)
+```
+
+それぞれモデル選択すると（当然だが）結果は全く異なり、結論に直接影響する可能性が極めて高い。
+
+`REML = TRUE`とした場合（不適切）[^1]：
+
+[^1]: 最新の`MuMIn`パッケージでは警告メッセージを出してくれるようだが、その意味するところは知らない者にとっては？？？となりそうな感じ。
+
+```{r}
+(ms0 <- dredge(m0,
+               rank = "AIC") %>% 
+    filter(delta < 4))
+```
+
+`REML = FALSE`とした場合（適切）：
+
+```{r}
+(ms1 <- dredge(m1,
+               rank = "AIC") %>% 
+    filter(delta < 4))
+```
+
+`REML = TRUE`の場合、`Caffeine`がすべてのトップモデル（$\Delta AIC < 2.0$）に含まれるのに対し、`REML = FALSE`とすると全く含まれなくなる。実際の論文で起きた場合、**結論が真逆になる可能性**すらある。怖い。
+
+# 複数マッチのエラーがでない
+
+Rのデフォルトデータである`iris`には`Species`列に`r as.character(unique(iris$Species))` の３種が含まれる。その中の２種、`r as.character(unique(iris$Species))[1:2]`をデータフレームから抜き出したいとする。このような複数マッチを指定したい場合、`%in%`を使う。
+
+```{r}
+df_sub <- iris %>% 
+  filter(Species %in% c("setosa",
+                        "versicolor"))
+
+table(df_sub$Species)
+```
+
+もともと、各種50点の観察値が含まれるデータである。`Species`の頻度をとると`r as.character(unique(iris$Species))[1:2]`が50となっており、正しく機能しているとわかる。
+
+しかし、ありがちなミスとして、`%in%`を使うべきところに`==`（単一の値・文字列との符合を指示する際の演算子）を使ってしまうことがある。このミスは**全く異なる結果を返すにも関わらず、エラーおよび警告メッセージが一切でない。**試してみる。
+
+```{r}
+df_sub <- iris %>% 
+  filter(Species == c("setosa",
+                        "versicolor"))
+
+table(df_sub$Species)
+```
+
+なぜか、`r as.character(unique(iris$Species))[1:2]` からそれぞれ25行ずつ選ばれている。本来50行ずつ選ばれるはず。この25行がどのような基準で選ばれているのかはわからない。このエラーに気付かないと、**知らぬ間に不適切なデータの間引きが起き、意味のないデータ解析を進めてしまう。**怖い。
+
+# "sample" surprise
+
+シミュレーションなどをしていると気が付く、`sample`関数の（意味の分からない）挙動。あるベクターからいくつかの要素をランダムに取り出したい場合、`sample`関数のお世話になることが多い。例えば：
+
+```{r}
+# random five draws from 1 to 10
+sample(1:10, size = 5)
+```
+
+この挙動から、最初の引数には「くじ」（この場合、1から10までの数字）を作ってやればよい、と理解する。なので、`sample(10, size = 1)`とすれば、かならず10が返ってくるはず、と思っていると痛い目にあう。
+
+```{r}
+# random one draws from 10...?
+set.seed(123)
+sample(10, size = 1)
+```
+
+なぜに3！？となる。
+
+これは、最初の引数が単一値の場合、`1:10`を与えた場合と同じ挙動をするためのようだ。これは`sample`関数のHelpページに”Surprise”として紹介されるとともに、より安全な関数の定義が提案されている。
+
+```{r}
+# safer function, return 10 every time
+resample <- function(x, ...) x[sample.int(length(x), ...)]
+resample(10, size = 1)
+```
+
+最近、自分でシミュレーションするときは、必ず`resample`関数を定義してからパッケージを組むようにしている。怖い。

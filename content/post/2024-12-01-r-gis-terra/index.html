@@ -19,17 +19,17 @@ tags:
 
 <div id="TOC">
 <ul>
-<li><a href="#rでgis" id="toc-rでgis">RでGIS</a></li>
-<li><a href="#terraによるラスター処理" id="toc-terraによるラスター処理"><code>terra</code>によるラスター処理</a>
+<li><a href="#r%E3%81%A7gis" id="toc-rでgis">RでGIS</a></li>
+<li><a href="#terra%E3%81%AB%E3%82%88%E3%82%8B%E3%83%A9%E3%82%B9%E3%82%BF%E3%83%BC%E5%87%A6%E7%90%86" id="toc-terraによるラスター処理"><code>terra</code>によるラスター処理</a>
 <ul>
-<li><a href="#データの読み込み" id="toc-データの読み込み">データの読み込み</a></li>
-<li><a href="#ベクターレイヤと組み合わせる" id="toc-ベクターレイヤと組み合わせる">ベクターレイヤと組み合わせる</a>
+<li><a href="#%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF" id="toc-データの読み込み">データの読み込み</a></li>
+<li><a href="#%E3%83%99%E3%82%AF%E3%82%BF%E3%83%BC%E3%83%AC%E3%82%A4%E3%83%A4%E3%81%A8%E7%B5%84%E3%81%BF%E5%90%88%E3%82%8F%E3%81%9B%E3%82%8B" id="toc-ベクターレイヤと組み合わせる">ベクターレイヤと組み合わせる</a>
 <ul>
-<li><a href="#crop-必要な部分のみ切り抜く" id="toc-crop-必要な部分のみ切り抜く"><code>crop()</code> ：必要な部分のみ切り抜く</a></li>
-<li><a href="#exact_extract-ポリゴンごとに値を集計" id="toc-exact_extract-ポリゴンごとに値を集計"><code>exact_extract()</code> ：ポリゴンごとに値を集計</a></li>
+<li><a href="#crop-%E5%BF%85%E8%A6%81%E3%81%AA%E9%83%A8%E5%88%86%E3%81%AE%E3%81%BF%E5%88%87%E3%82%8A%E6%8A%9C%E3%81%8F" id="toc-crop-必要な部分のみ切り抜く"><code>crop()</code> ：必要な部分のみ切り抜く</a></li>
+<li><a href="#exact_extract-%E3%83%9D%E3%83%AA%E3%82%B4%E3%83%B3%E3%81%94%E3%81%A8%E3%81%AB%E5%80%A4%E3%82%92%E9%9B%86%E8%A8%88" id="toc-exact_extract-ポリゴンごとに値を集計"><code>exact_extract()</code> ：ポリゴンごとに値を集計</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#最後に" id="toc-最後に">最後に</a></li>
+<li><a href="#%E6%9C%80%E5%BE%8C%E3%81%AB" id="toc-最後に">最後に</a></li>
 </ul>
 </div>
 
@@ -65,8 +65,8 @@ print(rs_air)</code></pre>
 <p>読み込むと、データの概要がプリントされる。</p>
 <table>
 <colgroup>
-<col width="26%" />
-<col width="73%" />
+<col width="50%" />
+<col width="50%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -117,6 +117,10 @@ print(rs_air)</code></pre>
 <pre class="r"><code># visualize using `tmap` package
 tm_shape(rs_air) +
   tm_raster(title = &quot;Temperature&quot;)</code></pre>
+<pre><code>## </code></pre>
+<pre><code>## ── tmap v3 code detected ───────────────────────────────────────────────────────</code></pre>
+<pre><code>## [v3-&gt;v4] `tm_raster()`: migrate the argument(s) related to the legend of the
+## visual variable `col` namely &#39;title&#39; to &#39;col.legend = tm_legend(&lt;HERE&gt;)&#39;</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>すごくおおざっぱにいうと<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>、Rのラスターデータは行列の各セルに緯度経度情報が紐づけされたものなので、各セルの値を通常の行列データのように呼び出すことができる。</p>
 <pre class="r"><code># call data entry in cell row 1, column 12
@@ -167,6 +171,11 @@ sf_nc &lt;- system.file(&quot;shape/nc.shp&quot;, package=&quot;sf&quot;) %&gt;%
   tm_raster(title = &quot;Temperature&quot;) +
   tm_shape(sf_nc) +
   tm_polygons(alpha = 0.5) # `alpha` specifies transparency</code></pre>
+<pre><code>## </code></pre>
+<pre><code>## ── tmap v3 code detected ───────────────────────────────────────────────────────</code></pre>
+<pre><code>## [v3-&gt;v4] `tm_raster()`: migrate the argument(s) related to the legend of the
+## visual variable `col` namely &#39;title&#39; to &#39;col.legend = tm_legend(&lt;HERE&gt;)&#39;
+## [v3-&gt;v4] `tm_polygons()`: use `fill_alpha` instead of `alpha`.</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <div id="crop-必要な部分のみ切り抜く" class="section level3">
 <h3><code>crop()</code> ：必要な部分のみ切り抜く</h3>
@@ -192,6 +201,11 @@ tm_shape(rs_air_cr) +
   tm_raster(title = &quot;Temperature&quot;) +
   tm_shape(poly) +
   tm_polygons(alpha = 0.5)</code></pre>
+<pre><code>## </code></pre>
+<pre><code>## ── tmap v3 code detected ───────────────────────────────────────────────────────</code></pre>
+<pre><code>## [v3-&gt;v4] `tm_raster()`: migrate the argument(s) related to the legend of the
+## visual variable `col` namely &#39;title&#39; to &#39;col.legend = tm_legend(&lt;HERE&gt;)&#39;
+## [v3-&gt;v4] `tm_polygons()`: use `fill_alpha` instead of `alpha`.</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
 <div id="exact_extract-ポリゴンごとに値を集計" class="section level3">
@@ -261,6 +275,6 @@ tm_shape(sf_nc) +
 <ol>
 <li id="fn1"><p>Rmarkdownの使用上<code>here::here()</code>で絶対パスを使っているが、通常は相対パスでOK。<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 <li id="fn2"><p>もちろん実際はもっと複雑だが、その辺は私の知識の範疇を超える。<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
-<li id="fn3"><p>注意点として、インプットデータに地理座標系（今回のようなWGS84など）を使っている場合、<code>weights="area"</code>としておかないと、変な平均値を計算してしまう。というのも、緯度経度座標系は歪んでいるので、赤道から離れるほど一つのセルの面積が大きくなる。<code>weights="area"</code>とすることで、この関数は各セルの面積に対応する値を自動計算し、その値をもとに重み付き平均をとってくれる。投影座標系の場合、<code>weights</code>を指定せずに<code>fun=”mean”</code>としても同じ結果が返ってくる。このあたりは煩雑なので、座標系の理解を深めたのち、<code>exact_extract()</code>関数のHelpを熟読したほうがよい。<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>注意点として、インプットデータに地理座標系（今回のようなWGS84など）を使っている場合、<code>weights="area"</code>としておかないと、変な平均値を計算してしまう。というのも、緯度経度座標系は歪んでいるので、赤道から離れるほど一つのセルの面積が小さくなる。<code>weights="area"</code>とすることで、この関数は各セルの面積に対応する値を自動計算し、その値をもとに重み付き平均をとってくれる。投影座標系の場合、<code>weights</code>を指定せずに<code>fun=”mean”</code>としても同じ結果が返ってくる。このあたりは煩雑なので、座標系の理解を深めたのち、<code>exact_extract()</code>関数のHelpを熟読したほうがよい。<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>

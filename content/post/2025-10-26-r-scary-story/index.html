@@ -1,0 +1,147 @@
+---
+title: Rの怖い話
+author: ''
+date: '2025-10-26'
+slug: r-scary-story
+output:
+  blogdown::html_page:
+    toc: true
+categories:
+  - academic
+  - R
+tags:
+  - dplyr
+  - lme4
+  - lmer
+  - filter
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#%E3%83%A2%E3%83%87%E3%83%AB%E9%81%B8%E6%8A%9E%E3%81%A7%E3%81%8D%E3%81%AA%E3%81%84glmm" id="toc-モデル選択できないglmm">モデル選択できないGLMM</a></li>
+<li><a href="#%E8%A4%87%E6%95%B0%E3%83%9E%E3%83%83%E3%83%81%E3%81%AE%E3%82%A8%E3%83%A9%E3%83%BC%E3%81%8C%E3%81%A7%E3%81%AA%E3%81%84" id="toc-複数マッチのエラーがでない">複数マッチのエラーがでない</a></li>
+<li><a href="#sample-surprise" id="toc-sample-surprise">“sample” surprise</a></li>
+</ul>
+</div>
+
+<p>なんとなく使っていると痛い目にあうRのデフォルト設定。</p>
+<div id="モデル選択できないglmm" class="section level1">
+<h1>モデル選択できないGLMM</h1>
+<p>GLMMで解析する際、<code>lme4::lmer()</code>（あるいは<code>lme4::glmer()</code>）を使うことは多い。しかし、<strong>これらの関数はデフォルト設定ではモデル選択</strong>できない。なぜなら、デフォルトで<code>REML = TRUE</code>（制限付き最尤法「Restricted Maximum Likelihood」）となっているため。</p>
+<p>制限付き最尤法（<code>REML=TRUE</code>）はランダム効果の分散推定を不偏にすることを目的とした推定方法のため、固定効果を入れ替えるようなモデル間比較には使えない。推定方法を最尤法（<code>REML=FALSE</code>）と明示せずにモデル選択すると、信頼できない結果が返ってくる。ちなみに、<strong>影響は極めて大きい。</strong></p>
+<pre class="r"><code>pacman::p_load(tidyverse,
+               lme4,
+               MuMIn)
+
+options(na.action = &quot;na.fail&quot;)
+
+## produce dummy data
+set.seed(123)
+sleepstudy_aug &lt;- sleepstudy %&gt;%
+  mutate(
+    Age = rnorm(n(), 
+                mean = 35, 
+                sd = 10),
+    Caffeine = sample(c(&quot;Low&quot;, &quot;Medium&quot;, &quot;High&quot;),
+                      n(),
+                      replace = TRUE),
+    Exercise = rnorm(n(), 
+                     mean = 3, 
+                     sd = 1)
+  )
+
+# REML = TRUE by default; Restricted Maximum Likelihood
+m0 &lt;- lmer(Reaction ~ Days + Age + Caffeine + Exercise + (1 | Subject),
+           data = sleepstudy_aug)
+
+# REML = FALSE; Maximum Likelihood
+m1 &lt;- lmer(Reaction ~ Days + Age + Caffeine + Exercise + (1 | Subject),
+           data = sleepstudy_aug,
+           REML = FALSE)</code></pre>
+<p>それぞれモデル選択すると（当然だが）結果は全く異なり、結論に直接影響する可能性が極めて高い。</p>
+<p><code>REML = TRUE</code>とした場合（不適切）<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>：</p>
+<pre class="r"><code>(ms0 &lt;- dredge(m0,
+               rank = &quot;AIC&quot;) %&gt;% 
+    filter(delta &lt; 4))</code></pre>
+<pre><code>## Warning in dredge(m0, rank = &quot;AIC&quot;): comparing models fitted by REML</code></pre>
+<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
+<pre><code>## Global model call: lmer(formula = Reaction ~ Days + Age + Caffeine + Exercise + 
+##     (1 | Subject), data = sleepstudy_aug)
+## ---
+## Model selection table 
+##      (Intrc)     Age Caffn  Days Exrcs df   logLik    AIC delta weight
+## [1,]   237.1             + 10.43 4.969  7 -883.375 1780.7  0.00  0.683
+## [2,]   245.9 -0.2443     + 10.45 4.866  8 -883.364 1782.7  1.98  0.254
+## Models ranked by AIC(x) 
+## Random terms (all models): 
+##   1 | Subject</code></pre>
+<p><code>REML = FALSE</code>とした場合（適切）：</p>
+<pre class="r"><code>(ms1 &lt;- dredge(m1,
+               rank = &quot;AIC&quot;) %&gt;% 
+    filter(delta &lt; 4))</code></pre>
+<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
+<pre><code>## Global model call: lmer(formula = Reaction ~ Days + Age + Caffeine + Exercise + 
+##     (1 | Subject), data = sleepstudy_aug, REML = FALSE)
+## ---
+## Model selection table 
+##      (Intrc)     Age Caffn  Days Exrcs df   logLik    AIC delta weight
+## [1,]   238.0               10.35 4.587  5 -895.025 1800.0  0.00  0.357
+## [2,]   246.5 -0.2353       10.36 4.488  6 -894.585 1801.2  1.12  0.204
+## [3,]   251.4               10.47        4 -897.039 1802.1  2.03  0.130
+## [4,]   237.1             + 10.43 4.962  7 -894.178 1802.4  2.31  0.113
+## [5,]   260.4 -0.2582       10.47        5 -896.523 1803.0  3.00  0.080
+## [6,]   245.9 -0.2438     + 10.45 4.861  8 -893.701 1803.4  3.35  0.067
+## Models ranked by AIC(x) 
+## Random terms (all models): 
+##   1 | Subject</code></pre>
+<p><code>REML = TRUE</code>の場合、<code>Caffeine</code>がすべてのトップモデル（<span class="math inline">\(\Delta AIC &lt; 2.0\)</span>）に含まれるのに対し、<code>REML = FALSE</code>とすると全く含まれなくなる。実際の論文で起きた場合、<strong>結論が真逆になる可能性</strong>すらある。怖い。</p>
+</div>
+<div id="複数マッチのエラーがでない" class="section level1">
+<h1>複数マッチのエラーがでない</h1>
+<p>Rのデフォルトデータである<code>iris</code>には<code>Species</code>列にsetosa, versicolor, virginica の３種が含まれる。その中の２種、setosa, versicolorをデータフレームから抜き出したいとする。このような複数マッチを指定したい場合、<code>%in%</code>を使う。</p>
+<pre class="r"><code>df_sub &lt;- iris %&gt;% 
+  filter(Species %in% c(&quot;setosa&quot;,
+                        &quot;versicolor&quot;))
+
+table(df_sub$Species)</code></pre>
+<pre><code>## 
+##     setosa versicolor  virginica 
+##         50         50          0</code></pre>
+<p>もともと、各種50点の観察値が含まれるデータである。<code>Species</code>の頻度をとるとsetosa, versicolorが50となっており、正しく機能しているとわかる。</p>
+<p>しかし、ありがちなミスとして、<code>%in%</code>を使うべきところに<code>==</code>（単一の値・文字列との符合を指示する際の演算子）を使ってしまうことがある。このミスは<strong>全く異なる結果を返すにも関わらず、エラーおよび警告メッセージが一切でない。</strong>試してみる。</p>
+<pre class="r"><code>df_sub &lt;- iris %&gt;% 
+  filter(Species == c(&quot;setosa&quot;,
+                        &quot;versicolor&quot;))
+
+table(df_sub$Species)</code></pre>
+<pre><code>## 
+##     setosa versicolor  virginica 
+##         25         25          0</code></pre>
+<p>なぜか、setosa, versicolor からそれぞれ25行ずつ選ばれている。本来50行ずつ選ばれるはず。この25行がどのような基準で選ばれているのかはわからない。このエラーに気付かないと、<strong>知らぬ間に不適切なデータの間引きが起き、意味のないデータ解析を進めてしまう。</strong>怖い。</p>
+</div>
+<div id="sample-surprise" class="section level1">
+<h1>“sample” surprise</h1>
+<p>シミュレーションなどをしていると気が付く、<code>sample</code>関数の（意味の分からない）挙動。あるベクターからいくつかの要素をランダムに取り出したい場合、<code>sample</code>関数のお世話になることが多い。例えば：</p>
+<pre class="r"><code># random five draws from 1 to 10
+sample(1:10, size = 5)</code></pre>
+<pre><code>## [1] 9 5 7 1 2</code></pre>
+<p>この挙動から、最初の引数には「くじ」（この場合、1から10までの数字）を作ってやればよい、と理解する。なので、<code>sample(10, size = 1)</code>とすれば、かならず10が返ってくるはず、と思っていると痛い目にあう。</p>
+<pre class="r"><code># random one draws from 10...?
+set.seed(123)
+sample(10, size = 1)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<p>なぜに3！？となる。</p>
+<p>これは、最初の引数が単一値の場合、<code>1:10</code>を与えた場合と同じ挙動をするためのようだ。これは<code>sample</code>関数のHelpページに”Surprise”として紹介されるとともに、より安全な関数の定義が提案されている。</p>
+<pre class="r"><code># safer function, return 10 every time
+resample &lt;- function(x, ...) x[sample.int(length(x), ...)]
+resample(10, size = 1)</code></pre>
+<pre><code>## [1] 10</code></pre>
+<p>最近、自分でシミュレーションするときは、必ず<code>resample</code>関数を定義してからパッケージを組むようにしている。怖い。</p>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>最新の<code>MuMIn</code>パッケージでは警告メッセージを出してくれるようだが、その意味するところは知らない者にとっては？？？となりそうな感じ。<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
