@@ -112,7 +112,7 @@ table(df_sub$Species)</code></pre>
 <p>しかし、ありがちなミスとして、<code>%in%</code>を使うべきところに<code>==</code>（単一の値・文字列との符合を指示する際の演算子）を使ってしまうことがある。このミスは<strong>全く異なる結果を返すにも関わらず、エラーおよび警告メッセージが一切でない。</strong>試してみる。</p>
 <pre class="r"><code>df_sub &lt;- iris %&gt;% 
   filter(Species == c(&quot;setosa&quot;,
-                        &quot;versicolor&quot;))
+                      &quot;versicolor&quot;))
 
 table(df_sub$Species)</code></pre>
 <pre><code>## 

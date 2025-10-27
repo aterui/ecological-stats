@@ -97,7 +97,7 @@ table(df_sub$Species)
 ```{r}
 df_sub <- iris %>% 
   filter(Species == c("setosa",
-                        "versicolor"))
+                      "versicolor"))
 
 table(df_sub$Species)
 ```
